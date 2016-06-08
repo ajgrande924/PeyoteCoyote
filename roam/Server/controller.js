@@ -26,7 +26,7 @@ const baseLink_users = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/c
 const baseLink_users_query = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/users/';
 const baseLink_history = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/history?apiKey=';
 const baseLink_roams = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/roams?apiKey=';
-
+const baseLink_verified = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/verified?apiKey=';
 //config for email SMTP for gmail. We are send email notifications to users
 // var smtpConfig = { 
 //   host: 'smtp.gmail.com',
@@ -40,6 +40,11 @@ const baseLink_roams = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/c
 
 //transport vehicle for nodemailer to send out email
 // var transporter = nodemailer.createTransport(smtpConfig); 
+var checkUser = (username, phone) => {
+    fetch(baseLink_users + mongoDB_API_KEY)
+    .then((response) => response.json())
+      .then((responseData) => {
+}
 
 var getUser = (username, password, res) => {
   fetch(baseLink_users + mongoDB_API_KEY)
@@ -174,6 +179,16 @@ module.exports = {
   },
 
   verifyUser: (req, res) => {
+    fetch(baseLink_verified + mongoDB_API_KEY,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+        body: JSON.stringify( { "username": req.body.username, "phone": req.body.phone })
+      });
+
     fetch(baseLink_users_query + req.body.id + '?apiKey=' + mongoDB_API_KEY,
     {
       method: 'PUT',
