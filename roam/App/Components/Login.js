@@ -27,7 +27,7 @@ class Login extends Component {
       errorMessage: ''
     };
   }
- // test
+
   // handleEmail(event) {
   //   this.setState({
   //     email: event.nativeEvent.text
@@ -77,9 +77,19 @@ class Login extends Component {
         if(res.message === 'Incorrect username/password combination!'){
           this.setState({errorMessage: res.message, error: true, isLoading: false});
         } else{
+          fetch('http://localhost:3000/isVerified',
+          {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id: res.id})
+          })
+          .then((res) => console.error(res));
           this.props.navigator.push({
             title: 'Roam',
-            username: res._bodyInit,
+            username: res,
             component: TabBar
           });
           this.setState({

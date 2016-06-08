@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // var Interests = require('./Interests');
 var Time = require('./Time');
 var TabBar = require('./TabBar.js');
+var VerificationPage = require('./VerifyText.js');
 
 var styles = require('./Helpers/styles');
 
@@ -29,6 +30,16 @@ class SignUp extends Component {
       error: false,
       errorMessage: ''
     };
+  }
+
+  getCode() {
+    var text = "";
+    var possible = "0123456789";
+
+    for( var i=0; i < 4; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
   }
 
   handleSubmit() {
@@ -58,6 +69,7 @@ class SignUp extends Component {
 
     //ensure all fields in our state is not empty
     if (this.state.firstName !== '' && this.state.userName !== '' && this.state.password !== '' && this.state.passwordAgain !== '' && (this.state.password === this.state.passwordAgain) && (rePhone.test(this.state.phone) || rePhone2.test(this.state.phone))) {
+      var verificationCode = this.getCode();
       fetch('http://localhost:3000/signup', {
         method: 'POST',
         headers: {
@@ -69,18 +81,21 @@ class SignUp extends Component {
           username: this.state.userName,
           password: this.state.password,
           phone: this.state.phone,
-          currentlocation: {latitude: 0, longitude: 0}
+          currentlocation: {latitude: 0, longitude: 0},
+          verifiedPhone: false,
+          verificationCode: verificationCode
         })
       })
       .then((res) => {
         // res = res.json();
         if (res.status === 200) {
           var body = JSON.parse(res._bodyInit);
-          console.warn('RESPONSE FROM SERVER ON SIGNUP PAGE', body);
+          body.verifiedPhone = false;
+          body.verificationCode = verificationCode;
           this.props.navigator.push({
-            title: 'Roam',
-            component: TabBar,
-            user: body
+            title: 'Verify Phone Link',
+            component: VerificationPage,
+            passProps: {user: body}
           });
           //Set isloading to false after conditions
           this.setState({

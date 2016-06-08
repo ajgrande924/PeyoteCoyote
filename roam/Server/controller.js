@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -13,9 +15,15 @@ var bodyParser = require('body-parser');
 // var saltRounds = 10;
 
 //Frantic_Rust Requires
+var config = require('../config.js');
+var twilio = require('twilio');
+
+var client = new twilio.RestClient(config.accountSid, config.authToken);
+
 var fetch = require('node-fetch');
 const mongoDB_API_KEY = 'yjH4qEJR-Olag89IaUTXd06IpuVDZWx1';
 const baseLink_users = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/users?apiKey=';
+const baseLink_users_query = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/users/';
 const baseLink_history = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/history?apiKey=';
 const baseLink_roams = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/roams?apiKey=';
 
@@ -59,7 +67,6 @@ var getUser = (username, password, res) => {
           phone: phone,
           currentlocation: currentlocation
         };
-        console.log('returnobj', returnObj);
         if (flag) {
           res.status(200).send(returnObj);
         } else {
@@ -76,15 +83,19 @@ module.exports = {
     const password = req.body.password;
     const phone = req.body.phone;
     const currentlocation = req.body.currentlocation;
+    const verificationCode = req.body.verificationCode;
+    const verifiedPhone = req.body.verifiedPhone;
 
     const obj = {
       name: name,
       username: username,
       password: password,
       phone: phone,
-      currentlocation: currentlocation
+      currentlocation: currentlocation,
+      verificationCode: verificationCode,
+      verifiedPhone: verifiedPhone
     };
-    console.log('obj.......', obj)
+    console.log('obj.......', obj);
     //Hash password
     // bcrypt.genSalt(saltRounds, function(err, salt) {
     //   if (err) {
@@ -107,10 +118,21 @@ module.exports = {
       },
       body: JSON.stringify(obj)
     })
+    // .then(() => {
+    //   fetch('http://localhost:3000/sendTxt', 
+    //   {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({code: verificationCode, phoneNumber: phone})
+    //   });
+    // })
     .then( err => {
-      getUser(obj.username, obj.password, res)
+      getUser(obj.username, obj.password, res);
     }).catch((err) => {
-        console.log('did not post user info')
+        console.log('did not post user info');
         res.sendStatus(400);
     });
   },
@@ -121,7 +143,55 @@ module.exports = {
     const password = req.body.password;
     getUser(username, password, res);
   },
-}
+
+  sendSMS: (req, res) => {
+    var code = req.body.code;
+    var phoneNumber = req.body.phoneNumber;
+    var name = req.body.name;
+    client.sendSms({
+      to:'+1' + phoneNumber,
+      from:'+19259058241',
+      body:'Greetings ' + name + '! Welcome to Roam!\nHere is your unique code: ' + code +'\nPlease enter it into the verification code box'
+    }, function(error, message) {
+        if (!error) {
+            console.log('Success! The code is:' + code);
+            console.log('Message sent on:');
+            console.log(message.dateCreated);
+        } else {
+            console.log('Oops! There was an error.');
+        }
+    });
+  },
+
+  checkCode: (req, res) => {
+    var realCode = req.body.code;
+    var inputCode = req.body.codeSubmitted;
+    if (realCode === inputCode) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
+  },
+
+  verifyUser: (req, res) => {
+    fetch(baseLink_users_query + req.body.id + '?apiKey=' + mongoDB_API_KEY,
+    {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        },
+      body: JSON.stringify( { "$set" : {verifiedPhone: true}})
+    });
+  },
+
+  isUserVerified: (req, res) => {
+    fetch(baseLink_users_query + req.body.id + '?apiKey=' + mongoDB_API_KEY)
+    .then((res) => res.json())
+    .then((responseData) => console.log(responseData));
+  }
+// amend old commit git
+};
 
   //Page to set up event between users, making API calls to YELP
 //   roam: (req, res) => {

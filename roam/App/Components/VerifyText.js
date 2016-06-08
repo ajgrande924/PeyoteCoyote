@@ -26,15 +26,54 @@ class VerifyText extends Component {
   }
 
   handleTextCode(event) {
+    this.setState({
+      code: event.nativeEvent.text
+    });
   }  
 
 
   handleSubmitCode() {
-
+    fetch('http://localhost:3000/checkCode', 
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({code: this.state.user.verificationCode, codeSubmitted: this.state.code})
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        fetch('http://localhost:3000/verified', 
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({id: this.state.user.id})
+        })
+        this.props.navigator.push({
+          title: 'Roam',
+          component: TabBar,
+          passProps: {user: this.state.user}
+        });
+      } else {
+        this.setState({isLoading: false, error: true, errorMessage: 'Incorrect Code!', code: ''});
+      }
+    });
   }
 
   handleResendCode() {
-
+    fetch('http://localhost:3000/sendTxt',
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({name: this.state.user.name, code: this.state.user.verificationCode, phoneNumber: this.state.user.phone})
+    });
   }
 
   render() {
@@ -50,8 +89,7 @@ class VerifyText extends Component {
           placeholder="Enter Code"
           placeholderTextColor="white"
           value={this.state.code}
-          onChange={this.handleTextCode.bind(this)}
-          secureTextEntry={true}/>
+          onChange={this.handleTextCode.bind(this)}/>
         <TouchableHighlight
           style={styles.button}
           onPress={this.handleSubmitCode.bind(this)}
