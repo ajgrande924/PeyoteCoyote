@@ -27,6 +27,8 @@ class Time extends Component {
     super(props);
     this.state = {
       selectedOption: '1 hour',
+      user: props.user,
+      navigator: props.navigator
     };
   }
   handleSelected(choice) {
@@ -37,29 +39,10 @@ class Time extends Component {
 
   handleSubmit() {
     console.log('Sending ROAM request!', coordinates);
-    // this.props.navigator.push({
-    //   title: 'Confirmation',
-    //   email: this.props.navigator.navigationContext._currentRoute.email,
-    //   component: Confirmation
-    // });
-
-    fetch('http://localhost:3000/roam', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        time: this.state.selectedOption,
-        coordinates: coordinates,
-        userEmail: this.props.navigator.navigationContext._currentRoute.email
-      })
-    })
-    .then((res) => {
-      console.log('Added to db. Waiting for ROAM request confirmation!');
-    })
-    .catch((error) => {
-      console.log('Error handling submit:', error);
+    this.props.navigator.push({
+      title: 'Confirmation',
+      component: Confirmation,
+      user: this.state.user
     });
   }
 
@@ -73,8 +56,16 @@ class Time extends Component {
     return (
       <Image style={styles.backgroundImage}
       source={require('../../imgs/uni.jpg')} >
-        <Geolocation region={this.props.region}/>
-        <Text style={styles.header}> pick time : </Text>
+        
+        <View style={styles.userContainer}>
+        <View style={styles.profileContainer}>
+          <Image style={styles.image}
+          source={require('../../imgs/uni.jpg')} />
+        </View>
+        <View style={styles.statsContainer}>
+        </View> 
+        </View>
+        
         <SegmentedControls
           tint={'#ff0066'}
           selectedTint={'white'}
@@ -84,6 +75,7 @@ class Time extends Component {
           fontWeight={'bold'}
           onSelection={this.handleSelected.bind(this)}
           selectedOption={this.state.selectedOption} />
+        <Geolocation region={this.props.region}/>
         <TouchableHighlight
           style={styles.button}
           onPress={this.handleSubmit.bind(this)} >
@@ -114,48 +106,36 @@ class Geolocation extends Component {
   render() {
     return (
       <View>
-        <Text style={styles.location}>Your Current Location:</Text>
-          <MapView
-          showsUserLocation={true}
-          style={styles.map}
-          region={this.state.region}
-          followUserLocation={true} />
+        <MapView
+        showsUserLocation={true}
+        style={styles.map}
+        region={this.state.region}
+        followUserLocation={true} />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  title: {
-    marginBottom: 20,
-    fontSize: 70,
-    fontWeight: "100",
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    color: 'white',
-    backgroundColor: 'transparent',
-    letterSpacing: 5
-  },
-  header: {
-    marginBottom: 20,
-    fontSize: 50,
-    fontWeight: "100",
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    color: 'white',
-    backgroundColor: 'transparent',
-    letterSpacing: 3
-  },
-  submit: {
-    height: 50,
-    padding: 10,
-    marginRight: 5,
-    marginBottom: 15,
-    fontSize: 18,
-    borderWidth: 1,
+  userContainer: {
+    width: deviceWidth,
+    height: deviceHeight/4,
     borderColor: 'white',
-    borderRadius: 8,
-    color: 'white'
+    borderWidth: 4
+  },
+  profileContainer: {
+    width: deviceWidth,
+    height: deviceHeight/8,
+    borderColor: 'white',
+    borderWidth: 4,
+    alignItems: 'center'
+  },
+  image: {
+    height: deviceWidth/5,
+    width: deviceWidth/5,
+    borderRadius: 40,
+    borderColor: 'white',
+    borderWidth: 4
   },
   buttonText: {
     fontSize: 18,
@@ -163,21 +143,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   button: {
-    height: 50,
-    width: 300,
+    height: deviceHeight/15,
+    width: deviceWidth,
     flexDirection: 'row',
     backgroundColor: '#ff0066',
-    borderRadius:10,
+    // borderRadius:10,
     marginBottom: 10,
-    marginTop: 20,
     alignSelf: 'center',
     justifyContent: 'center',
-  },
-  signUpButton: {
-    color: 'white',
-    textAlign: 'center',
-    paddingTop: 10,
-    fontSize: 18
   },
   unselected: {
     fontSize: 20,
@@ -203,24 +176,9 @@ const styles = StyleSheet.create({
     flex:1,
     width:null,
     height: null,
-    padding: 30,
-    marginTop: 20,
+    // marginTop: 20,
     flexDirection: 'column',
     justifyContent: 'center'
-  },
-  errorMessage: {
-    backgroundColor: 'transparent',
-    color: '#ff0066',
-    textAlign: 'center',
-    fontSize: 20,
-    marginTop: -23
-  },
-  confirmation: {
-    color: 'white',
-    textAlign: 'center',
-    backgroundColor: 'transparent',
-    fontSize: 25,
-    paddingBottom: 10
   },
   location: {
     backgroundColor: 'transparent',
@@ -230,10 +188,10 @@ const styles = StyleSheet.create({
   },
   map: {
     height: deviceHeight/2,
-    width: deviceWidth/2,
-    margin: 10,
-    borderWidth: 1,
-    borderColor: '#000000',
+    width: deviceWidth,
+    // margin: 10,
+    // borderWidth: 1,
+    // borderColor: '#000000',
     backgroundColor: 'transparent'
   },
 });
