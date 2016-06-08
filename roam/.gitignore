@@ -1,7 +1,9 @@
 # OSX
 #
 .DS_Store
+
 config.js
+
 # Xcode
 #
 build/
