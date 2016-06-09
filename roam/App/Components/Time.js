@@ -5,6 +5,8 @@ import MapView from 'react-native-maps';
 var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
 
+console.disableYellowBox = true;
+
 var coordinates = {};
 
 import {
@@ -123,20 +125,56 @@ class Geolocation extends Component {
     };
   }
 
-  componentDidMount() {             
+  loadingPage() {
+    this.setState({refresh: false});
+    return(
+      <View></View>
+      );
+  }
+
+  handleSelected(choice) {
+    let value;
+    const mile = 1609.34;
+    if (choice === '0.5 Miles') {
+      value = mile/2;
+    }
+    if (choice === '1 Mile') {
+      value = mile;
+    }
+    if (choice === '1.5 Miles') {
+      value = mile + (mile/2);
+    }
+    if (choice === '2 Miles') {
+      value = 2 * mile;
+    }
+    this.setState({
+      circleRadius: value,
+      refresh: true
+    });
   }
 
   render() {
+    if (this.state.refresh) {
+      return this.loadingPage();
+    } else {
+    const options = [
+      '0.5 Miles',
+      '1 Mile',
+      '1.5 Miles',
+      '2 Miles'
+    ];
     return (
       <View>
         <View style={styles.sliderContainer}>
-            <Slider 
-                onValueChange={(value) => this.setState({circleRadius: value})} 
-                style={styles.slider}
-                minimumValue={100}
-                maximumValue={2000}
-                step={1}
-            />
+            <SegmentedControls
+              tint={'#ff0066'}
+              selectedTint={'white'}
+              backTint={'white'}
+              options={options}
+              allowFontScaling={false}
+              fontWeight={'bold'}
+              onSelection={this.handleSelected.bind(this)}
+              selectedOption={this.state.selectedOption} />
             <Text>{this.state.circleRadius}</Text>
         </View>
         <MapView 
@@ -144,13 +182,14 @@ class Geolocation extends Component {
         initialRegion={this.state.region}>
           <MapView.Circle
             center={this.state.markers[0]}
-            radius={800}
+            radius={this.state.circleRadius}
             fillColor="rgba(200, 0, 0, 0.5)"
             strokeColor="rgba(0,0,0,0.5)"
           />
         </MapView>
       </View>
     );
+  }
   }
 }
 
