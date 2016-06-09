@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import MapView from 'react-native-maps';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import ActivityPicker from './PickActivity.js';
 var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
-
 console.disableYellowBox = true;
 
 import {
@@ -28,7 +28,6 @@ class Time extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedOption: 'Walk',
       user: props.user,
       navigator: props.navigator,
       region: {},
@@ -45,8 +44,8 @@ class Time extends Component {
           region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.03,
-            longitudeDelta: 0.03
+            latitudeDelta: 0.04,
+            longitudeDelta: 0.04
           },
           markers: [{
             latitude: position.coords.latitude,
@@ -73,15 +72,10 @@ class Time extends Component {
     });
   }
 
-
   render () {
     if (this.state.refresh) {
       return this.loadingPage();
     }
-    const options = [
-      'Walk',
-      'Drive',
-    ];
     return (
       <Image style={styles.backgroundImage}
       source={require('../../imgs/uni.jpg')} >
@@ -110,17 +104,7 @@ class Time extends Component {
           </View>
         </View> 
       </View>
-
-        <SegmentedControls
-          tint={'#ff0066'}
-          selectedTint={'white'}
-          backTint={'white'}
-          options={options}
-          allowFontScaling={false}
-          fontWeight={'bold'}
-          onSelection={this.handleSelected.bind(this)}
-          selectedOption={this.state.selectedOption} />
-        <Geolocation user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate} navigator={this.state.navigator}/>
+        <Geolocation region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
       </Image>
     );
   }
@@ -145,8 +129,27 @@ class Geolocation extends Component {
       circleRadius: 1609.34,
       refresh: true,
       coordinate: props.coordinate,
-      selectedOption: '1 Mile'
+      transportSelectedOption: 'Walk',
+      selectedOption: '0.5 Miles',
+      driveSelectedOption: '5 Miles',
+      transportOptions: [
+        'Walk',
+        'Drive',
+      ],
+      walkOptions: [
+        '0.5 Miles',
+        '1 Mile',
+        '1.5 Miles',
+        '2 Miles'
+      ],
+      driveOptions: [
+        '5 Miles',
+        '10 Miles',
+        '15 Miles',
+        '20 Miles',
+      ] 
     };
+    
   }
 
   handleSubmit() {
@@ -180,6 +183,43 @@ class Geolocation extends Component {
       );
   }
 
+  handleTransportSelected(choice) {
+    this.setState({
+      transportSelectedOption: choice,
+      refresh: true
+    });
+  }
+
+  renderDistanceSegment() {
+    if (this.state.transportSelectedOption === 'Walk') {
+      return (
+        <View>
+        <SegmentedControls
+          tint={'#ff0066'}
+          selectedTint={'white'}
+          backTint={'white'}
+          options={this.state.walkOptions}
+          allowFontScaling={false}
+          fontWeight={'bold'}
+          onSelection={this.handleSelected.bind(this)}
+          selectedOption={this.state.selectedOption}/>
+        </View>
+      )
+    } else {
+      return (
+        <SegmentedControls
+          tint={'#ff0066'}
+          selectedTint={'white'}
+          backTint={'white'}
+          options={this.state.driveOptions}
+          allowFontScaling={false}
+          fontWeight={'bold'}
+          onSelection={this.handleDriveSelected.bind(this)}
+          selectedOption={this.state.driveSelectedOption} />
+      )
+    }
+  }
+
   handleSelected(choice) {
     let value;
     const mile = 1609.34;
@@ -198,7 +238,13 @@ class Geolocation extends Component {
     this.setState({
       selectedOption: choice,
       circleRadius: value,
-      refresh: true
+      refresh: true,
+      region: {
+        latitude: this.state.region.latitude,
+        longitude: this.state.region.longitude,
+        latitudeDelta: 0.04 * value/1609.34,
+        longitudeDelta: 0.04 * value/1609.34,
+      },
     });
   }
 
@@ -208,19 +254,25 @@ class Geolocation extends Component {
     if (choice === '5 Miles') {
       value = mile * 5;
     }
-    if (choice === '10 Mile') {
+    if (choice === '10 Miles') {
       value = mile * 10;
     }
     if (choice === '15 Miles') {
       value = mile * 15;
     }
     if (choice === '20 Miles') {
-      value = miles * 20;
+      value = mile * 20;
     }
     this.setState({
-      selectedOption: choice,
+      driveSelectedOption: choice,
       circleRadius: value,
       refresh: true,
+      region: {
+        latitude: this.state.region.latitude,
+        longitude: this.state.region.longitude,
+        latitudeDelta: 0.04 * value/1609.34,
+        longitudeDelta: 0.04 * value/1609.34,
+      },
     });
   }
 
@@ -228,24 +280,25 @@ class Geolocation extends Component {
     if (this.state.refresh) {
       return this.loadingPage();
     } else {
-    const options = [
-      '0.5 Miles',
-      '1 Mile',
-      '1.5 Miles',
-      '2 Miles'
-    ];
+
     return (
       <View>
-        <View style={styles.sliderContainer}>
-            <SegmentedControls
-              tint={'#ff0066'}
-              selectedTint={'white'}
-              backTint={'white'}
-              options={options}
-              allowFontScaling={false}
-              fontWeight={'bold'}
-              onSelection={this.handleSelected.bind(this)}
-              selectedOption={this.state.selectedOption} />
+        <ActivityPicker />
+        <View style={styles.segment}>
+          <View style={styles.sliderContainer1}>
+              <SegmentedControls
+                tint={'#ff0066'}
+                selectedTint={'white'}
+                backTint={'white'}
+                options={this.state.transportOptions}
+                allowFontScaling={false}
+                fontWeight={'bold'}
+                onSelection={this.handleTransportSelected.bind(this)}
+                selectedOption={this.state.transportSelectedOption} />
+          </View>
+          <View style={styles.sliderContainer2}>
+            {this.renderDistanceSegment()}
+          </View>
         </View>
         <MapView 
         style={styles.map}
@@ -258,7 +311,7 @@ class Geolocation extends Component {
           <MapView.Circle
             center={this.state.marker.coordinates}
             radius={this.state.circleRadius}
-            fillColor="rgba(200, 0, 0, 0.5)"
+            fillColor="rgba(200, 0, 0, 0.4)"
             strokeColor="rgba(0,0,0,0.5)"/>
           <MapView.Marker
             coordinate={this.state.coordinate}/>
@@ -280,7 +333,7 @@ const styles = StyleSheet.create({
     paddingTop: deviceHeight/25,
     height: deviceHeight/3,
     borderBottomColor: 'white',
-    // borderWidth: 2
+    borderWidth: 2
   },
   navTitle: {
     color:'#fff',
@@ -366,7 +419,7 @@ const styles = StyleSheet.create({
     height: null,
     // marginTop: 20,
     flexDirection: 'column',
-    justifyContent: 'center'
+    // justifyContent: 'center'
   },
   location: {
     backgroundColor: 'transparent',
@@ -375,10 +428,21 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   map: {
-    height: deviceHeight/3,
+    height: deviceHeight/2.28,
     width: deviceWidth,
     backgroundColor: 'transparent'
   },
+  segment: {
+    flexDirection: 'row'
+  },
+  sliderContainer1: {
+    width: 3 * deviceWidth/10,
+    padding: 10
+  },
+  sliderContainer2: {
+    width: 7 * deviceWidth/10,
+    padding: 10
+  }
 });
 
 
