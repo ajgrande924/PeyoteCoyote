@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import MapView from 'react-native-maps';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import ActivityPicker from './PickActivity.js';
 var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
-import Icon from 'react-native-vector-icons/FontAwesome';
 console.disableYellowBox = true;
 
 import {
@@ -105,11 +105,6 @@ class Time extends Component {
         </View> 
       </View>
         <Geolocation region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
-        <TouchableHighlight
-          style={styles.button}
-          onPress={this.handleSubmit.bind(this)} >
-            <Text style={styles.buttonText}> Roam! </Text>
-        </TouchableHighlight>
       </Image>
     );
   }
@@ -288,6 +283,7 @@ class Geolocation extends Component {
 
     return (
       <View>
+        <ActivityPicker />
         <View style={styles.segment}>
           <View style={styles.sliderContainer1}>
               <SegmentedControls
@@ -315,7 +311,7 @@ class Geolocation extends Component {
           <MapView.Circle
             center={this.state.marker.coordinates}
             radius={this.state.circleRadius}
-            fillColor="rgba(200, 0, 0, 0.5)"
+            fillColor="rgba(200, 0, 0, 0.4)"
             strokeColor="rgba(0,0,0,0.5)"/>
           <MapView.Marker
             coordinate={this.state.coordinate}/>
