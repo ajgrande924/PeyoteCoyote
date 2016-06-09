@@ -125,7 +125,7 @@ class SignUp extends Component {
 
   render() {
     var showErr = (
-      this.state.error ? <Text style={styles.errorMessage}> {this.state.errorMessage} </Text> : <View></View>
+      this.state.error ? <Text style={styles.errorMessage}> {this.state.errorMessage} </Text> : <Text style={styles.errorMessage}> </Text>
     );
     return(
       <Image style={styles.backgroundImage}

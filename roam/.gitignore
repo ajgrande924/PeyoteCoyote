@@ -1,8 +1,7 @@
 # OSX
 #
 .DS_Store
-./config.js
-config.js
+api_keys.js
 # Xcode
 #
 build/
