@@ -27,24 +27,32 @@ const baseLink_users_query = 'https://api.mlab.com/api/1/databases/frantic-rust-
 const baseLink_history = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/history?apiKey=';
 const baseLink_roams = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/roams?apiKey=';
 const baseLink_verified = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/verified?apiKey=';
-//config for email SMTP for gmail. We are send email notifications to users
-// var smtpConfig = { 
-//   host: 'smtp.gmail.com',
-//   port: 465,
-//   secure: true, // use SSL 
-//   auth: {
-//     user: 'roamincenterprises@gmail.com',
-//     pass: 'roamroam'
-//   }
-// };
 
-//transport vehicle for nodemailer to send out email
-// var transporter = nodemailer.createTransport(smtpConfig); 
-// var checkUser = (username, phone) => {
-//     fetch(baseLink_users + mongoDB_API_KEY)
-//     .then((response) => response.json())
-//       .then((responseData) => {
-// }
+var checkSignup = (username, phone, res) => {
+  fetch(baseLink_verified + mongoDB_API_KEY)
+    .then((response) => response.json())
+      .then((responseData) => {
+        var usernameFlag = false;
+        var phoneFlag = false;
+        for (var i = 0; i < responseData.length; i++) {
+          if (responseData[i].username === username) {
+            usernameFlag = true;
+          }
+          if (responseData[i].phone === phone) {
+            phoneFlag = true;
+          }
+        }
+        if (usernameFlag && phoneFlag) {
+          res.sendStatus(400);
+        } else if (usernameFlag) {
+          res.sendStatus(401);
+        } else if (phoneFlag) {
+          res.sendStatus(402);
+        } else {
+          console.log('signup good to go');
+        }
+      });
+}
 
 var getUser = (username, password, res) => {
   fetch(baseLink_users + mongoDB_API_KEY)
@@ -79,7 +87,7 @@ var getUser = (username, password, res) => {
         if (flag) {
           res.status(200).send(returnObj);
         } else {
-          res.sendStatus(400);
+          res.sendStatus(402);
         }
       });
 };
@@ -105,18 +113,8 @@ module.exports = {
       verifiedPhone: verifiedPhone
     };
     console.log('obj.......', obj);
-    //Hash password
-    // bcrypt.genSalt(saltRounds, function(err, salt) {
-    //   if (err) {
-    //     console.log('Error generating salt', err);
-    //   }
-    //   bcrypt.hash(req.body.password, salt, function(err, hash) {
-    //     if (err) {
-    //       console.log('Error hashing password', err);
-    //     }
-    //     obj.password = hash;
-    //   })
-    // };
+
+    checkSignup(obj.username, obj.phone, res);
 
     fetch(baseLink_users + mongoDB_API_KEY,
     {
@@ -127,17 +125,6 @@ module.exports = {
       },
       body: JSON.stringify(obj)
     })
-    // .then(() => {
-    //   fetch('http://localhost:3000/sendTxt', 
-    //   {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({code: verificationCode, phoneNumber: phone})
-    //   });
-    // })
     .then( err => {
       getUser(obj.username, obj.password, res);
     }).catch((err) => {

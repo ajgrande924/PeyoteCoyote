@@ -26,7 +26,7 @@ class VerifyText extends Component {
     };
   }
 
-  didComponentDidMount() {
+  ComponentDidMount() {
     this.handleResendCode();
   }
 
