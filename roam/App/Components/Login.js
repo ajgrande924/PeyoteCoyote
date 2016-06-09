@@ -84,7 +84,7 @@ class Login extends Component {
             if (resp.status === 200) {
               this.props.navigator.push({
                 title: 'Roam',
-                username: res,
+                passProps: {user: res},
                 component: TabBar
               });
             } else {
