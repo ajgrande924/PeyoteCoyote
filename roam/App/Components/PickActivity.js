@@ -7,7 +7,7 @@ import {
     View,
 } from 'react-native';
 
-import FMPicker from 'react-native-fm-picker';
+import FMPicker from '../Lib/index.js';
 
 var options = ['Option1', 'Option2', 'Option3'];
 //Labels is optional
