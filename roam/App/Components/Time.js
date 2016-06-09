@@ -45,8 +45,8 @@ class Time extends Component {
           region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01
+            latitudeDelta: 0.03,
+            longitudeDelta: 0.03
           },
           markers: [{
             latitude: position.coords.latitude,
@@ -155,8 +155,8 @@ class Geolocation extends Component {
       region: props.region,
       marker: {
         coordinates: {
-          latitude: props.markers.latitude,
-          longitude: props.markers.longitude,
+          latitude: props.markers[0].latitude,
+          longitude: props.markers[0].longitude,
         },
         title: 'Hello',
         description: 'this is a nice spot',
