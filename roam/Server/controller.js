@@ -184,10 +184,9 @@ module.exports = {
 
   verifyUser: (req, res) => {
     var verifiedObj = {
-      username: req.body.username,
-      phone: req.body.phone,
+      username: req.body.user.username,
+      phone: req.body.user.phone,
     };
-    console.log(req.body);
 
     fetch(baseLink_verified + mongoDB_API_KEY,
       {

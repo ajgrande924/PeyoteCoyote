@@ -56,7 +56,7 @@ class VerifyText extends Component {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({id: this.state.user.id})
+          body: JSON.stringify({id: this.state.user.id, user: this.state.user})
         });
         AlertIOS.alert('One-time Verification Complete\n\nPhone Linked');
         this.props.navigator.push({
