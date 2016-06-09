@@ -92,6 +92,8 @@ class VerifyText extends Component {
       source={require('../../imgs/uni.jpg')}>
         <Text style={styles.title}> verify </Text>
         <TextInput
+          keyboardType="number-pad"
+          maxLength="4"
           style={styles.submit}
           placeholder="Enter Code"
           placeholderTextColor="white"
