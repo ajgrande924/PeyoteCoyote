@@ -127,6 +127,7 @@ class Login extends Component {
     return(
       <Image style={styles.backgroundImage}
       source={require('../../imgs/uni.jpg')}>
+      <View style={styles.loginContainer}>
         <Text style={styles.title}> roam </Text>
         <View style={styles.inputBar}>
         <TextInput
@@ -134,22 +135,24 @@ class Login extends Component {
           placeholder="Username"
           placeholderTextColor="white"
           value={this.state.username}
-          onChange={this.handleUsername.bind(this)}/>
+          onChange={this.handleUsername.bind(this)}
+          onSubmitEditing={(event) => { 
+            this.refs.password.focus(); 
+          }}/>
+
         </View>
         <TextInput
+          ref='password'
           style={styles.submit}
           placeholder="Password"
           placeholderTextColor="white"
           value={this.state.password}
           onChange={this.handlePassword.bind(this)}
-          secureTextEntry={true}/>
+          secureTextEntry={true}
+          onSubmitEditing={(event) => { 
+            this.handleSignUp.bind(this)();
+          }}/>
 
-        <TouchableHighlight
-          style={styles.button}
-          onPress={this.handleSignIn.bind(this)}
-          underlayColor="white" >
-            <Text style={styles.buttonText}> Sign In </Text>
-        </TouchableHighlight>
         <TouchableHighlight
           // style={styles.button}
           onPress={this.handleSignUp.bind(this)}
@@ -162,6 +165,7 @@ class Login extends Component {
           color="#111"
           size="large"></ActivityIndicatorIOS>
         {showErr}
+        </View>
       </Image>
     )
   }
