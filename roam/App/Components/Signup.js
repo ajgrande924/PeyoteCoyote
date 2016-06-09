@@ -6,6 +6,7 @@ var TabBar = require('./TabBar.js');
 var VerificationPage = require('./VerifyText.js');
 
 var styles = require('./Helpers/styles');
+var dismissKeyboard = require('react-native-dismiss-keyboard');
 
 import {
   View,
@@ -43,7 +44,7 @@ class SignUp extends Component {
   }
 
   handleSubmit() {
-    console.log(this.state);
+    dismissKeyboard();
     this.setState({
       isLoading: true
     });
@@ -143,64 +144,86 @@ class SignUp extends Component {
     return(
       <Image style={styles.backgroundImage}
         source={require('../../imgs/uni.jpg')} >
-        <Text style={styles.title}> sign up </Text>
-        {/* Fields that we want to bind the username and password input */}
-        <View style={styles.inputBar}>
-          <TextInput
-            style={styles.submit}
-            placeholder="First name"
-            placeholderTextColor="white"
-            onChangeText={(text) => this.setState({firstName: text})}
-            value={this.state.firstName}
-            />
-        </View>
-        <View style={styles.inputBar}>
-          <TextInput
-            style={styles.submit}
-            placeholder="Username"
-            placeholderTextColor="white"
-            onChangeText={(text) => this.setState({userName: text})}
-            value={this.state.userName}
-            />
+        <View style={styles.signupContainer}>
+          <Text underlayColor='transparent' style={styles.title} onPress={this.handleSubmit.bind(this)}> sign up </Text>
+          {/* Fields that we want to bind the username and password input */}
+          <View style={styles.inputBar}>
+            <TextInput
+              style={styles.submit}
+              returnKeyType = {"next"}
+              autoFocus = {true}
+              placeholder="First Name"
+              placeholderTextColor="white"
+              onChangeText={(text) => this.setState({firstName: text})}
+              value={this.state.firstName}
+              onSubmitEditing={(event) => { 
+                this.refs.SecondInput.focus(); 
+              }}
+              />
           </View>
-        <View style={styles.inputBar}>  
-          <TextInput
-            style={styles.submit}
-            placeholder="Enter a password"
-            placeholderTextColor="white"
-            onChangeText={(text) => this.setState({password: text})}
-            value={this.state.password}
-            secureTextEntry={true}
-            />
-        </View>
-        <View style={styles.inputBar}>
-          <TextInput
-            style={styles.submit}
-            placeholder="Enter password again"
-            placeholderTextColor="white"
-            onChangeText={(text) => this.setState({passwordAgain: text})}
-            value={this.state.passwordAgain}
-            secureTextEntry={true}
-            />
-        </View>
-        <View style={styles.inputBar}>
-          <TextInput
-            style={styles.submit}
-            autoCapitalize="none"
-            placeholder="Phone number"
-            placeholderTextColor="white"
-            onChangeText={(text) => this.setState({phone: text})}
-            value={this.state.phone}
-            keyboardType="number-pad"
-            />
-        </View>
-        <TouchableHighlight
-          style={styles.button}
-          onPress={this.handleSubmit.bind(this)}
-          underlayColor="white" >
-            <Text style={styles.buttonText}> Create Account </Text>
-        </TouchableHighlight>
-        {/* This is the loading animation when isLoading is set to true */}
+          <View style={styles.inputBar}>
+            <TextInput
+              ref='SecondInput'
+              returnKeyType = {"next"}
+              style={styles.submit}
+              placeholder="Username"
+              placeholderTextColor="white"
+              onChangeText={(text) => this.setState({userName: text})}
+              value={this.state.userName}
+              onSubmitEditing={(event) => { 
+                this.refs.ThirdInput.focus(); 
+              }}
+              />
+            </View>
+          <View style={styles.inputBar}>  
+            <TextInput
+              ref='ThirdInput'
+              returnKeyType = {"next"}
+              style={styles.submit}
+              placeholder="Enter password"
+              placeholderTextColor="white"
+              onChangeText={(text) => this.setState({password: text})}
+              value={this.state.password}
+              secureTextEntry={true}
+              onSubmitEditing={(event) => { 
+                this.refs.FourthInput.focus(); 
+              }}
+              />
+          </View>
+          <View style={styles.inputBar}>
+            <TextInput
+              ref='FourthInput'
+              returnKeyType = {"next"}
+              style={styles.submit}
+              placeholder="Confirm Password"
+              placeholderTextColor="white"
+              onChangeText={(text) => this.setState({passwordAgain: text})}
+              value={this.state.passwordAgain}
+              secureTextEntry={true}
+              onSubmitEditing={(event) => { 
+                this.refs.FifthInput.focus(); 
+              }}
+              />
+          </View>
+          <View style={styles.inputBar}>
+            <TextInput
+              ref='FifthInput'
+              style={styles.submit}
+              autoCapitalize="none"
+              placeholder="Phone Number"
+              placeholderTextColor="white"
+              onChangeText={(text) => this.setState({phone: text})}
+              value={this.state.phone}
+              keyboardType="number-pad"
+              returnKeyType={'done'}
+              maxLength={10}
+              onSubmitEditing={(event) => { 
+                this.handleSubmit.bind(this)(); 
+              }}
+              />
+          </View>
+          {/* This is the loading animation when isLoading is set to true */}
+          </View>
         <ActivityIndicatorIOS
           animating={this.state.isLoading}
           color="#111"

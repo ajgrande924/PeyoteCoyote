@@ -470,7 +470,7 @@
 						DevelopmentTeam = 2S3D8J8M3T;
 						SystemCapabilities = {
 							com.apple.Push = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -789,8 +789,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.roamjkhasdfbjk;
+				PRODUCT_BUNDLE_IDENTIFIER = "roam-ben";
 				PRODUCT_NAME = roam;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -813,8 +814,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.roamjkhasdfbjk;
+				PRODUCT_BUNDLE_IDENTIFIER = "roam-ben";
 				PRODUCT_NAME = roam;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
