@@ -9,22 +9,20 @@ import {
 
 import FMPicker from '../Lib/index.js';
 
-var options = ['Option1', 'Option2', 'Option3'];
-//Labels is optional
-var labels = ['hello', 'world', 'Foodmate'];
+var options = ['Hot Yoga', 'Regular Yoga', 'Restaurants', 'Bars', 'Food', 'Excercise', 'Siteseeing', ];
 
 class ActivityPicker extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedOption: 'Option1'
+            selectedOption: 'Hot Yoga'
         }
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text>Current Option: {this.state.selectedOption}</Text>
+                <Text>{this.state.selectedOption}</Text>
                 <Text
                     style={{color:'blue', marginTop: 20}}
                     onPress={()=>{
@@ -32,19 +30,7 @@ class ActivityPicker extends Component {
                     }}>
                     Click here to select your option
                 </Text>
-                <Text
-                    style={{color:'blue', marginTop: 20}}
-                    onPress={()=>{
-                        this.refs.picker2.show();
-                    }}>
-                    Click here to select your option with labels
-                </Text>
                 <FMPicker ref={'picker'} options={options}
-                    onSubmit={(option)=>{
-                        this.setState({selectedOption: option})
-                    }}
-                    />
-                <FMPicker ref={'picker2'} options={options} labels={labels}
                     onSubmit={(option)=>{
                         this.setState({selectedOption: option})
                     }}
