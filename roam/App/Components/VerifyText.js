@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 var SignUp = require('./Signup');
 var styles = require('./Helpers/styles');
 var TabBar = require('./TabBar.js');
+var dismissKeyboard = require('react-native-dismiss-keyboard');
+
 import {
   AlertIOS,
   Image,
@@ -38,6 +40,7 @@ class VerifyText extends Component {
 
 
   handleSubmitCode() {
+    dismissKeyboard();
     fetch('http://localhost:3000/checkCode', 
     {
       method: 'POST',
@@ -90,14 +93,17 @@ class VerifyText extends Component {
     return(
       <Image style={styles.backgroundImage}
       source={require('../../imgs/uni.jpg')}>
-        <Text style={styles.title}> verify </Text>
+      <View style={styles.verifyContainer}>
+        <Text underlayColor='transparent' onPress={this.handleSubmitCode.bind(this)} style={styles.title}> verify </Text>
         <TextInput
           keyboardType="number-pad"
-          maxLength="4"
+          maxLength={4}
+          autoFocus = {true}
           style={styles.submit}
           placeholder="Enter Code"
           placeholderTextColor="white"
           value={this.state.code}
+          returnKeyType={'done'}
           onChange={this.handleTextCode.bind(this)}/>
         <TouchableHighlight
           style={styles.button}
@@ -116,6 +122,7 @@ class VerifyText extends Component {
           color="#111"
           size="large"></ActivityIndicatorIOS>
         {showErr}
+        </View>
       </Image>
     )
   }
