@@ -73,22 +73,6 @@ class Time extends Component {
     });
   }
 
-  handleSubmit() {
-    // fetch('http://localhost:3000/initiateRoam',
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       'Accept': 'application/json',
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify()
-    //   });
-    this.props.navigator.push({
-      title: 'Confirmation',
-      component: Confirmation,
-      user: this.state.user
-    });
-  }
 
   render () {
     if (this.state.refresh) {
@@ -136,12 +120,7 @@ class Time extends Component {
           fontWeight={'bold'}
           onSelection={this.handleSelected.bind(this)}
           selectedOption={this.state.selectedOption} />
-        <Geolocation region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
-        <TouchableHighlight
-          style={styles.button}
-          onPress={this.handleSubmit.bind(this)} >
-            <Text style={styles.buttonText}> Roam! </Text>
-        </TouchableHighlight>
+        <Geolocation user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate} navigator={this.state.navigator}/>
       </Image>
     );
   }
@@ -152,6 +131,8 @@ class Geolocation extends Component {
     constructor(props) {
     super(props);
     this.state = {
+      user: props.user,
+      navigator: props.navigator,
       region: props.region,
       marker: {
         coordinates: {
@@ -166,6 +147,30 @@ class Geolocation extends Component {
       coordinate: props.coordinate,
       selectedOption: '1 Mile'
     };
+  }
+
+  handleSubmit() {
+    var userObj = {
+      id: this.state.user.id,
+      latitude: this.state.region.latitude,
+      longitude: this.state.region.longitude,
+      radius: Math.floor(this.state.circleRadius),
+      transportation: 1
+    };
+    fetch('http://localhost:3000/roam',
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userObj)
+      });
+    this.props.navigator.push({
+      title: 'Confirmation',
+      component: Confirmation,
+      user: this.state.user
+    });
   }
 
   loadingPage() {
@@ -258,6 +263,11 @@ class Geolocation extends Component {
           <MapView.Marker
             coordinate={this.state.coordinate}/>
         </MapView>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={this.handleSubmit.bind(this)} >
+            <Text style={styles.buttonText}> Roam! </Text>
+        </TouchableHighlight>
       </View>
     );
   }
