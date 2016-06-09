@@ -7,8 +7,6 @@ var Separator = require('./Helpers/Separator');
 
 console.disableYellowBox = true;
 
-var coordinates = {};
-
 import {
   Animated,
   Image,
@@ -33,8 +31,42 @@ class Time extends Component {
       selectedOption: 'Walk',
       user: props.user,
       navigator: props.navigator,
+      region: {},
+      markers: [],
+      coordinate: {},
+      refresh: true
     };
   }
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          region: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01
+          },
+          markers: [{
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }],
+          coodinate: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+          refresh: false
+        });
+      });
+  }
+
+  loadingPage() {
+    return(
+      <View></View>
+      );
+  }
+
   handleSelected(choice) {
     this.setState({
       selectedOption: choice
@@ -42,7 +74,15 @@ class Time extends Component {
   }
 
   handleSubmit() {
-    console.log('Sending ROAM request!', coordinates);
+    // fetch('http://localhost:3000/initiateRoam',
+    //   {
+    //     method: 'POST',
+    //     headers: {
+    //       'Accept': 'application/json',
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify()
+    //   });
     this.props.navigator.push({
       title: 'Confirmation',
       component: Confirmation,
@@ -51,6 +91,9 @@ class Time extends Component {
   }
 
   render () {
+    if (this.state.refresh) {
+      return this.loadingPage();
+    }
     const options = [
       'Walk',
       'Drive',
@@ -93,7 +136,7 @@ class Time extends Component {
           fontWeight={'bold'}
           onSelection={this.handleSelected.bind(this)}
           selectedOption={this.state.selectedOption} />
-        <Geolocation region={this.props.region}/>
+        <Geolocation region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
         <TouchableHighlight
           style={styles.button}
           onPress={this.handleSubmit.bind(this)} >
@@ -109,21 +152,18 @@ class Geolocation extends Component {
     constructor(props) {
     super(props);
     this.state = {
-      region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-      },
+      region: props.region,
       marker: {
         coordinates: {
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: props.markers.latitude,
+          longitude: props.markers.longitude,
         },
         title: 'Hello',
         description: 'this is a nice spot',
       },
       circleRadius: 1609.34,
+      refresh: true,
+      coordinate: props.coordinate,
       selectedOption: '1 Mile'
     };
   }
@@ -201,7 +241,6 @@ class Geolocation extends Component {
               fontWeight={'bold'}
               onSelection={this.handleSelected.bind(this)}
               selectedOption={this.state.selectedOption} />
-            <Text>{this.state.circleRadius}</Text>
         </View>
         <MapView 
         style={styles.map}
@@ -215,8 +254,9 @@ class Geolocation extends Component {
             center={this.state.marker.coordinates}
             radius={this.state.circleRadius}
             fillColor="rgba(200, 0, 0, 0.5)"
-            strokeColor="rgba(0,0,0,0.5)"
-          />
+            strokeColor="rgba(0,0,0,0.5)"/>
+          <MapView.Marker
+            coordinate={this.state.coordinate}/>
         </MapView>
       </View>
     );
