@@ -30,7 +30,7 @@ class Time extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedOption: '1 hour',
+      selectedOption: 'Walk',
       user: props.user,
       navigator: props.navigator,
     };
@@ -52,10 +52,8 @@ class Time extends Component {
 
   render () {
     const options = [
-      '1 hour',
-      '2 hours',
-      '4 hours',
-      'Anytime'
+      'Walk',
+      'Drive',
     ];
     return (
       <Image style={styles.backgroundImage}
@@ -117,11 +115,16 @@ class Geolocation extends Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
       },
-      markers: [{
-        latitude: 37.78825,
-        longitude: -122.4324,
-      }],
-      circleRadius: 200,
+      marker: {
+        coordinates: {
+          latitude: 37.78825,
+          longitude: -122.4324,
+        },
+        title: 'Hello',
+        description: 'this is a nice spot',
+      },
+      circleRadius: 1609.34,
+      selectedOption: '1 Mile'
     };
   }
 
@@ -148,8 +151,31 @@ class Geolocation extends Component {
       value = 2 * mile;
     }
     this.setState({
+      selectedOption: choice,
       circleRadius: value,
       refresh: true
+    });
+  }
+
+  handleDriveSelected(choice) {
+    let value;
+    const mile = 1609.34;
+    if (choice === '5 Miles') {
+      value = mile * 5;
+    }
+    if (choice === '10 Mile') {
+      value = mile * 10;
+    }
+    if (choice === '15 Miles') {
+      value = mile * 15;
+    }
+    if (choice === '20 Miles') {
+      value = miles * 20;
+    }
+    this.setState({
+      selectedOption: choice,
+      circleRadius: value,
+      refresh: true,
     });
   }
 
@@ -180,8 +206,13 @@ class Geolocation extends Component {
         <MapView 
         style={styles.map}
         initialRegion={this.state.region}>
+          <MapView.Marker
+            coordinate={this.state.marker.coordinates}
+            title={this.state.marker.title}
+            description={this.state.marker.description}
+          />
           <MapView.Circle
-            center={this.state.markers[0]}
+            center={this.state.marker.coordinates}
             radius={this.state.circleRadius}
             fillColor="rgba(200, 0, 0, 0.5)"
             strokeColor="rgba(0,0,0,0.5)"
