@@ -15,10 +15,10 @@ var bodyParser = require('body-parser');
 // var saltRounds = 10;
 
 //Frantic_Rust Requires
-var config = require('../config.js');
+var config = require('../api_keys.js');
 var twilio = require('twilio');
 
-var client = new twilio.RestClient(config.accountSid, config.authToken);
+var client = new twilio.RestClient(config.twilioKeys.accountSid, config.twilioKeys.authToken);
 
 var fetch = require('node-fetch');
 const mongoDB_API_KEY = 'yjH4qEJR-Olag89IaUTXd06IpuVDZWx1';
