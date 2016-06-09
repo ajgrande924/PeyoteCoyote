@@ -2,6 +2,8 @@
 #
 .DS_Store
 api_keys.js
+config.js
+
 # Xcode
 #
 build/

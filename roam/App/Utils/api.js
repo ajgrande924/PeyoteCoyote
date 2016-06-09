@@ -1,5 +1,7 @@
+'use strict'
+
 var Yelp = require('yelp');
-var yelpKeys = require('./apiKeys').yelpKeys;
+var yelpKeys = require('../../api_keys').yelpKeys;
 
 let yelp = new Yelp({
   consumer_key: yelpKeys.consumer_key,
