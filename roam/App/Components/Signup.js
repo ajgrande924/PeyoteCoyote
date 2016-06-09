@@ -51,13 +51,19 @@ class SignUp extends Component {
     const rePhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
     const rePhone2 = /[1-9][0-9]{2}[1-9][0-9]{6}/; 
 
+    // check if the passwords are greater that 5 characters
+    if (this.state.password.length < 5) {
+      // console.warn('dafdsafsda', this.state.password.length);
+      this.setState({isLoading: false, error: true, errorMessage: 'Password must be > 5 characters!'});
+    }
+
     //check if the passwords entered matches
-    if (this.state.password !== this.state.passwordAgain) {
+    else if (this.state.password !== this.state.passwordAgain) {
       this.setState({isLoading: false, error: true, errorMessage: 'Passwords do not match!'});
     }
 
     //check if the phone supplied is valid
-    if (!rePhone.test(this.state.phone) && !rePhone2.test(this.state.phone) ) {
+    else if (!rePhone.test(this.state.phone) && !rePhone2.test(this.state.phone) ) {
       this.setState({isLoading: false, error: true, errorMessage: 'Invalid phone number!', phone: ''});
     } else {
       this.setState({
@@ -67,58 +73,65 @@ class SignUp extends Component {
     }
 
 
-    //ensure all fields in our state is not empty
-    if (this.state.firstName !== '' && this.state.userName !== '' && this.state.password !== '' && this.state.passwordAgain !== '' && (this.state.password === this.state.passwordAgain) && (rePhone.test(this.state.phone) || rePhone2.test(this.state.phone))) {
-      var verificationCode = this.getCode();
-      fetch('http://localhost:3000/signup', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: this.state.firstName,
-          username: this.state.userName,
-          password: this.state.password,
-          phone: this.state.phone,
-          currentlocation: {latitude: 0, longitude: 0},
-          verifiedPhone: false,
-          verificationCode: verificationCode
+    if (this.state.error) {
+      if (this.state.firstName !== '' && this.state.userName !== '' && this.state.password !== '' && this.state.passwordAgain !== '' && (this.state.password === this.state.passwordAgain) && (rePhone.test(this.state.phone) || rePhone2.test(this.state.phone))) {
+        var verificationCode = this.getCode();
+        fetch('http://localhost:3000/signup', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: this.state.firstName,
+            username: this.state.userName,
+            password: this.state.password,
+            phone: this.state.phone,
+            currentlocation: {latitude: 0, longitude: 0},
+            verifiedPhone: false,
+            verificationCode: verificationCode
+          })
         })
-      })
-      .then((res) => {
-        // res = res.json();
-        if (res.status === 200) {
-          var body = JSON.parse(res._bodyInit);
-          body.verifiedPhone = false;
-          body.verificationCode = verificationCode;
-          this.props.navigator.push({
-            title: 'Verify Phone Link',
-            component: VerificationPage,
-            passProps: {user: body}
-          });
-          //Set isloading to false after conditions
-          this.setState({
-            isLoading: false
-          });
-        } else {
-          this.setState({
-            error: true,
-            errorMessage: 'Phone already exists!',
-            isLoading: false
-          });
-          console.log('CURRENT ERROR:',this.state.error);
-          console.log('SIGNUP ERROR MESSAGE:', this.state.errorMessage);
-        }
+        .then((res) => {
+          // res = res.json();
+          if (res.status === 200) {
+            var body = JSON.parse(res._bodyInit);
+            body.verifiedPhone = false;
+            body.verificationCode = verificationCode;
+            this.props.navigator.push({
+              title: 'Verify Phone Link',
+              component: VerificationPage,
+              passProps: {user: body}
+            });
+            //Set isloading to false after conditions
+            this.setState({
+              isLoading: false
+            });
+          } else if (res.status === 400) {
+            this.setState({
+              error: true,
+              errorMessage: 'Username and Phone already exist!',
+              isLoading: false
+            });
+          } else if (res.status === 401) {
+            this.setState({
+              error: true,
+              errorMessage: 'Username already exist!',
+              isLoading: false
+            });
+          } else if (res.status === 402) {
+            this.setState({
+              error: true,
+              errorMessage: 'Phone already exist!',
+              isLoading: false
+            });
+          }  
 
-      })
-      .catch((error) => {
-        console.log('Error handling submit:', error);
-      });
-      //Need logic to check if username is taken in the database
-      //Check if the passwords are matching
-      //Check if the phone is valid
-      //Route to the hobbies screen
+        })
+        .catch((error) => {
+          console.log('Error handling submit:', error);
+        });
+      }
     }
 
   }
