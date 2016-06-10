@@ -52,6 +52,7 @@ class MatchView extends Component {
       currentView: 1,
       currentRoam: props.currentRoam,
       match: props.user,
+      stateChange: props.passedDownStateChange
     };
 
   }
@@ -84,12 +85,11 @@ class MatchView extends Component {
 
   getMatch() {
     var id;
-    if (this.user.id === this.state.currentRoam.username1) {
+    if (this.state.user.id === this.state.currentRoam.username1) {
       id = this.state.currentRoam.username2;
     } else {
       id = this.state.currentRoam.username1;
     }
-    console.error(id);
     const obj = {
       id: id,
     };
@@ -110,6 +110,28 @@ class MatchView extends Component {
     })
     .catch((error) => {
       console.warn(error);
+    });
+  }
+
+  cancelMatch() {
+    fetch('http://localhost:3000/cancelRoam', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id: this.state.user.id})
+    })
+    .then((res) => {
+      this.state.stateChange(1);
+      if (res.status === 200) {
+        AlertIOS.alert('deletion successful');
+      } else {
+        AlertIOs.alert('something wrong happened');
+      }
+    })
+    .catch((error) => {
+      console.log('Error handling submit:', error);
     });
   }
 
@@ -160,6 +182,7 @@ class MatchView extends Component {
       <View style={styles.buttons}>
         <View style={styles.buttonContainer}>
           <TouchableHighlight
+            onPress={this.cancelMatch.bind(this)}
             style={styles.button}
             underlayColor="white" >
               <Text style={styles.buttonText}>Cancel Roam</Text>
