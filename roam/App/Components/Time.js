@@ -3,6 +3,7 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActivityPicker from './PickActivity.js';
+// var Matched = require('./CurrentRoam.js');
 var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
 console.disableYellowBox = true;
@@ -10,6 +11,7 @@ console.disableYellowBox = true;
 import {
   Animated,
   Image,
+  AlertIOS,
   View,
   Text,
   StyleSheet,
@@ -154,12 +156,17 @@ class Geolocation extends Component {
   }
 
   handleSubmit() {
+    if(this.state.transportSelectedOption === 'Walk') {
+      this.state.transportSelectedOption = 'walking';
+    } else {
+      this.state.transportSelectedOption = 'driving';
+    }
     var userObj = {
       id: this.state.user.id,
       latitude: this.state.region.latitude,
       longitude: this.state.region.longitude,
       radius: Math.floor(this.state.circleRadius),
-      transportation: 1
+      transportation: this.state.transportSelectedOption
     };
     fetch('http://localhost:3000/roam',
       {
@@ -169,11 +176,17 @@ class Geolocation extends Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(userObj)
-      });
-    this.props.navigator.push({
-      title: 'Confirmation',
-      component: Confirmation,
-      user: this.state.user
+      })
+    .then( response => {
+      if(response.status === 400) {
+        this.props.navigator.push({
+          title: 'Confirmation',
+          component: Confirmation,
+          user: this.state.user
+        });
+      } else {
+        AlertIOS.alert('hii');
+      }
     });
   }
 
