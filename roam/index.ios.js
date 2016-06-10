@@ -17,6 +17,7 @@ var VerifyText = require('./App/Components/VerifyText.js');
 var CurrentRoam = require('./App/Components/CurrentRoam.js');
 var Signup = require('./App/Components/Signup.js');
 var Confirmation = require('./App/Components/Confirmation.js');
+var MatchView = require('./App/Components/Match.js');
 
 class roam extends Component{
   render() {
@@ -25,7 +26,7 @@ class roam extends Component{
       style={styles.container}
         initialRoute={{
           title: 'Login',
-          component: Login,
+          component: MatchView,
           //passProps: {user: {id: '5758a1abc2ef1652b41f961f'}}
         }}
         navigationBarHidden={true} />
