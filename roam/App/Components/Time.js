@@ -4,6 +4,8 @@ import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActivityPicker from './PickActivity.js';
 
+var Geolocation = require('./Geolocation.js');
+var stylesFile = require('./Helpers/styles');
 var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
 console.disableYellowBox = true;
@@ -26,7 +28,7 @@ import {
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 
-class Time extends Component {
+class RoamView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +38,9 @@ class Time extends Component {
       markers: [],
       coordinate: {},
       refresh: true,
-      currentView: 1
+      currentView: 1,
+      initialLoad: false,
+      roamingData: {}
     };
 
   }
@@ -59,23 +63,44 @@ class Time extends Component {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           },
-          refresh: false
+          refresh: false,
+          initialLoad: true,
         });
       });
-  }
-
-  passedDownStateChange(value) {
-    this.setState({
-      currentView: value,
-      refresh: true
+    fetch('http://localhost:3000/isRoaming', 
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id: this.state.user.id})
+    })
+    .then(res => {
+      if (res.status === 200) {
+        this.setState({
+          roamingData: JSON.parse(res._bodyInit),
+          currentView: 3
+        });
+      }
+      if (res.status === 300) {
+        this.setState({
+          currentView: 2
+        });
+      }
+      if (res.status === 400) {
+        this.setState({
+          currentView: 1
+        });
+      }
     });
   }
 
-
-  loadingPage() {
-    return(
-      <View></View>
-      );
+  passedDownStateChange(value) {
+    this.state.currentView = value;
+    this.setState({
+      refresh: true
+    });
   }
 
   handleSelected(choice) {
@@ -84,10 +109,16 @@ class Time extends Component {
     });
   }
 
-  render () {
-    if (this.state.refresh) {
-      return this.loadingPage();
+  renderLoadingPage() {
+    if (this.state.initialLoad === true) {
+      setTimeout(() => this.setState({refresh: false}), 0);
     }
+    return(
+      <View></View>
+      );
+  }
+
+  renderSearchView() {
     return (
       <Image style={styles.backgroundImage}
       source={require('../../imgs/uni.jpg')} >
@@ -116,53 +147,71 @@ class Time extends Component {
           </View>
         </View> 
       </View>
-        <Geolocation stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
+        <RoamSearchView stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
       </Image>
     );
   }
+
+  render () {
+
+    if (this.state.refresh) {
+      return this.renderLoadingPage();
+    }
+    if (this.state.currentView === 1) {
+      return this.renderSearchView();
+    }
+    if (this.state.currentView === 2) {
+      return (<PendingRoam user={this.state.user} passedDownStateChange={this.passedDownStateChange.bind(this)} />);
+    }
+
+    if (this.state.currentView === 3) {
+      return (<MatchedView user={this.state.user} data={this.state.roamingData} passedDownStateChange={this.passedDownStateChange.bind(this)} />);
+    }
+    
+  }
 }
 
-
-class Geolocation extends Component {
-    constructor(props) {
-    super(props);
-    this.state = {
-      user: props.user,
-      navigator: props.navigator,
-      sendState: props.stateChange,
-      region: props.region,
-      marker: {
-        coordinates: {
-          latitude: props.markers[0].latitude,
-          longitude: props.markers[0].longitude,
-        },
-        title: 'Hello',
-        description: 'this is a nice spot',
-      },
-      circleRadius: 1609.34,
-      refresh: true,
-      coordinate: props.coordinate,
-      transportSelectedOption: 'Walk',
-      selectedOption: '0.5 Miles',
-      driveSelectedOption: '5 Miles',
-      transportOptions: [
-        'Walk',
-        'Drive',
-      ],
-      walkOptions: [
-        '0.5 Miles',
-        '1 Mile',
-        '1.5 Miles',
-        '2 Miles'
-      ],
-      driveOptions: [
-        '5 Miles',
-        '10 Miles',
-        '15 Miles',
-        '20 Miles',
-      ] 
-    };
+class RoamSearchView extends Component {
     
+  constructor(props) {
+  super(props);
+  this.state = {
+    user: props.user,
+    navigator: props.navigator,
+    sendState: props.stateChange,
+    region: props.region,
+    marker: {
+      coordinates: {
+        latitude: props.markers[0].latitude,
+        longitude: props.markers[0].longitude,
+      },
+      title: 'Hello',
+      description: 'this is a nice spot',
+    },
+    circleRadius: 1609.34,
+    refresh: true,
+    coordinate: props.coordinate,
+    transportSelectedOption: 'Walk',
+    selectedOption: '0.5 Miles',
+    driveSelectedOption: '5 Miles',
+    transportOptions: [
+      'Walk',
+      'Drive',
+    ],
+    walkOptions: [
+      '0.5 Miles',
+      '1 Mile',
+      '1.5 Miles',
+      '2 Miles'
+    ],
+    driveOptions: [
+      '5 Miles',
+      '10 Miles',
+      '15 Miles',
+      '20 Miles',
+    ] 
+  };
+  
   }
 
   handleSubmit() {
@@ -188,22 +237,16 @@ class Geolocation extends Component {
         body: JSON.stringify(userObj)
       })
     .then( response => {
-      console.error(response.status);
       if(response.status === 400) {
-        this.props.navigator.push({
-          title: 'Confirmation',
-          component: Confirmation,
-          passProps: {user: this.state.user, navigator: this.state.navigator}
-        });
+        AlertIOS.alert('searching for match');
+        this.state.sendState(2);
       } else if (response.status === 200){
         AlertIOS.alert('going to match view!');
-        // this.props.navigator.push({
-        //   title: 'Confirmation',
-        //   component: RoamView,
-        //   user: this.state.user
-        // });
+        this.state.sendState(3);
+        
       } else if (response.status === 401) {
         AlertIOS.alert('match in progress! going to match view!');
+        this.state.sendState(3);
       }
     });
   }
@@ -386,6 +429,140 @@ class Geolocation extends Component {
   }
 }
 
+class PendingRoam extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: props.user,
+      address: null,
+      time: null,
+      queryType: '',
+      stateChange: props.passedDownStateChange
+    };
+  }
+
+  handleCancel() {
+    //we will cancel roam from here
+    //remove the roam from db
+    //take the user back to the 'Time' page
+    fetch('http://localhost:3000/cancelRoam', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id: this.state.user.id})
+    })
+    .then((res) => {
+      this.state.stateChange(1);
+      if (res.status === 200) {
+        AlertIOS.alert('deletion successful');
+      } else {
+        AlertIOs.alert('something wrong happened');
+      }
+    })
+    .catch((error) => {
+      console.log('Error handling submit:', error);
+    });
+
+  }
+
+  render() {
+    return (
+      <Image style={stylesFile.backgroundImage}
+        source={require('../../imgs/uni.jpg')}>
+        <Text style={stylesFile.title}> ROAM </Text>
+
+          <Text>We will notify you once you are matched</Text>
+          <Text>{this.state.address}</Text>
+          <Text>Roam starts at {this.state.time}</Text>
+          <TouchableHighlight
+            style={stylesFile.button}
+            onPress={this.handleCancel.bind(this)}
+            underlayColor="white" >
+              <Text style={stylesFile.buttonText}>Cancel Roam</Text>
+          </TouchableHighlight>
+
+      </Image>
+    );
+  }
+}
+
+class MatchedView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: props.user,
+      isLoading: false,
+      error: false,
+      errorMessage: '',
+      roamingData: props.data,
+      buddy: 'Ben',
+      destination: 'Sonoma',
+      address: '4263 Market Street',
+      meetupTime: '6:00 PM',
+      stateChange: props.passedDownStateChange
+    };
+  }
+
+  componentDidMount() {
+    if (this.state.roamingData.username1 === this.state.user.id) {
+      this.state.buddy = this.state.roamingData.username2;
+    } else {
+      this.state.buddy = this.state.roamingData.username1;
+    }
+
+    this.setState({
+      destination: this.state.roamingData.venue,
+      address:  this.state.roamingData.address,
+      meetupTime: this.state.roamingData.date
+    })
+
+  }
+
+  handleUberClick() {
+    // AlertIOS.alert(
+    //   'Uber\'s been ordered for ' + this.state.destination + '!'
+    // );
+    this.state.stateChange(1);
+    AlertIOS.alert('cancelling match');
+  }
+  handleCancel() {
+    //we will cancel roam from here
+    //remove the roam from db
+    //take the user back to the 'Time' page
+    this.state.stateChange(1);
+  }
+  
+  render() {
+    var showErr = (
+      this.state.error ? <Text style={stylesFile.errorMessage}> {this.state.errorMessage} </Text> : <View></View>
+    );
+    return(
+      <Image style={stylesFile.backgroundImage}
+        source={require('../../imgs/uni.jpg')}>
+        <Text style={stylesFile.title}> Match! </Text>
+        <Text style={[stylesFile.subTitle, stylesFile.boldify]}> { this.state.destination }</Text>
+        <Text style={[stylesFile.subTitle, stylesFile.boldify]}> { this.state.address }</Text>
+        <Text style={stylesFile.subTitle}>Buddy: { this.state.buddy }</Text>
+        <Text style={stylesFile.subTitle}>Meetup Time: <Text style={stylesFile.boldify}>{ this.state.meetupTime }</Text></Text>
+        <Geolocation />
+        <TouchableHighlight
+          onPress={this.handleUberClick.bind(this)}
+          underlayColor="transparent" >
+            <Image style={stylesFile.button}source={require('../../imgs/UberButton.png')}></Image>
+        </TouchableHighlight>
+        {/* This is the loading animation when isLoading is set to true */}
+        <ActivityIndicatorIOS
+          animating={this.state.isLoading}
+          color="#111"
+          size="large"></ActivityIndicatorIOS>
+        {showErr}
+      </Image>
+    )
+  }
+}
+
 const styles = StyleSheet.create({
   navbarContainer:{
     backgroundColor: 'transparent',
@@ -504,7 +681,4 @@ const styles = StyleSheet.create({
   }
 });
 
-
-
-
-module.exports = Time;
+module.exports = RoamView;
