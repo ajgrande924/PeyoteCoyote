@@ -9,6 +9,6 @@ module.exports = function (app) {
   app.post('/checkCode', controller.checkCode);
   app.post('/verified', controller.verifyUser);
   app.post('/isVerified', controller.isUserVerified);
-  // app.post('/roam', );
+  app.post('/roam', controller.roam);
   // app.post('/cancel', );
 };

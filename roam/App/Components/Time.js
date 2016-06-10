@@ -35,6 +35,7 @@ class Time extends Component {
       coordinate: {},
       refresh: true
     };
+
   }
 
   componentDidMount() {
@@ -104,7 +105,7 @@ class Time extends Component {
           </View>
         </View> 
       </View>
-        <Geolocation region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
+        <Geolocation navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
       </Image>
     );
   }
@@ -428,7 +429,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   map: {
-    height: deviceHeight/2.28,
+    height: deviceHeight/3,//deviceHeight/2.28,
     width: deviceWidth,
     backgroundColor: 'transparent'
   },

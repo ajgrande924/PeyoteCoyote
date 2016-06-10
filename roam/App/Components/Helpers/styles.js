@@ -32,8 +32,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     letterSpacing: deviceWidth/500
   },
+  loginContainer: {
+    marginTop: -deviceHeight/3,
+  },
   signupContainer: {
-    marginTop: -deviceHeight/6,
+    marginTop: -deviceHeight/2,
   },
   verifyContainer: {
     marginTop: -deviceHeight/2,
