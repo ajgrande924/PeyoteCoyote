@@ -6,6 +6,8 @@ var Confirmation = require('./Confirmation');
 var CameraView = require('./CameraView')
 var Separator = require('./Helpers/Separator');
 var dummyData = require('./data');
+// const baseLink_history = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/history?apiKey=';
+// const mongoDB_API_KEY = 'yjH4qEJR-Olag89IaUTXd06IpuVDZWx1';
 
 import history from './data-new.js';
 
@@ -14,33 +16,70 @@ var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 
 import {
-  Animated,
-  Image,
   Dimensions,
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
+  Image,
   ListView,
+  Modal,
+  StyleSheet,
+  Text,
   TouchableHighlight,
-  ActivityIndicatorIOS,
-  MapView,
-  Modal
+  View,
 } from 'react-native';
 
-var deviceWidth = Dimensions.get('window').width;
-var deviceHeight = Dimensions.get('window').height;
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 
 class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
       user: props.user,
-      pictures: history,
-      dataSource: ds.cloneWithRows(history),
-      navigator: props.navigator
+      pictures: [],
+      dataSource: null,
+      navigator: props.navigator,
+      loaded: false,
     };
   }
+  componentDidMount() {
+    this.getHistory();
+    // history.forEach(function(obj) {
+    //   fetch(baseLink_history + mongoDB_API_KEY, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Accept': 'application/json',
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(obj),
+    //   });
+    // });
+  }
+
+  getHistory() {
+    const obj = {
+      username: this.state.user.username,
+    };
+    fetch('http://localhost:3000/history', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    })
+    .then((response) => {
+      if (response.status === 201) {
+        this.setState({
+          pictures: JSON.parse(response._bodyInit),
+          dataSource: ds.cloneWithRows(JSON.parse(response._bodyInit)),
+          loaded: true,
+        });
+      }
+    })
+    .catch((error) => {
+      console.warn(error);
+    });
+  }
+
   // handleSelected(choice) {
   //   this.setState({
   //     selectedOption: choice
@@ -52,12 +91,22 @@ class User extends Component {
     this.props.navigator.push({
       title: CameraView.title,
       component: CameraView,
-      passProps: { user: this.state.user }
-
+      passProps: { user: this.state.user },
     });
   }
 
-  render () {
+  renderLoadingView() {
+    return (
+      <View>
+        <Text>Test</Text>
+      </View>
+    );
+  }
+
+  render() {
+    if (!this.state.loaded) {
+      return this.renderLoadingView();
+    }
     return (
       <View>
         <Image style={styles.backgroundImage}

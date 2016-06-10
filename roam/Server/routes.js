@@ -11,5 +11,5 @@ module.exports = function (app) {
   app.post('/isVerified', controller.isUserVerified);
   app.post('/roam', controller.roam);
   app.post('/cancelRoam', controller.cancelRoam);
-  // app.post('/cancel', );
+  app.post('/history', controller.populateHistory);
 };
