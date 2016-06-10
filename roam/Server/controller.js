@@ -96,7 +96,7 @@ var getUser = (username, password, res) => {
 };
 
 var createNewRoam = (username, userLat, userLong, transportation, radius, neighborhood) => {
-  console.log('making roam');
+  // console.log('making roam');
   var obj = {
     //we generate
     username1: username,
@@ -127,7 +127,7 @@ var createNewRoam = (username, userLat, userLong, transportation, radius, neighb
       cll: userLat + ',' + userLong,
       location: neighborhood
     };
-    console.log('params: ', searchParams);
+    // console.log('params: ', searchParams);
 
     yelp.searchYelp(searchParams, function(venue) {
       
@@ -136,7 +136,7 @@ var createNewRoam = (username, userLat, userLong, transportation, radius, neighb
       obj.venueLongitude = venue.location.coordinate.longitude;
       obj.venueLatitude = venue.location.coordinate.latitude;
       //post to roam database all the details
-      console.log('yelp', obj);
+      // console.log('yelp', obj);
       fetch(baseLink_roams + mongoDB_API_KEY,
       {
         method: 'POST',
@@ -278,6 +278,7 @@ module.exports = {
     var userLatitude = req.body.latitude;
     var radius = req.body.radius;
     var transportation = req.body.transportation;
+    var flag = false;
     console.log('this is transportation: >>>>>', transportation);
     //Search database for existing roams
     fetch(baseLink_roams + mongoDB_API_KEY)
@@ -285,6 +286,7 @@ module.exports = {
     .then(responseData => {
       // if no existing roams, create new roam
       if(responseData.length === 0) {
+        console.log('*******');
           fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
           .then((response) => response.json())
           .then((responseData) => {
@@ -292,13 +294,17 @@ module.exports = {
             createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
           }).catch(err=>console.log(err))
           // 400 means new room created, did not find a match
-          .then(() => res.sendStatus(400));
+          .then(() => {res.sendStatus(400); return;});
       } else {
         //access the coordinates of existing roams
         //compare to current user's location to find roams within x mi radius
         for(var i=0; i<responseData.length; i++) {
           if(responseData[i].username1 === username || responseData[i].username2 === username) { res.sendStatus(401); return; }
           if(responseData[i].username2 !== '') { continue; }
+
+          if (flag) {
+            break;
+          }
           var roamLat = responseData[i].venueLatitude;
           var roamLong = responseData[i].venueLongitude;
           var distance; 
@@ -317,6 +323,7 @@ module.exports = {
               var user2TimeToDest = responseData2.rows[0].elements[0].duration.value;
               var origin = 'origins=' + responseData[saver].user1Latitude + ',' + responseData[saver].user1Longitude;
               var mode = '&mode=' + responseData[saver].user1Transportation;
+                console.log('2');
 
               var googleMapsPath = googlemaps_API + origin + destination + mode + '&key=' + config.googleKey;
               fetch(googleMapsPath)
@@ -331,6 +338,7 @@ module.exports = {
                 };
                 var timeToMeet = new Date();
                 timeToMeet.setMinutes(timeToMeet.getMinutes() + 20);
+                console.log('3');
               fetch(baseLink_roams_query + responseData[saver]._id.$oid + '?apiKey=' + mongoDB_API_KEY,
               {
                 method: 'PUT',
@@ -341,19 +349,28 @@ module.exports = {
                 body: JSON.stringify( { "$set" : {username2: username, date: timeToMeet}})
               })
               .catch(err => console.log(err))
-              .then( () => res.sendStatus(200));
+              .then( () => {flag = true; console.log('MATCHED');});
             })
            } 
           });
         }
-        fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
-          .then((response) => response.json())
-          .then((responseData) => {
-            var neighborhood = responseData.results[0].address_components[2].long_name;
-            createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
-          }).catch(err=>console.log(err))
-          // 400 means new room created, did not find a match
-          .then(() => res.sendStatus(400));
+
+        setTimeout(() => {
+          if (!flag) {
+            fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
+              .then((response) => response.json())
+              .then((responseData) => {
+                var neighborhood = responseData.results[0].address_components[2].long_name;
+                createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
+              }).catch(err=>console.log(err))
+              // 400 means new room created, did not find a match
+              .then(() => res.sendStatus(400));          
+          } else {
+            res.sendStatus(200);
+          }
+        }, 500);
+
+
       }
     });
   },

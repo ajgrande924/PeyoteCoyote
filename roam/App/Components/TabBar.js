@@ -15,7 +15,6 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Time from './Time.js'
 import User from './User.js'
-import CurrentRoam from './User.js'
 
 // var key_file = require('../../config.js');
 var deviceWidth = Dimensions.get('window').width;
@@ -27,7 +26,7 @@ class TabBar extends Component {
   	this.state = {
       user: props.user,
       navigator: props.navigator,
-      selectedTab: 'home'
+      selectedTab: 'map'
   	}
   }
 
@@ -58,18 +57,7 @@ class TabBar extends Component {
           }}>
           {this.renderRoamView()}
         </Icon.TabBarItem>
-        <Icon.TabBarItem
-          title="Current"
-          selected={this.state.selectedTab === 'uber'}
-          iconName={'envira'}
-          iconSize={20}
-          onPress={() => {
-              this.setState({
-                selectedTab: 'uber'
-              });
-          }}>
-          {this.renderCurrentRoamView()}
-        </Icon.TabBarItem>
+
       </TabBarIOS>
       )
   }

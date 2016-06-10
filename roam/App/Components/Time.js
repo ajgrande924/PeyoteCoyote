@@ -3,7 +3,6 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActivityPicker from './PickActivity.js';
-// var CurrentRoam = require('./CurrentRoam.js');
 
 var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
@@ -36,7 +35,8 @@ class Time extends Component {
       region: {},
       markers: [],
       coordinate: {},
-      refresh: true
+      refresh: true,
+      currentView: 1
     };
 
   }
@@ -63,6 +63,14 @@ class Time extends Component {
         });
       });
   }
+
+  passedDownStateChange(value) {
+    this.setState({
+      currentView: value,
+      refresh: true
+    });
+  }
+
 
   loadingPage() {
     return(
@@ -108,7 +116,7 @@ class Time extends Component {
           </View>
         </View> 
       </View>
-        <Geolocation navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
+        <Geolocation stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
       </Image>
     );
   }
@@ -121,6 +129,7 @@ class Geolocation extends Component {
     this.state = {
       user: props.user,
       navigator: props.navigator,
+      sendState: props.stateChange,
       region: props.region,
       marker: {
         coordinates: {
@@ -190,7 +199,7 @@ class Geolocation extends Component {
         AlertIOS.alert('going to match view!');
         // this.props.navigator.push({
         //   title: 'Confirmation',
-        //   component: Confirmation,
+        //   component: RoamView,
         //   user: this.state.user
         // });
       } else if (response.status === 401) {
@@ -207,10 +216,37 @@ class Geolocation extends Component {
   }
 
   handleTransportSelected(choice) {
-    this.setState({
-      transportSelectedOption: choice,
-      refresh: true
-    });
+    let value;
+    if (choice === 'Walk') {
+      value = 1609.34/2;
+      this.setState({
+        transportSelectedOption: choice,
+        selectedOption: '0.5 Miles',
+        circleRadius: value,
+        refresh: true,
+        region: {
+          latitude: this.state.region.latitude,
+          longitude: this.state.region.longitude,
+          latitudeDelta: 0.04 * value/1609.34,
+          longitudeDelta: 0.04 * value/1609.34,
+        },
+      });
+    } else {
+      value = 1609.34 * 5;
+      this.setState({
+        transportSelectedOption: choice,
+        driveSelectedOption: '5 Miles',
+        circleRadius: value,
+        refresh: true,
+        region: {
+          latitude: this.state.region.latitude,
+          longitude: this.state.region.longitude,
+          latitudeDelta: 0.04 * value/1609.34,
+          longitudeDelta: 0.04 * value/1609.34,
+        },
+      });
+    }
+
   }
 
   renderDistanceSegment() {
