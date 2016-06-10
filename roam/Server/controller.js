@@ -94,7 +94,8 @@ var getUser = (username, password, res) => {
       });
 };
 
-var createNewRoam = (username, userLat, userLong, transportation, res) => {
+var createNewRoam = (username, userLat, userLong, transportation, radius, neighborhood) => {
+  console.log('making roam');
   var obj = {
     //we generate
     username1: username,
@@ -107,30 +108,22 @@ var createNewRoam = (username, userLat, userLong, transportation, res) => {
     venue: ''
   };
 
-  pickRandomCategory = () =>{
+  var pickRandomCategory = () =>{
     var categories = ['bar', 'restaurant'];
     return categories[Math.floor(Math.random() * categories.length)];
   };
-  ;
   //set limit: 1 so we only return back one search result
   //hardcode radius_filter for 2 miles
   //sample yelp api request looks like https://api.yelp.com/v2/search?term=german+food&location=Hayes&cll=37.77493,-122.419415
-    var radius = 0;
-    var selectTrans = () => {
-      if(transportation === 1) {
-        radius = 3200;
-      } else {
-        radius = 1600;
-      }
-    };
-    selectTrans(transportation);
 
     var searchParams = {
       term: pickRandomCategory(),
       limit: 1,
       radius_filter: radius,
-      cll: userLat + ',' + userLong
+      cll: userLat + ',' + userLong,
+      location: neighborhood
     };
+    console.log('params: ', searchParams);
 
     yelp.searchYelp(searchParams, function(venue) {
       
@@ -139,6 +132,7 @@ var createNewRoam = (username, userLat, userLong, transportation, res) => {
       obj.longitude = venue.location.coordinate.longitude;
       obj.latitude = venue.location.coordinate.latitude;
       //post to roam database all the details
+      console.log('yelp', obj);
       fetch(baseLink_roams + mongoDB_API_KEY,
       {
         method: 'POST',
@@ -150,8 +144,6 @@ var createNewRoam = (username, userLat, userLong, transportation, res) => {
       });
       //send back a confirmation response or not found
     });
-
-  res.sendStatus(404);
 };
 
 module.exports = {
@@ -280,51 +272,60 @@ module.exports = {
     var username = req.body.id;
     var userLongitude = req.body.longitude;
     var userLatitude = req.body.latitude;
-    var radius = req.body.circleRadius;
+    var radius = req.body.radius;
     var transportation = req.body.transporation;
     //Search database for existing roams
-    fetch(baseLink_users + mongoDB_API_KEY)
-    .then( (response) => {
-      //if no existing roams, create new roam
-      if(response.length === 0) {
-        createNewRoam(username, userLatitude, userLongitude, transportation, res);
-      } else {
-        //access the coordinates of existing roams
-        //compare to current user's location to find roams within x mi radius
-        for(var i=0; i<response.length; i++) {
-          var roamLat = response[i].latitude;
-          var roamLong = response[i].longitude;
-          var distance; 
-
-          var origin = 'origins=' + userLongitude + ',' + userLongitude;
-          var destination = '&destinations=' + roamLat + ',' + roamLong;
-          var apiKey = '&key=' + config.googleMapsKeys.key;
-
-          googleMapsPath = googlemaps_API + origin + destination + apiKey;
-
-          request(googleMapsPath, (err, res, body) => {
-            if(!error && response.statusCode === 200) {
-              distance = res.rows.elements[0].distance //always in meters
-            }
-          });
-
-          //if it is within the radius, add it to an array
-          if(distance <= radius) {
-            availableRoams.push(response[i]);
-          }
-        }
-        //if no roams match radius requirement, create new roam
-        if(availableRoams.length === 0) {
-          createNewRoam()
-        } else {
-          var selectedRoam = availableRoams[Math.floor(Math.random() * availableRoams.length)];
-          selectedRoam.username2 = username;
-          var timeToMeet = new Date();
-          selectRoam.date = timeToMeet.setHours(timeToMeet.getHours() + 1);
-        }
-      }
-    }).then(res.status(200).send(selectedRoam));
+    fetch(baseLink_roams + mongoDB_API_KEY)
+    .then(response => response.json())
+    .then(responseData => {
+      // if no existing roams, create new roam
+      if(responseData.length > 0) {
+          fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
+          .then((response) => response.json())
+          .then((responseData) => {
+            var neighborhood = responseData.results[0].address_components[2].long_name;
+            createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
+          }).catch(err=>console.log(err));
+      }});
   }
+      // } else {
+      //   //access the coordinates of existing roams
+      //   //compare to current user's location to find roams within x mi radius
+      //   for(var i=0; i<response.length; i++) {
+      //     var roamLat = response[i].latitude;
+      //     var roamLong = response[i].longitude;
+      //     var distance; 
+
+    //       var origin = 'origins=' + userLongitude + ',' + userLongitude;
+    //       var destination = '&destinations=' + roamLat + ',' + roamLong;
+    //       var apiKey = '&key=' + config.googleMapsKeys.key;
+
+    //       googleMapsPath = googlemaps_API + origin + destination + apiKey;
+
+    //       request(googleMapsPath, (err, res, body) => {
+    //         if(!error && response.statusCode === 200) {
+    //           distance = res.rows.elements[0].distance //always in meters
+    //         }
+    //       });
+
+    //       //if it is within the radius, add it to an array
+    //       if(distance <= radius) {
+    //         availableRoams.push(response[i]);
+    //       }
+    //     }
+    //     var selectedRoam;
+    //     //if no roams match radius requirement, create new roam
+    //     if(availableRoams.length === 0) {
+    //       createNewRoam()
+    //     } else {
+    //       selectedRoam = availableRoams[Math.floor(Math.random() * availableRoams.length)];
+    //       selectedRoam.username2 = username;
+    //       var timeToMeet = new Date();
+    //       selectRoam.date = timeToMeet.setHours(timeToMeet.getHours() + 1);
+    //     }
+    //   }
+    // }).then(res.status(200).send(selectedRoam));
+  // }
 
 };
 

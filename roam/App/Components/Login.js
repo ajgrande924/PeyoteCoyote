@@ -155,7 +155,8 @@ class Login extends Component {
 
         <TouchableHighlight
           // style={styles.button}
-          onPress={this.handleSignUp.bind(this)}
+          onPress={this.handleSignIn.bind(this)}
+          //onPress={this.handleSignUp.bind(this)}
           underlayColor="transparent" >
             <Text style={styles.signUpButton}> Not a user? Sign Up </Text>
         </TouchableHighlight>
