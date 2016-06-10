@@ -279,40 +279,43 @@ module.exports = {
     .then(response => response.json())
     .then(responseData => {
       // if no existing roams, create new roam
-      if(responseData.length > 0) {
+      if(responseData.length === 0) {
           fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
           .then((response) => response.json())
           .then((responseData) => {
             var neighborhood = responseData.results[0].address_components[2].long_name;
             createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
-          }).catch(err=>console.log(err));
+          }).catch(err=>console.log(err))
+          // 400 means new room created, did not find a match
+          .then(() => res.sendStatus(400));
+      } else {
+        //access the coordinates of existing roams
+        //compare to current user's location to find roams within x mi radius
+        for(var i=0; i<responseData.length; i++) {
+          var roamLat = responseData[i].latitude;
+          var roamLong = responseData[i].longitude;
+          var distance; 
+
+          var origin = 'origins=' + userLongitude + ',' + userLongitude;
+          var destination = '&destinations=' + roamLat + ',' + roamLong;
+
+          googleMapsPath = googlemaps_API + origin + destination + config.googleKey;
+
+          request(googleMapsPath, (err, res, body) => {
+            console.log(err);
+            if(!error && response.statusCode === 200) {
+              distance = res.rows.elements[0].distance //always in meters
+            }
+          });
+        }
       }});
-  }
-      // } else {
-      //   //access the coordinates of existing roams
-      //   //compare to current user's location to find roams within x mi radius
-      //   for(var i=0; i<response.length; i++) {
-      //     var roamLat = response[i].latitude;
-      //     var roamLong = response[i].longitude;
-      //     var distance; 
+}
 
-    //       var origin = 'origins=' + userLongitude + ',' + userLongitude;
-    //       var destination = '&destinations=' + roamLat + ',' + roamLong;
-    //       var apiKey = '&key=' + config.googleMapsKeys.key;
-
-    //       googleMapsPath = googlemaps_API + origin + destination + apiKey;
-
-    //       request(googleMapsPath, (err, res, body) => {
-    //         if(!error && response.statusCode === 200) {
-    //           distance = res.rows.elements[0].distance //always in meters
-    //         }
-    //       });
-
-    //       //if it is within the radius, add it to an array
-    //       if(distance <= radius) {
-    //         availableRoams.push(response[i]);
-    //       }
-    //     }
+          //if it is within the radius, add it to an array
+        //   if(distance <= radius) {
+        //     availableRoams.push(response[i]);
+        //   }
+        // }
     //     var selectedRoam;
     //     //if no roams match radius requirement, create new roam
     //     if(availableRoams.length === 0) {
