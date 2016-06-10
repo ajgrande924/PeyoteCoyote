@@ -13,4 +13,5 @@ module.exports = function (app) {
   app.post('/cancelRoam', controller.cancelRoam);
   app.post('/history', controller.populateHistory);
   app.post('/isRoaming', controller.isRoaming);
+  app.post('/match', controller.getMatch);
 };

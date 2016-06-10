@@ -50,12 +50,15 @@ class MatchView extends Component {
       coordinate: {},
       refresh: true,
       currentView: 1,
-      currentRoam: currentRoam,
+      currentRoam: props.currentRoam,
+      match: props.user,
     };
 
   }
 
   componentDidMount() {
+    // this.getMatch();
+    // console.error(this.state.currentRoam);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -76,6 +79,38 @@ class MatchView extends Component {
           refresh: false
         });
       });
+    this.getMatch();
+  }
+
+  getMatch() {
+    var id;
+    if (this.user.id === this.state.currentRoam.username1) {
+      id = this.state.currentRoam.username2;
+    } else {
+      id = this.state.currentRoam.username1;
+    }
+    console.error(id);
+    const obj = {
+      id: id,
+    };
+    fetch('http://localhost:3000/match', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    })
+    .then((response) => {
+      if (response.status === 201) {
+        this.setState({
+          match: JSON.parse(response._bodyInit),
+        });
+      }
+    })
+    .catch((error) => {
+      console.warn(error);
+    });
   }
 
   passedDownStateChange(value) {
@@ -108,15 +143,15 @@ class MatchView extends Component {
 
       <View style={styles.navbarContainer}>
         <Text style={styles.matchTitle}> It's a Match! </Text>
-        <Text style={styles.matchMessage}>Congratulations! You and alex345 are ready to Roam!</Text>
+        <Text style={styles.matchMessage}>Congratulations! You and {this.state.match.username} are ready to Roam!</Text>
         <View style={styles.profileContainer}>
           <View style={styles.titles}>
-            <Image style={styles.circleImage} source={{uri: 'http://liketherazor.com/wp-content/uploads/2014/12/13-Chris-Gillett-Houston-Headshot-Photographer-Brenna-Smith-1024x732.jpg'}}/> 
-            <Text style={styles.navTitle}>jjones</Text>
+            <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
+            <Text style={styles.navTitle}>{this.state.user.username}</Text>
           </View>
           <View style={styles.titles}>
-            <Image style={styles.circleImage} source={{uri: 'http://theatre.arizona.edu/wp-content/uploads/sites/18/2013/07/Sarah-Bartley-300dpi.jpg'}}/> 
-            <Text style={styles.navTitle}>alex345</Text>
+            <Image style={styles.circleImage} source={{uri: this.state.match.image}}/> 
+            <Text style={styles.navTitle}>{this.state.match.username}</Text>
           </View>
         </View>
 

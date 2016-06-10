@@ -437,6 +437,45 @@ module.exports = {
         res.sendStatus(400);
       }
     });
+  }, 
+  getMatch: (req, res) => {
+    var id = req.body.id;
+    fetch(baseLink_users + mongoDB_API_KEY)
+      .then((response) => response.json())
+        .then((responseData) => {
+          var flag = false;
+          var idFetched, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone;
+          for (var i = 0; i < responseData.length; i++) {
+            if (responseData[i]._id.$oid === id) {
+              console.log('got it');
+              idFetched = responseData[i]._id.$oid;
+              name = responseData[i].name;
+              usernameFetched = responseData[i].username;
+              passwordFetched = responseData[i].password;
+              currentlocation = responseData[i].currentlocation;
+              phone = responseData[i].phone;
+              code = responseData[i].verificationCode;
+              verifiedPhone = responseData[i].verifiedPhone;
+              flag = true;
+              break;
+            }
+          }
+          const returnObj = {
+            id: idFetched,
+            name: name,
+            username: usernameFetched,
+            password: passwordFetched,
+            phone: phone,
+            currentlocation: currentlocation,
+            verificationCode: code,
+            verifiedPhone: verifiedPhone
+          };
+          if (flag) {
+            res.status(200).send(returnObj);
+          } else {
+            res.sendStatus(402);
+          }
+        });
   }
 
             // var obj = {
