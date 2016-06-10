@@ -4,26 +4,35 @@ var styles = require('./Helpers/styles');
 
 class Confirmation extends Component {
 
+  constructor(props) {
+      super(props);
+      this.state = {
+        user: props.user,
+        navigator: props.navigator,
+      };
+    }
+
+
   handleCancel() {
     //we will cancel roam from here
     //remove the roam from db
     //take the user back to the 'Time' page
-    console.log('email is:', this.props.navigator.navigationContext._currentRoute.email);
 
-    this.props.navigator.pop();
-
-    fetch('http://localhost:3000/cancel', {
+    fetch('http://localhost:3000/cancelRoam', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        userEmail: this.props.navigator.navigationContext._currentRoute.email
-      })
+      body: JSON.stringify({id: this.state.user.id})
     })
     .then((res) => {
-      console.log('Cancelled Roam:', res);
+      this.state.navigator.pop();
+      if (res.status === 200) {
+        AlertIOS.alert('deletion successful');
+      } else {
+        AlertIOs.alert('something wrong happened');
+      }
     })
     .catch((error) => {
       console.log('Error handling submit:', error);

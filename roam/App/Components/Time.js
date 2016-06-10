@@ -3,7 +3,8 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActivityPicker from './PickActivity.js';
-// var Matched = require('./CurrentRoam.js');
+// var CurrentRoam = require('./CurrentRoam.js');
+
 var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
 console.disableYellowBox = true;
@@ -178,14 +179,22 @@ class Geolocation extends Component {
         body: JSON.stringify(userObj)
       })
     .then( response => {
+      console.error(response.status);
       if(response.status === 400) {
         this.props.navigator.push({
           title: 'Confirmation',
           component: Confirmation,
-          user: this.state.user
+          passProps: {user: this.state.user, navigator: this.state.navigator}
         });
-      } else {
-        AlertIOS.alert('hii');
+      } else if (response.status === 200){
+        AlertIOS.alert('going to match view!');
+        // this.props.navigator.push({
+        //   title: 'Confirmation',
+        //   component: Confirmation,
+        //   user: this.state.user
+        // });
+      } else if (response.status === 401) {
+        AlertIOS.alert('match in progress! going to match view!');
       }
     });
   }

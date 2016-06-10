@@ -16,6 +16,7 @@ var Splash = require('./App/Components/Splash.js');
 var VerifyText = require('./App/Components/VerifyText.js');
 var CurrentRoam = require('./App/Components/CurrentRoam.js');
 var Signup = require('./App/Components/Signup.js');
+var Confirmation = require('./App/Components/Confirmation.js');
 
 class roam extends Component{
   render() {
@@ -25,6 +26,7 @@ class roam extends Component{
         initialRoute={{
           title: 'Login',
           component: Login,
+          //passProps: {user: {id: '5758a1abc2ef1652b41f961f'}}
         }}
         navigationBarHidden={true} />
     );

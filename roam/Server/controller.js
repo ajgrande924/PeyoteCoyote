@@ -145,7 +145,7 @@ var createNewRoam = (username, userLat, userLong, transportation, radius, neighb
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(obj)
-      });
+      }).then(() => res.sendStatus(1999));
       //send back a confirmation response or not found
     });
 };
@@ -283,7 +283,6 @@ module.exports = {
     fetch(baseLink_roams + mongoDB_API_KEY)
     .then(response => response.json())
     .then(responseData => {
-      console.log('1');
       // if no existing roams, create new roam
       if(responseData.length === 0) {
           fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
@@ -298,7 +297,7 @@ module.exports = {
         //access the coordinates of existing roams
         //compare to current user's location to find roams within x mi radius
         for(var i=0; i<responseData.length; i++) {
-          console.log('2');
+          if(responseData[i].username1 === username || responseData[i].username2 === username) { res.sendStatus(401); return; }
           if(responseData[i].username2 !== '') { continue; }
           var roamLat = responseData[i].venueLatitude;
           var roamLong = responseData[i].venueLongitude;
@@ -307,29 +306,22 @@ module.exports = {
           var origin = 'origins=' + userLatitude + ',' + userLongitude;
           var destination = '&destinations=' + roamLat + ',' + roamLong;
           var mode = '&mode=' + transportation;
-
+          var saver = i;
           var googleMapsPath = googlemaps_API + origin + destination + mode + '&key=' + config.googleKey;
-          console.log(googleMapsPath);
           fetch(googleMapsPath)
           .catch(err => console.log(err))
           .then( respons => respons.json())
           .then(responseData2 => {
-            console.log('3');
-            console.log(responseData2.rows[0].elements[0].distance.value, radius + 2000);
             if(responseData2.rows[0].elements[0].distance.value < (radius + 2000)) {
 
               var user2TimeToDest = responseData2.rows[0].elements[0].duration.value;
-
-              console.log('responseData!!!!>>>>>>', responseData[i-1]._id.$oid);
-              console.log('responseDataNextONe!!!>>>>>', responseData[i]._id.$oid);
-              var origin = 'origins=' + responseData[i].user1Latitude + ',' + responseData[i].user1Longitude;
-              var mode = '&mode=' + responseData[i].user1Transportation;
+              var origin = 'origins=' + responseData[saver].user1Latitude + ',' + responseData[saver].user1Longitude;
+              var mode = '&mode=' + responseData[saver].user1Transportation;
 
               var googleMapsPath = googlemaps_API + origin + destination + mode + '&key=' + config.googleKey;
               fetch(googleMapsPath)
               .then(respons3 => respons3.json())
               .then( responseData3 => {
-                console.log('halskjdfls');
                 var user1TimeToDest = responseData3.rows[0].elements[0].duration.value;
                 var furtherPersonTime;
                 if(user1TimeToDest > user2TimeToDest) {
@@ -339,9 +331,7 @@ module.exports = {
                 };
                 var timeToMeet = new Date();
                 timeToMeet.setMinutes(timeToMeet.getMinutes() + 20);
-                console.log('4');
-
-              fetch(baseLink_roams_query + responseData[i]._id.$oid + '?apiKey=' + mongoDB_API_KEY,
+              fetch(baseLink_roams_query + responseData[saver]._id.$oid + '?apiKey=' + mongoDB_API_KEY,
               {
                 method: 'PUT',
                 headers: {
@@ -352,7 +342,6 @@ module.exports = {
               })
               .catch(err => console.log(err))
               .then( () => res.sendStatus(200));
-              console.log('5');
             })
            } 
           });
@@ -367,7 +356,22 @@ module.exports = {
           .then(() => res.sendStatus(400));
       }
     });
-}
+  },
+
+  cancelRoam: (req, res) => {
+    fetch(baseLink_roams + mongoDB_API_KEY)
+    .then(response => response.json())
+    .then(responseData => {
+      for(var i = 0; i < responseData.length; i++) {
+        if (responseData[i].username1 === req.body.id || responseData[i].username2 === req.body.id) {
+          fetch(baseLink_roams_query + responseData[i]._id.$oid + '?apiKey=' + mongoDB_API_KEY,
+          {
+            method: 'DELETE'
+          }).then( () => res.send(200));
+        }
+      }
+    });
+  }
             // var obj = {
             // miles: responseData2.rows[0].elements[0].distance.text,
             // time: responseData2.rows[0].elements[0].duration.text,

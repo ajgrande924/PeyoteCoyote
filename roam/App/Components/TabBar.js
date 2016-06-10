@@ -15,7 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Time from './Time.js'
 import User from './User.js'
-import CurrentRoam from './CurrentRoam.js'
+import CurrentRoam from './User.js'
 
 // var key_file = require('../../config.js');
 var deviceWidth = Dimensions.get('window').width;

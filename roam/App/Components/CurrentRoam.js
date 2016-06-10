@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 
-class roamView extends Component {
+class RoamView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -67,4 +67,4 @@ class roamView extends Component {
   }
 }
 
-module.exports = roamView;
+module.exports = RoamView;
