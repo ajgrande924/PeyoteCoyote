@@ -127,10 +127,10 @@ class RoamView extends Component {
       <View style={styles.navbarContainer}>
         <View style={styles.profileContainer}>
           <View>
-            <Image style={styles.circleImage} source={{uri: 'http://liketherazor.com/wp-content/uploads/2014/12/13-Chris-Gillett-Houston-Headshot-Photographer-Brenna-Smith-1024x732.jpg'}}/> 
+            <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
           </View>
           <View style={styles.titles}>
-            <Text style={styles.navTitle}>jjones</Text>
+            <Text style={styles.navTitle}>{this.state.user.username}</Text>
           </View>
         </View>
         <View style={styles.statsContainer}>

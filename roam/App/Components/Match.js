@@ -51,15 +51,14 @@ class MatchView extends Component {
       refresh: true,
       currentView: 1,
       currentRoam: props.currentRoam,
-      match: props.user,
+      match: {},
       stateChange: props.passedDownStateChange
     };
 
   }
 
   componentDidMount() {
-    // this.getMatch();
-    // console.error(this.state.currentRoam);
+    this.getMatch();
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -80,7 +79,6 @@ class MatchView extends Component {
           refresh: false
         });
       });
-    this.getMatch();
   }
 
   getMatch() {
@@ -103,8 +101,10 @@ class MatchView extends Component {
     })
     .then((response) => {
       if (response.status === 201) {
+        // console.error(response._bodyInit);
         this.setState({
           match: JSON.parse(response._bodyInit),
+          // response: false,
         });
       }
     })

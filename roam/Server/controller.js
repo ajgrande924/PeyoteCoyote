@@ -62,7 +62,7 @@ var getUser = (username, password, res) => {
     .then((response) => response.json())
       .then((responseData) => {
         var flag = false;
-        var id, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone;
+        var id, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone, image;
         for (var i = 0; i < responseData.length; i++) {
           if (responseData[i].username === username && responseData[i].password === password) {
             id = responseData[i]._id.$oid;
@@ -73,6 +73,7 @@ var getUser = (username, password, res) => {
             phone = responseData[i].phone;
             code = responseData[i].verificationCode;
             verifiedPhone = responseData[i].verifiedPhone;
+            image = responseData[i].image;
             flag = true;
             break;
           }
@@ -85,7 +86,8 @@ var getUser = (username, password, res) => {
           phone: phone,
           currentlocation: currentlocation,
           verificationCode: code,
-          verifiedPhone: verifiedPhone
+          verifiedPhone: verifiedPhone,
+          image: image,
         };
         if (flag) {
           res.status(200).send(returnObj);
@@ -160,6 +162,7 @@ module.exports = {
     const currentlocation = req.body.currentlocation;
     const verificationCode = req.body.verificationCode;
     const verifiedPhone = req.body.verifiedPhone;
+    const image = req.body.image;
 
     const obj = {
       name: name,
@@ -168,7 +171,8 @@ module.exports = {
       phone: phone,
       currentlocation: currentlocation,
       verificationCode: verificationCode,
-      verifiedPhone: verifiedPhone
+      verifiedPhone: verifiedPhone,
+      image: image
     };
     console.log('obj.......', obj);
 
@@ -444,7 +448,7 @@ module.exports = {
       .then((response) => response.json())
         .then((responseData) => {
           var flag = false;
-          var idFetched, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone;
+          var idFetched, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone, image;
           for (var i = 0; i < responseData.length; i++) {
             if (responseData[i]._id.$oid === id) {
               console.log('got it');
@@ -456,6 +460,7 @@ module.exports = {
               phone = responseData[i].phone;
               code = responseData[i].verificationCode;
               verifiedPhone = responseData[i].verifiedPhone;
+              image = responseData[i].image;
               flag = true;
               break;
             }
@@ -468,10 +473,12 @@ module.exports = {
             phone: phone,
             currentlocation: currentlocation,
             verificationCode: code,
-            verifiedPhone: verifiedPhone
+            verifiedPhone: verifiedPhone,
+            image: image
           };
+          console.log(returnObj);
           if (flag) {
-            res.status(200).send(returnObj);
+            res.status(201).send(returnObj);
           } else {
             res.sendStatus(402);
           }

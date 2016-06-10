@@ -94,7 +94,8 @@ class SignUp extends Component {
             phone: this.state.phone,
             currentlocation: {latitude: 0, longitude: 0},
             verifiedPhone: false,
-            verificationCode: verificationCode
+            verificationCode: verificationCode,
+            image: 'https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg',
           })
         })
         .then((res) => {

@@ -14,7 +14,7 @@ import FMPicker from '../Lib/index.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 
-var options = ['Hot Yoga', 'Regular Yoga', 'Restaurants', 'Bars', 'Food', 'Excercise', 'Siteseeing', ];
+var options = ['Hot Yoga', 'Regular Yoga', 'Restaurants', 'Bars', 'Food', 'Excercise', 'Site Seeing', ];
 
 class ActivityPicker extends Component {
     constructor(props) {
