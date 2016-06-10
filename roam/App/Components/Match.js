@@ -5,22 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 // console.disableYellowBox = true;
 
-const currentRoam = {
-  "_id": {
-      "$oid": "575afc63bd966f7076198920"
-  },
-  "username1": "5758a1abc2ef1652b41f961f",
-  "username2": "575a3138c2ef166e0a29e40c",
-  "user1Longitude": -122.02980523,
-  "user1Latitude": 37.33068623,
-  "user1Transportation": "walking",
-  "date": "2016-06-10T18:04:31.294Z",
-  "venueLatitude": 37.3236351013184,
-  "venueLongitude": -122.040130615234,
-  "address": "20955 Stevens Creek Blvd Cupertino, CA 95014",
-  "venue": "Brew Hub"
-}
-
 import {
   Animated,
   Image,
@@ -41,6 +25,12 @@ var deviceHeight = Dimensions.get('window').height;
 
 class MatchView extends Component {
   constructor(props) {
+    var date = new Date(props.currentRoam.date);
+    var hours = date.getHours();
+    var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+    var TofD = hours > 12 ? 'PM' : 'AM';
+    hours = TofD === 'PM' ? hours-12 : hours;
+    var meetupTime = hours + ":" + minutes + TofD;
     super(props);
     this.state = {
       user: props.user,
@@ -52,7 +42,8 @@ class MatchView extends Component {
       currentView: 1,
       currentRoam: props.currentRoam,
       match: {},
-      stateChange: props.passedDownStateChange
+      stateChange: props.passedDownStateChange,
+      date: meetupTime
     };
 
   }
@@ -65,8 +56,8 @@ class MatchView extends Component {
           region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: Math.abs(position.coords.latitude - this.state.currentRoam.venueLatitude) * 4,
-            longitudeDelta: Math.abs(position.coords.longitude - this.state.currentRoam.venueLongitude) * 4
+            latitudeDelta: Math.abs(position.coords.latitude - this.state.currentRoam.venueLatitude) * 2,
+            longitudeDelta: Math.abs(position.coords.longitude - this.state.currentRoam.venueLongitude) * 2
           },
           markers: [{
             latitude: position.coords.latitude,
@@ -78,6 +69,7 @@ class MatchView extends Component {
           },
           refresh: false
         });
+        console.warn(this.state.region);
       });
   }
 
@@ -178,7 +170,7 @@ class MatchView extends Component {
         </View>
 
       </View>
-      <Geolocation currentRoam={this.state.currentRoam} stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
+      <Geolocation date={this.state.date} currentRoam={this.state.currentRoam} stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
       <View style={styles.buttons}>
         <View style={styles.buttonContainer}>
           <TouchableHighlight
@@ -207,6 +199,7 @@ class Geolocation extends Component {
     super(props);
     this.state = {
       user: props.user,
+      date: props.date,
       currentRoam: props.currentRoam,
       navigator: props.navigator,
       sendState: props.stateChange,
@@ -229,7 +222,7 @@ class Geolocation extends Component {
         <View style={styles.addressContainer}>
           <Text style={styles.addressTitle}>{this.state.currentRoam.venue}</Text>
           <Text style={styles.addressDescription}>{this.state.currentRoam.address}</Text>
-          <Text style={styles.addressDescription}>Meetup Time: {this.state.currentRoam.date}</Text>
+          <Text style={styles.addressDescription}>Meetup Time: {this.state.date}</Text>
         </View>
         <View style={styles.mapContainer}>
           <View>

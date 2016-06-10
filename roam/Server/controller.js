@@ -368,11 +368,12 @@ module.exports = {
                 createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
               }).catch(err=>console.log(err))
               // 400 means new room created, did not find a match
-              .then(() => res.sendStatus(400));          
+              .then(() => res.sendStatus(400));
+              console.log('made new thing');          
           } else {
             res.sendStatus(200);
           }
-        }, 500);
+        }, (500 * responseData.length));
 
 
       }
