@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // var Interests = require('./Interests');
 var Time = require('./Time');
 var TabBar = require('./TabBar.js');
 var VerificationPage = require('./VerifyText.js');
 
-var styles = require('./Helpers/styles');
+// var styles = require('./Helpers/styles');
 var dismissKeyboard = require('react-native-dismiss-keyboard');
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 
 import {
+  Dimensions,
   View,
   Image,
   Text,
@@ -148,82 +152,123 @@ class SignUp extends Component {
           <Text underlayColor='transparent' style={styles.title} onPress={this.handleSubmit.bind(this)}> sign up </Text>
           {/* Fields that we want to bind the username and password input */}
           <View style={styles.inputBar}>
-            <TextInput
-              style={styles.submit}
-              returnKeyType = {"next"}
-              autoFocus = {true}
-              placeholder="First Name"
-              placeholderTextColor="white"
-              onChangeText={(text) => this.setState({firstName: text})}
-              value={this.state.firstName}
-              onSubmitEditing={(event) => { 
-                this.refs.SecondInput.focus(); 
-              }}
-              />
-          </View>
-          <View style={styles.inputBar}>
-            <TextInput
-              ref='SecondInput'
-              returnKeyType = {"next"}
-              style={styles.submit}
-              placeholder="Username"
-              placeholderTextColor="white"
-              onChangeText={(text) => this.setState({userName: text})}
-              value={this.state.userName}
-              onSubmitEditing={(event) => { 
-                this.refs.ThirdInput.focus(); 
-              }}
-              />
+            <View style={styles.icon}>
+              <TouchableHighlight underlayColor='transparent'>
+                <Icon name="user" size={20} color="#fff" />
+              </TouchableHighlight>
             </View>
-          <View style={styles.inputBar}>  
-            <TextInput
-              ref='ThirdInput'
-              returnKeyType = {"next"}
-              style={styles.submit}
-              placeholder="Enter password"
-              placeholderTextColor="white"
-              onChangeText={(text) => this.setState({password: text})}
-              value={this.state.password}
-              secureTextEntry={true}
-              onSubmitEditing={(event) => { 
-                this.refs.FourthInput.focus(); 
-              }}
-              />
+            <View style= {styles.lineName}>
+              <TextInput
+                style={styles.submit}
+                returnKeyType = {"next"}
+                autoFocus = {true}
+                placeholder="First Name"
+                placeholderTextColor="white"
+                onChangeText={(text) => this.setState({firstName: text})}
+                value={this.state.firstName}
+                onSubmitEditing={(event) => { 
+                  this.refs.SecondInput.focus(); 
+                }}
+                />
+              </View>
           </View>
           <View style={styles.inputBar}>
-            <TextInput
-              ref='FourthInput'
-              returnKeyType = {"next"}
-              style={styles.submit}
-              placeholder="Confirm Password"
-              placeholderTextColor="white"
-              onChangeText={(text) => this.setState({passwordAgain: text})}
-              value={this.state.passwordAgain}
-              secureTextEntry={true}
-              onSubmitEditing={(event) => { 
-                this.refs.FifthInput.focus(); 
-              }}
-              />
+            <View style={styles.icon}>
+              <TouchableHighlight underlayColor='transparent'>
+                <Icon name="user" size={20} color="#fff" />
+              </TouchableHighlight>
+            </View>
+            <View style= {styles.lineName}>
+              <TextInput
+                ref='SecondInput'
+                returnKeyType = {"next"}
+                style={styles.submit}
+                placeholder="Username"
+                placeholderTextColor="white"
+                onChangeText={(text) => this.setState({userName: text})}
+                value={this.state.userName}
+                onSubmitEditing={(event) => { 
+                  this.refs.ThirdInput.focus(); 
+                }}
+                />
+              </View>
+            </View>
+          <View style={styles.inputBar}>
+            <View style={styles.icon}>
+              <TouchableHighlight underlayColor='transparent'>
+                <Icon name="lock" size={20} color="#fff" />
+              </TouchableHighlight>
+            </View>
+            <View style= {styles.lineName}>  
+              <TextInput
+                ref='ThirdInput'
+                returnKeyType = {"next"}
+                style={styles.submit}
+                placeholder="Enter password"
+                placeholderTextColor="white"
+                onChangeText={(text) => this.setState({password: text})}
+                value={this.state.password}
+                secureTextEntry={true}
+                onSubmitEditing={(event) => { 
+                  this.refs.FourthInput.focus(); 
+                }}
+                />
+            </View>
           </View>
           <View style={styles.inputBar}>
-            <TextInput
-              ref='FifthInput'
-              style={styles.submit}
-              autoCapitalize="none"
-              placeholder="Phone Number"
-              placeholderTextColor="white"
-              onChangeText={(text) => this.setState({phone: text})}
-              value={this.state.phone}
-              keyboardType="number-pad"
-              returnKeyType={'done'}
-              maxLength={10}
-              onSubmitEditing={(event) => { 
-                this.handleSubmit.bind(this)(); 
-              }}
-              />
+            <View style={styles.icon}>
+              <TouchableHighlight underlayColor='transparent'>
+                <Icon name="lock" size={20} color="#fff" />
+              </TouchableHighlight>
+            </View>
+            <View style= {styles.lineName}> 
+              <TextInput
+                ref='FourthInput'
+                returnKeyType = {"next"}
+                style={styles.submit}
+                placeholder="Confirm Password"
+                placeholderTextColor="white"
+                onChangeText={(text) => this.setState({passwordAgain: text})}
+                value={this.state.passwordAgain}
+                secureTextEntry={true}
+                onSubmitEditing={(event) => { 
+                  this.refs.FifthInput.focus(); 
+                }}
+                />
+            </View>
+          </View>
+          <View style={styles.inputBar}>
+            <View style={styles.icon}>
+              <TouchableHighlight underlayColor='transparent'>
+                <Icon name="phone" size={20} color="#fff" />
+              </TouchableHighlight>
+            </View>
+            <View style= {styles.lineName}> 
+              <TextInput
+                ref='FifthInput'
+                style={styles.submit}
+                autoCapitalize="none"
+                placeholder="Phone Number"
+                placeholderTextColor="white"
+                onChangeText={(text) => this.setState({phone: text})}
+                value={this.state.phone}
+                keyboardType="number-pad"
+                returnKeyType={'done'}
+                maxLength={10}
+                onSubmitEditing={(event) => { 
+                  this.handleSubmit.bind(this)(); 
+                }}
+                />
+            </View>
           </View>
           {/* This is the loading animation when isLoading is set to true */}
           </View>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={this.handleSubmit.bind(this)}
+          underlayColor="white" >
+            <Text style={styles.buttonText}> Create Account </Text>
+        </TouchableHighlight>
         <ActivityIndicatorIOS
           animating={this.state.isLoading}
           color="#111"
@@ -233,5 +278,85 @@ class SignUp extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    width: deviceWidth/8,
+    alignItems: 'center',
+    // borderColor: 'white',
+    // borderWidth: 0.5,
+  },
+  lineName: {
+    width: deviceWidth/1.5,
+    // borderColor: 'white',
+    // borderWidth: 0.5,
+  },
+  title: {
+    marginBottom: deviceHeight/20,
+    fontSize: deviceHeight/12,
+    fontWeight: "100",
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    color: 'white',
+    backgroundColor: 'transparent',
+    letterSpacing: deviceWidth/50,
+  },
+  subTitle: {
+    marginBottom: deviceHeight/80,
+    fontSize: deviceHeight/40,
+    fontWeight: "100",
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    color: 'white',
+    backgroundColor: 'transparent',
+    letterSpacing: deviceWidth/500
+  },
+  submit: {
+    height: deviceHeight/30,
+    marginBottom: deviceHeight/200,
+    fontSize: deviceHeight/47,
+    borderColor: 'white',
+    color: 'white',
+    textAlign: 'left',
+  },
+  inputBar: {
+    marginBottom: deviceHeight/40,
+    borderBottomColor: 'white',
+    borderBottomWidth: 0.5,
+    flexDirection: 'row',
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+  },
+  button: {
+    height: deviceHeight/20,
+    width: deviceWidth/2,
+    flexDirection: 'row',
+    backgroundColor: '#ff0066',
+    marginBottom: deviceHeight/40,
+    marginTop: deviceHeight/40,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  backgroundImage: {
+    flex: 1,
+    width: deviceWidth,
+    height: deviceHeight,
+    padding: deviceWidth/10,
+    paddingTop: deviceHeight/6,
+    marginTop: deviceHeight/30,
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  errorMessage: {
+    backgroundColor: 'transparent',
+    height: deviceHeight/10,
+    color: '#ff0066',
+    textAlign: 'center',
+    fontSize: deviceHeight/40,
+  },
+});
 
 module.exports = SignUp;
