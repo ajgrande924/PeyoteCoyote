@@ -71,8 +71,6 @@ class RoamView extends Component {
   }
 }
 
-<<<<<<< 93b463b5b417e4ece645ceaa1cc3cf1af5c87365
-=======
 const buttonStyles = StyleSheet.create({
   button: {
     width: deviceWidth / 1.8,
@@ -80,5 +78,4 @@ const buttonStyles = StyleSheet.create({
   },
 });
 
->>>>>>> finished match view page pulling from dummy data
 module.exports = RoamView;

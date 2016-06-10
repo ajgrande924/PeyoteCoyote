@@ -26,7 +26,7 @@ class roam extends Component{
       style={styles.container}
         initialRoute={{
           title: 'Login',
-          component: MatchView,
+          component: Login,
           //passProps: {user: {id: '5758a1abc2ef1652b41f961f'}}
         }}
         navigationBarHidden={true} />
