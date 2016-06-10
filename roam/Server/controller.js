@@ -415,15 +415,25 @@ module.exports = {
     .then(responseData => {
       var flag = false;
       var data;
+      var roaming = false;
       responseData.forEach(entry => {
         if (entry.username1 === req.body.id || entry.username2 === req.body.id) {
-          flag = true;
-          data = entry;
+          roaming = true;
+        }
+        if (entry.username1 === req.body.id || entry.username2 === req.body.id) {
+          if (entry.username1 !== '' && entry.username2 !== '') {
+            flag = true;
+            data = entry;           
+          }
         }
       });
       if (flag) {
         res.status(200).send(data);
-      } else {
+      } 
+      if (roaming) {
+        res.sendStatus(300);
+      }
+      if (!roaming) {
         res.sendStatus(400);
       }
     });

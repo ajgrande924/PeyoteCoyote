@@ -76,12 +76,23 @@ class RoamView extends Component {
       },
       body: JSON.stringify({id: this.state.user.id})
     })
-    .then(res => res.json())
-    .then(responseData => {
-      this.setState({
-        roamingData: responseData,
-        currentView: 3
-      })
+    .then(res => {
+      if (res.status === 200) {
+        this.setState({
+          roamingData: JSON.parse(res._bodyInit),
+          currentView: 3
+        });
+      }
+      if (res.status === 300) {
+        this.setState({
+          currentView: 2
+        });
+      }
+      if (res.status === 400) {
+        this.setState({
+          currentView: 1
+        });
+      }
     });
   }
 
