@@ -5,9 +5,13 @@ const styles = require('./Helpers/styles');
 const TabBar = require('./TabBar.js');
 const Geolocation = require('./Geolocation.js');
 
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
+
 import {
   ActivityIndicatorIOS,
   AlertIOS,
+  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -54,7 +58,7 @@ class RoamView extends Component {
         <TouchableHighlight
           onPress={this.handleUberClick.bind(this)}
           underlayColor="transparent" >
-            <Image style={styles.button}source={require('../../imgs/UberButton.png')}></Image>
+            <Image style={[styles.button, buttonStyles.button]} source={require('../../imgs/UberButton.png')}></Image>
         </TouchableHighlight>
         {/* This is the loading animation when isLoading is set to true */}
         <ActivityIndicatorIOS
@@ -63,8 +67,15 @@ class RoamView extends Component {
           size="large"></ActivityIndicatorIOS>
         {showErr}
       </Image>
-    )
+    );
   }
 }
+
+const buttonStyles = StyleSheet.create({
+  button: {
+    width: deviceWidth / 1.8,
+    backgroundColor: 'transparent',
+  },
+});
 
 module.exports = RoamView;

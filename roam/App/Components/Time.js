@@ -3,6 +3,7 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActivityPicker from './PickActivity.js';
+import MatchView from './Match.js';
 
 var Geolocation = require('./Geolocation.js');
 var stylesFile = require('./Helpers/styles');
@@ -165,7 +166,7 @@ class RoamView extends Component {
     }
 
     if (this.state.currentView === 3) {
-      return (<MatchedView user={this.state.user} data={this.state.roamingData} passedDownStateChange={this.passedDownStateChange.bind(this)} />);
+      return (<MatchView user={this.state.user} currentRoam={this.state.roamingData} passedDownStateChange={this.passedDownStateChange.bind(this)} />);
     }
     
   }
