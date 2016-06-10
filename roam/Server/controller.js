@@ -22,7 +22,7 @@ var twilio = require('twilio');
 var client = new twilio.RestClient(config.twilioKeys.accountSid, config.twilioKeys.authToken);
 
 var fetch = require('node-fetch');
-const googlemaps_API = 'https://maps.googleapis.com/maps/api/distancematrix/json?';
+const googlemaps_API = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&';
 const mongoDB_API_KEY = 'yjH4qEJR-Olag89IaUTXd06IpuVDZWx1';
 const baseLink_users = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/users?apiKey=';
 const baseLink_users_query = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/users/';
@@ -296,19 +296,28 @@ module.exports = {
           var roamLong = responseData[i].longitude;
           var distance; 
 
-          var origin = 'origins=' + userLongitude + ',' + userLongitude;
+          var origin = 'origins=' + userLatitude + ',' + userLongitude;
           var destination = '&destinations=' + roamLat + ',' + roamLong;
-
-          googleMapsPath = googlemaps_API + origin + destination + config.googleKey;
-
-          request(googleMapsPath, (err, res, body) => {
-            console.log(err);
+          console.log(userLatitude, ',', userLongitude);
+          console.log(roamLat, ',', roamLong);
+          var googleMapsPath = googlemaps_API + origin + destination + '&key=' + config.googleKey;
+          fetch(googleMapsPath)
+          .catch(err => console.log(err))
+          .then( respons => respons.json())
+          .then(responseData2 => {
+            console.log(responseData2.rows[0]);
+            var obj = {
+            miles: responseData2.rows[0].elements[0].distance.text,
+            time: responseData2.rows[0].elements[0].duration.text,
+            };
+            console.log('****', obj);
             if(!error && response.statusCode === 200) {
               distance = res.rows.elements[0].distance //always in meters
             }
           });
+          }
         }
-      }});
+      });
 }
 
           //if it is within the radius, add it to an array
