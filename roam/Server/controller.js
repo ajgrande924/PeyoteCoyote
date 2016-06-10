@@ -418,9 +418,6 @@ module.exports = {
             //   distance = res.rows.elements[0].distance //always in meters
             // }
 
-
-
-
           //if it is within the radius, add it to an array
         //   if(distance <= radius) {
         //     availableRoams.push(response[i]);
