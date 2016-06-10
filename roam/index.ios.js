@@ -17,6 +17,7 @@ var VerifyText = require('./App/Components/VerifyText.js');
 var CurrentRoam = require('./App/Components/CurrentRoam.js');
 var Signup = require('./App/Components/Signup.js');
 var Confirmation = require('./App/Components/Confirmation.js');
+var tabs = require('./App/Components/TabBar.js');
 
 class roam extends Component{
   render() {

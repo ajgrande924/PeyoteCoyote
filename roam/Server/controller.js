@@ -407,6 +407,26 @@ module.exports = {
         console.warn(error);
         res.sendStatus(400);
       });
+  },
+
+  isRoaming: (req, res) => {
+    fetch(baseLink_roams + mongoDB_API_KEY)
+    .then(res => res.json())
+    .then(responseData => {
+      var flag = false;
+      var data;
+      responseData.forEach(entry => {
+        if (entry.username1 === req.body.id || entry.username2 === req.body.id) {
+          flag = true;
+          data = entry;
+        }
+      });
+      if (flag) {
+        res.status(200).send(data);
+      } else {
+        res.sendStatus(400);
+      }
+    });
   }
 
             // var obj = {
