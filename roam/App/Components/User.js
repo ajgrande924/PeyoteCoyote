@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-var Confirmation = require('./Confirmation');
 var CameraView = require('./CameraView')
 var Separator = require('./Helpers/Separator');
-var dummyData = require('./data');
 // const baseLink_history = 'https://api.mlab.com/api/1/databases/frantic-rust-roam/collections/history?apiKey=';
 // const mongoDB_API_KEY = 'yjH4qEJR-Olag89IaUTXd06IpuVDZWx1';
 
@@ -117,15 +115,12 @@ class User extends Component {
               <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
             </View>
             <View style={styles.titles}>
-              <Text style={styles.navTitle}>{this.state.user.username}</Text>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="camera" onPress={this.goToCamera.bind(this)} size={23} color="#fff" />
-              </TouchableHighlight>
+              <Text style={styles.navTitle}>{this.state.user.name}</Text>
             </View>
           </View>
           <View style={styles.statsContainer}>
             <View style={styles.statBox}>
-              <Text style={styles.stat}>18</Text>
+              <Text style={styles.stat}>9</Text>
               <Text style={styles.statTitle}>Roams</Text>
             </View>
             <View style={styles.statBox}>
@@ -133,8 +128,12 @@ class User extends Component {
               <Text style={styles.statTitle}>Rating</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.stat}>18</Text>
-              <Text style={styles.statTitle}>Roams</Text>
+              <View style={styles.cam}>
+                <TouchableHighlight underlayColor='transparent'>
+                  <Icon name="camera" onPress={this.goToCamera.bind(this)} size={26} color="#fff" />
+                </TouchableHighlight>
+              </View>
+              <Text style={styles.statTitle2}>Camera</Text>
             </View>
           </View> 
         </View>
@@ -196,14 +195,8 @@ class GridListItem extends Component {
                 source={{uri: this.state.history.username2pic}}
                 style={styles.modalCircleImage}/>
               <View style={styles.modalInfoContainer}>
-                <View style={styles.modalInfoBox}>
-                  <Text style={styles.statNumbers}>Roamed in</Text>
-                  <Text style={styles.statText}>{this.state.history.placeRoamed}</Text>
-                </View>
-                <View style={styles.modalInfoBox}>
-                  <Text style={styles.statNumbers}>Rating</Text>
-                  <Text style={styles.statText}>{this.state.history.rating2}</Text>
-                </View>
+                  <Text style={styles.statNumbers}>Roamed in {this.state.history.placeRoamed}</Text>
+                  <Text style={styles.statNumbers}>Rating: {this.state.history.rating2}</Text>
               </View>
               <View style={styles.closeContainer}> 
                 <TouchableHighlight style={styles.closeButton} onPress={this.setModalVisible.bind(this, false, false)}>
@@ -234,7 +227,7 @@ const styles = StyleSheet.create({
     paddingTop: deviceHeight/25,
     height: deviceHeight/3,
     borderBottomColor: 'white',
-    borderWidth: 2
+    borderWidth: 0.5
   },
   navTitle: {
     color:'#fff',
@@ -242,7 +235,7 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     fontSize: 20,
     fontFamily: 'Avenir',
-    marginRight: deviceWidth/40
+    // marginRight: deviceWidth/40
   },
   profileContainer: {
     height: deviceHeight/6,
@@ -258,17 +251,29 @@ const styles = StyleSheet.create({
   statBox: {
     width: deviceWidth/3,
     alignItems: 'center',
-    borderColor: 'white',
-    borderWidth: 2,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    // borderColor: 'white',
+    // borderWidth: 2,
   },
   stat: {
     fontSize: 25,
     color: 'white',
   },
+  statNumbers: {
+    textAlign: 'center',
+    fontSize: 12,
+  },
   statTitle: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#ff0066',
+  },
+  statTitle2: {
+    marginTop: deviceHeight/200,
+    fontSize: 12,
+    color: '#ff0066',
+  },
+  cam: {
+    marginTop: deviceHeight/200,
   },
   titles: {
     flexDirection: 'row',
@@ -316,13 +321,15 @@ const styles = StyleSheet.create({
     borderWidth: 1.5
   },
   modalCircleImage: {
-    height: deviceWidth/3,
-    borderRadius: deviceWidth/6,
-    width: deviceWidth/3,
-    borderColor: 'white'
+    height: deviceWidth/2.5,
+    borderRadius: deviceWidth/5,
+    width: deviceWidth/2.5,
+    borderColor: 'black',
+    borderWidth: 2,
   },
   mainContainer: {
-    height: deviceHeight
+    height: deviceHeight,
+    // backgroundColor: 'white',
   },
   gridList: {
     justifyContent: 'center',
@@ -355,24 +362,27 @@ const styles = StyleSheet.create({
   modalTitle: {
     width: deviceWidth/2,
     textAlign: 'center',
-    borderWidth: 0.5,
     paddingTop: deviceHeight/110,
     paddingBottom: deviceHeight/110,
     margin: 5,
-    fontSize: 18,
-    fontFamily: 'Avenir'
+    fontSize: 25,
+    fontFamily: 'Avenir',
+    textAlign:'center',
+    fontWeight: 'bold'
   },
   modalInfoContainer: {
-    flexDirection: 'row',
+    textAlign: 'center',
+    marginTop: deviceHeight/80,
+    // flexDirection: 'row',
     // borderTopColor: '#47315a',
     // borderTopWidth: 0.5,
     // borderBottomColor: '#47315a',
     // borderBottomWidth: 0.5,
   },
   modalInfoBox: {
-    width: deviceWidth/3.3,
+    width: deviceWidth/2,
     alignItems: 'center',
-    borderWidth: 0.5,
+    // borderWidth: 0.5,
     paddingTop: deviceHeight/110,
     paddingBottom: deviceHeight/110,
     margin: 5

@@ -6,9 +6,7 @@ import ActivityPicker from './PickActivity.js';
 import MatchView from './Match.js';
 import PendingRoam from './PendingRoam.js';
 
-var Geolocation = require('./Geolocation.js');
 var stylesFile = require('./Helpers/styles');
-var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
 console.disableYellowBox = true;
 
@@ -127,26 +125,17 @@ class RoamView extends Component {
 
       <View style={styles.navbarContainer}>
         <View style={styles.profileContainer}>
-          <View>
-            <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
-          </View>
-          <View style={styles.titles}>
-            <Text style={styles.navTitle}>{this.state.user.username}</Text>
+          <View style={styles.imageContainer}>
+            <View>
+              <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
+            </View>
+            <View>
+              <Text style={styles.navTitle}>{this.state.user.name}</Text>
+            </View>
           </View>
         </View>
         <View style={styles.statsContainer}>
-          <View style={styles.statBox}>
-            <Text style={styles.stat}>18</Text>
-            <Text style={styles.statTitle}>Roams</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.stat}>8.5</Text>
-            <Text style={styles.statTitle}>Rating</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.stat}>18</Text>
-            <Text style={styles.statTitle}>Roams</Text>
-          </View>
+            <ActivityPicker />
         </View> 
       </View>
         <RoamSearchView stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
@@ -387,7 +376,6 @@ class RoamSearchView extends Component {
 
     return (
       <View>
-        <ActivityPicker />
         <View style={styles.segment}>
           <View style={styles.sliderContainer1}>
               <SegmentedControls
@@ -435,9 +423,9 @@ const styles = StyleSheet.create({
   navbarContainer:{
     backgroundColor: 'transparent',
     paddingTop: deviceHeight/25,
-    height: deviceHeight/3,
+    height: deviceHeight/3.5,
     borderBottomColor: 'white',
-    borderWidth: 2
+    borderWidth: 0.5
   },
   navTitle: {
     color:'#fff',
@@ -445,32 +433,43 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     fontSize: 20,
     fontFamily: 'Avenir',
-    marginRight: deviceWidth/40
+
   },
   profileContainer: {
     height: deviceHeight/6,
     width: deviceWidth,
     alignItems: 'center',
-    justifyContent: 'center', 
+    justifyContent: 'center',
+    flexDirection: 'row', 
   },
-  statsContainer: {
-    height: deviceHeight/9,
+  imageContainer: {
     width: deviceWidth,
-    flexDirection: 'row'
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // picker: {
+  //   width: 3 * deviceWidth/5,
+  // },
+  statsContainer: {
+    height: deviceHeight/12,
+    width: deviceWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTopColor: 'white',
+    borderWidth: 0.5,
+    justifyContent: 'center'
   },
   statBox: {
     width: deviceWidth/3,
     alignItems: 'center',
-    borderColor: 'white',
-    borderWidth: 2,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   stat: {
     fontSize: 25,
     color: 'white',
   },
   statTitle: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#ff0066',
   },
   titles: {
@@ -532,7 +531,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   map: {
-    height: deviceHeight/3,//deviceHeight/2.28,
+    height: deviceHeight/2,
     width: deviceWidth,
     backgroundColor: 'transparent'
   },
