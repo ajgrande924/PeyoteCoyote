@@ -115,6 +115,7 @@ class MatchView extends Component {
   }
 
   cancelMatch() {
+    this.state.stateChange(1);
     fetch('http://localhost:3000/cancelRoam', {
       method: 'POST',
       headers: {
@@ -122,14 +123,13 @@ class MatchView extends Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({id: this.state.user.id})
-    })
-    .then((res) => {
-      this.state.stateChange(1);
-    })
-    .catch((error) => {
-      this.state.stateChange(1);
-      console.log('Error handling submit:', error);
     });
+    // .then((res) => {
+    //   this.state.stateChange(1);
+    // })
+    // .catch((error) => {
+    //   console.log('Error handling submit:', error);
+    // });
   }
 
   passedDownStateChange(value) {
