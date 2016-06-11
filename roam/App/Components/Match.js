@@ -45,7 +45,6 @@ class MatchView extends Component {
       stateChange: props.passedDownStateChange,
       date: meetupTime
     };
-
   }
 
   componentDidMount() {
@@ -134,7 +133,6 @@ class MatchView extends Component {
     });
   }
 
-
   loadingPage() {
     return(
       <View></View>
@@ -145,6 +143,17 @@ class MatchView extends Component {
     this.setState({
       selectedOption: choice
     });
+  }
+
+  sendText() {
+    AlertIOS.alert(  
+    'Text to ',
+  [
+    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+    {text: 'OK', onPress: password => console.log('OK Pressed, password: ' + password)},
+  ],
+  'secure-text'
+););
   }
 
   render () {
@@ -182,6 +191,7 @@ class MatchView extends Component {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableHighlight
+            onPress={this.sendText.bind(this)}
             style={styles.button}
             underlayColor="white" >
               <Text style={styles.buttonText}>Text</Text>

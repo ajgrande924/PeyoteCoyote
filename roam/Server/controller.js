@@ -107,6 +107,8 @@ var createNewRoam = (username, userLat, userLong, transportation, radius, neighb
     user1Latitude: userLat,
     user1Transportation: transportation,
     date: '',
+    user1TextCount: 3,
+    user2TextCount: 3,
     //yelp generates for us
     venueLatitude: '',
     venueLongitude: '',
@@ -290,7 +292,6 @@ module.exports = {
     .then(responseData => {
       // if no existing roams, create new roam
       if(responseData.length === 0) {
-        console.log('*******');
           fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
           .then((response) => response.json())
           .then((responseData) => {
@@ -305,7 +306,6 @@ module.exports = {
         for(var i=0; i<responseData.length; i++) {
           if(responseData[i].username1 === username || responseData[i].username2 === username) { res.sendStatus(401); return; }
           if(responseData[i].username2 !== '') { continue; }
-
           if (flag) {
             break;
           }
@@ -443,6 +443,7 @@ module.exports = {
       }
     });
   }, 
+
   getMatch: (req, res) => {
     var id = req.body.id;
     fetch(baseLink_users + mongoDB_API_KEY)
@@ -484,6 +485,10 @@ module.exports = {
             res.sendStatus(402);
           }
         });
+  },
+
+  sendRoamText: (req, res) => {
+    console.log(req.body);
   }
 
             // var obj = {
