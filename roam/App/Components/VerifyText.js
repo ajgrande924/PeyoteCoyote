@@ -95,7 +95,7 @@ class VerifyText extends Component {
     );
     return(
       <Image style={styles.backgroundImage}
-      source={require('../../imgs/mountains.png')}>
+      source={require('../../imgs/dude.png')}>
       <View style={styles.logoContainer}>
         <Image style={styles.logo}
         source={require('../../imgs/logo.png')} />
