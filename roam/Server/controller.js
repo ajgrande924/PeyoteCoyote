@@ -406,22 +406,11 @@ module.exports = {
               .then(() => res.sendStatus(400));          
           } else {
             var roamId = roamObj._id.$oid;
-            console.log('roamObj ====================== ', roamObj); 
-
-            //make call to get roamObj -> currently undefined - I think its an asyn issue
-            // fetch(baseLink_roams_query + roamId + '?apiKey=' + mongoDB_API_KEY)
-            // .then(response => {response.json})
-            // .then(function(roamObjJson) {
-            //   var myRoamObj = roamObjJson;
-            //   console.log('roamObj ======================== :', myRoamObj);
-            // });
-
 
             // send text to first user to sign up for a roam
-            // get user1's user info from roamObj
+            // get user id's from roamObj
             var user1Id = roamObj.username1.toString();
             var user2Id = roamObj.username2.toString();
-            console.log('user2Id ==================== ', roamObj.username2.toString())
 
             // use user1's id to search for user1's object in users collection
             fetch(baseLink_users_query + user1Id + '?apiKey=' + mongoDB_API_KEY)
