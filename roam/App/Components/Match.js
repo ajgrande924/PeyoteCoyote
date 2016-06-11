@@ -127,6 +127,7 @@ class MatchView extends Component {
       this.state.stateChange(1);
     })
     .catch((error) => {
+      this.state.stateChange(1);
       console.log('Error handling submit:', error);
     });
   }
