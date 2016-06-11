@@ -121,7 +121,6 @@ class RoamView extends Component {
   }
 
   handleSelected(choice) {
-    console.error(choice);
     this.setState({
       selectedOption: choice
     });
@@ -129,7 +128,8 @@ class RoamView extends Component {
 
   setActivity(activity) {
     this.setState({
-      activityType: activity
+      activityType: activity,
+      refresh: true
     });
   }
 
@@ -162,7 +162,7 @@ class RoamView extends Component {
             <ActivityPicker callback={this.setActivity.bind(this)}/>
         </View> 
       </View>
-        <RoamSearchView stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
+        <RoamSearchView stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} activityType= {this.state.activityType} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
       </Image>
     );
   }
@@ -196,6 +196,7 @@ class RoamSearchView extends Component {
       user: props.user,
       navigator: props.navigator,
       sendState: props.stateChange,
+      activityType: props.activityType,
       region: props.region,
       marker: {
         coordinates: {
@@ -242,7 +243,8 @@ class RoamSearchView extends Component {
       latitude: this.state.region.latitude,
       longitude: this.state.region.longitude,
       radius: Math.floor(this.state.circleRadius),
-      transportation: this.state.transportSelectedOption
+      transportation: this.state.transportSelectedOption,
+      activity: this.state.activityType,
     };
     fetch('http://159.203.197.90:3000/roam',
       {

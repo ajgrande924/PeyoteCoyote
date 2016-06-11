@@ -91,7 +91,6 @@ class ViewProfPic extends Component {
         username: this.state.userId,
         imageLink: 'https://franticrust.s3-us-west-1.amazonaws.com/uploads%2F' + photo.filename,
       };
-      console.error(photoObj.username);
       this.state.photoObj = photoObj;
       
       fetch('http://159.203.197.90:3000/upload', 

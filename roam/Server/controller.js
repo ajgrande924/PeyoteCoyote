@@ -98,7 +98,7 @@ var getUser = (username, password, res) => {
       });
 };
 
-var createNewRoam = (username, userLat, userLong, transportation, radius, neighborhood) => {
+var createNewRoam = (username, userLat, userLong, transportation, radius, neighborhood, activity) => {
   // console.log('making roam');
   var obj = {
     //we generate
@@ -117,25 +117,28 @@ var createNewRoam = (username, userLat, userLong, transportation, radius, neighb
     venue: ''
   };
 
-  var pickRandomCategory = () =>{
-    var categories = ['bar', 'restaurant'];
-    return categories[Math.floor(Math.random() * categories.length)];
-  };
+  // var pickRandomCategory = () =>{
+  //   var categories = ['bar', 'restaurant'];
+  //   return categories[Math.floor(Math.random() * categories.length)];
+  // };
   //set limit: 1 so we only return back one search result
   //hardcode radius_filter for 2 miles
   //sample yelp api request looks like https://api.yelp.com/v2/search?term=german+food&location=Hayes&cll=37.77493,-122.419415
 
     var searchParams = {
-      term: pickRandomCategory(),
-      limit: 1,
+      term: activity,
+      limit: 5,
       radius_filter: radius,
       cll: userLat + ',' + userLong,
       location: neighborhood
     };
-    // console.log('params: ', searchParams);
+    console.log('params: ', searchParams);
 
     yelp.searchYelp(searchParams, function(venue) {
-      
+
+      // var randomVenue = Math.floor(Math.random() * venue.length);
+
+      console.log('yelp results: >>>>>', venue);
       obj.venue = venue.name;
       obj.address = venue.location.display_address.join(' ');
       obj.venueLongitude = venue.location.coordinate.longitude;
@@ -304,8 +307,9 @@ module.exports = {
     var userLatitude = req.body.latitude;
     var radius = req.body.radius;
     var transportation = req.body.transportation;
+    var activity = req.body.activity;
     var flag = false;
-    console.log('this is transportation: >>>>>', transportation);
+    console.log('this is activity: >>>>>', activity);
     //Search database for existing roams
     fetch(baseLink_roams + mongoDB_API_KEY)
     .then(response => response.json())
@@ -317,7 +321,7 @@ module.exports = {
           .then((response) => response.json())
           .then((responseData) => {
             var neighborhood = responseData.results[0].address_components[2].long_name;
-            createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
+            createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood, activity);
           }).catch(err=>console.log(err))
           // 400 means new room created, did not find a match
           .then(() => {res.sendStatus(400); return;});
@@ -400,7 +404,7 @@ module.exports = {
               .then((response) => response.json())
               .then((responseData) => {
                 var neighborhood = responseData.results[0].address_components[2].long_name;
-                createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
+                createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood, activity);
               }).catch(err=>console.log(err))
               // 400 means new room created, did not find a match
               .then(() => res.sendStatus(400));          
