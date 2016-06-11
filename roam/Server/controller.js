@@ -394,8 +394,18 @@ module.exports = {
     });
   },
 
+  profilePic: (req, res) => {
+    console.log('>>>>>>>req.body: ', req.body);
+    fetch(baseLink_users_query + req.body.id + '?apiKey=' + mongoDB_API_KEY)
+    .then((res) => res.json())
+    .then((responseData) => {
+      console.log('>>>>>>>>parsed response!: ', responseData.image);
+      res.status(200).send(responseData.image);
+    });
+  },
+
   uploadPhoto: (req, res) => {
-    fetch(baseLink_users_query + req.body.username + '?apiKey=' + mongoDB_API_KEY, {
+    fetch(baseLink_users_query + req.body + '?apiKey=' + mongoDB_API_KEY, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
@@ -453,7 +463,7 @@ module.exports = {
       }
     });
   }, 
-  
+
   getMatch: (req, res) => {
     var id = req.body.id;
     fetch(baseLink_users + mongoDB_API_KEY)

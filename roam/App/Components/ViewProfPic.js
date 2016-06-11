@@ -26,7 +26,7 @@ class Card extends Component {
   render() {
     return (
       <View style={styles.card}>
-        <Image style={styles.thumbnail} source={{uri: this.props.imageLink}} />
+        <Image style={styles.thumbnail} source={{uri: this.props.image.imageLink}} />
       </View>
     )
   }
@@ -40,13 +40,15 @@ class ViewProfPic extends Component {
       username: props.username || '',
       password: props.password || '',
       image: props.image,
-      navigator: this.props.navigator
-    }
+      //userId: props.id,
+      navigator: this.props.navigator,
+      photoObj: ''
+    };
   }
  
-  componentDidMount() {
-
-  }
+  // componentDidMount() {
+  //   console.error(this.state.image.path);
+  // }
 
   getCode() {
     var text = "";
@@ -86,10 +88,11 @@ class ViewProfPic extends Component {
       });
 
       const photoObj = {
-        username: this.state.username,
-        comment: this.state.comment,
+        username: this.state.userId,
         imageLink: 'https://franticrust.s3-us-west-1.amazonaws.com/uploads%2F' + photo.filename,
       };
+      console.error(photoObj.imageLink);
+      this.state.photoObj = photoObj;
       
       fetch('http://localhost:3000/upload', 
         {
@@ -102,11 +105,15 @@ class ViewProfPic extends Component {
         });
       AlertIOS.alert('Photo is now Live');
     }
-    this.goBackToProfile();
+      this.goBackToProfile();
+  }
+
+  goBackToCamera() {
+    this.state.navigator.pop();
   }
 
   goBackToProfile() {
-    this.state.navigator.popN(2);
+    this.state.navigator.popN(1);
   }
 
   refreshPage() {
@@ -124,7 +131,7 @@ class ViewProfPic extends Component {
         <Card image={{imageLink: this.state.image.path}} submitPhoto={this.submitPhoto.bind(this)} />
         <View style={styles.buttonsContainer}>
           <View style={styles.button}>
-            <TouchableHighlight onPress={this.goBackToProfile.bind(this)} underlayColor='transparent'>
+            <TouchableHighlight onPress={this.goBackToCamera.bind(this)} underlayColor='transparent'>
               <Image source={require('./Images/reject.png')} style={styles.accept} />
             </TouchableHighlight>
           </View>

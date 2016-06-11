@@ -44,6 +44,7 @@ class CameraView extends Component {
       this.state = {
         user: props.user,
         image: null,
+        id: props.user.id,
         type: Camera.constants.Type.back,
         flag: true,
         navigator: this.props.navigator
