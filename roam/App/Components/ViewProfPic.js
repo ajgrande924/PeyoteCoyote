@@ -71,7 +71,6 @@ class ViewProfPic extends Component {
         name: photo.filename,
         type: "image/png"
       };
-      console.error(key_file.s3Keys.S3_ACCESS_KEY);
       const options = {
         keyPrefix: "uploads/",
         bucket: "franticrust",
@@ -88,6 +87,7 @@ class ViewProfPic extends Component {
 
       const photoObj = {
         username: this.state.username,
+        comment: this.state.comment,
         imageLink: 'https://franticrust.s3-us-west-1.amazonaws.com/uploads%2F' + photo.filename,
       };
       
@@ -102,11 +102,11 @@ class ViewProfPic extends Component {
         });
       AlertIOS.alert('Photo is now Live');
     }
-    this.goBackToCamera();
+    this.goBackToProfile();
   }
 
-  goBackToCamera() {
-    this.state.navigator.pop();
+  goBackToProfile() {
+    this.state.navigator.popN(2);
   }
 
   refreshPage() {
@@ -124,7 +124,7 @@ class ViewProfPic extends Component {
         <Card image={{imageLink: this.state.image.path}} submitPhoto={this.submitPhoto.bind(this)} />
         <View style={styles.buttonsContainer}>
           <View style={styles.button}>
-            <TouchableHighlight onPress={this.goBackToCamera.bind(this)} underlayColor='transparent'>
+            <TouchableHighlight onPress={this.goBackToProfile.bind(this)} underlayColor='transparent'>
               <Image source={require('./Images/reject.png')} style={styles.accept} />
             </TouchableHighlight>
           </View>

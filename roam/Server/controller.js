@@ -62,7 +62,7 @@ var getUser = (username, password, res) => {
     .then((response) => response.json())
       .then((responseData) => {
         var flag = false;
-        var id, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone;
+        var id, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone, image;
         for (var i = 0; i < responseData.length; i++) {
           if (responseData[i].username === username && responseData[i].password === password) {
             id = responseData[i]._id.$oid;
@@ -73,6 +73,7 @@ var getUser = (username, password, res) => {
             phone = responseData[i].phone;
             code = responseData[i].verificationCode;
             verifiedPhone = responseData[i].verifiedPhone;
+            image = responseData[i].image;
             flag = true;
             break;
           }
@@ -85,7 +86,8 @@ var getUser = (username, password, res) => {
           phone: phone,
           currentlocation: currentlocation,
           verificationCode: code,
-          verifiedPhone: verifiedPhone
+          verifiedPhone: verifiedPhone,
+          image: image
         };
         if (flag) {
           res.status(200).send(returnObj);
@@ -160,6 +162,7 @@ module.exports = {
     const currentlocation = req.body.currentlocation;
     const verificationCode = req.body.verificationCode;
     const verifiedPhone = req.body.verifiedPhone;
+    const image = req.body.image;
 
     const obj = {
       name: name,
@@ -168,7 +171,8 @@ module.exports = {
       phone: phone,
       currentlocation: currentlocation,
       verificationCode: verificationCode,
-      verifiedPhone: verifiedPhone
+      verifiedPhone: verifiedPhone,
+      image: image
     };
     console.log('obj.......', obj);
 
@@ -368,7 +372,7 @@ module.exports = {
           } else {
             res.sendStatus(200);
           }
-        }, 500);
+        }, (500 * responseData.length));
 
 
       }
@@ -418,6 +422,79 @@ module.exports = {
         console.warn(error);
         res.sendStatus(400);
       });
+    },
+
+  isRoaming: (req, res) => {
+    fetch(baseLink_roams + mongoDB_API_KEY)
+    .then(res => res.json())
+    .then(responseData => {
+      var flag = false;
+      var data;
+      var roaming = false;
+      responseData.forEach(entry => {
+        if (entry.username1 === req.body.id || entry.username2 === req.body.id) {
+          roaming = true;
+        }
+        if (entry.username1 === req.body.id || entry.username2 === req.body.id) {
+          if (entry.username1 !== '' && entry.username2 !== '') {
+            flag = true;
+            data = entry;           
+          }
+        }
+      });
+      if (flag) {
+        res.status(200).send(data);
+      } 
+      if (roaming) {
+        res.sendStatus(300);
+      }
+      if (!roaming) {
+        res.sendStatus(400);
+      }
+    });
+  }, 
+  
+  getMatch: (req, res) => {
+    var id = req.body.id;
+    fetch(baseLink_users + mongoDB_API_KEY)
+      .then((response) => response.json())
+        .then((responseData) => {
+          var flag = false;
+          var idFetched, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone, image;
+          for (var i = 0; i < responseData.length; i++) {
+            if (responseData[i]._id.$oid === id) {
+              console.log('got it');
+              idFetched = responseData[i]._id.$oid;
+              name = responseData[i].name;
+              usernameFetched = responseData[i].username;
+              passwordFetched = responseData[i].password;
+              currentlocation = responseData[i].currentlocation;
+              phone = responseData[i].phone;
+              code = responseData[i].verificationCode;
+              verifiedPhone = responseData[i].verifiedPhone;
+              image = responseData[i].image;
+              flag = true;
+              break;
+            }
+          }
+          const returnObj = {
+            id: idFetched,
+            name: name,
+            username: usernameFetched,
+            password: passwordFetched,
+            phone: phone,
+            currentlocation: currentlocation,
+            verificationCode: code,
+            verifiedPhone: verifiedPhone,
+            image: image
+          };
+          console.log(returnObj);
+          if (flag) {
+            res.status(201).send(returnObj);
+          } else {
+            res.sendStatus(402);
+          }
+        });
   }
 
             // var obj = {
