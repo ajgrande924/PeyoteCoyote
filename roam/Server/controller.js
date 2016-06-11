@@ -403,8 +403,7 @@ module.exports = {
                 createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
               }).catch(err=>console.log(err))
               // 400 means new room created, did not find a match
-              .then(() => res.sendStatus(400));
-              console.log('made new thing');          
+              .then(() => res.sendStatus(400));          
           } else {
             console.log(roamObj, 'dsfadfasfadsfdasfds');
             var roamId = roamObj._id.$oid;
@@ -464,6 +463,28 @@ module.exports = {
     });
   },
 
+  profilePic: (req, res) => {
+    console.log('>>>>>>>req.body: ', req.body);
+    fetch(baseLink_users_query + req.body.id + '?apiKey=' + mongoDB_API_KEY)
+    .then((res) => res.json())
+    .then((responseData) => {
+      console.log('>>>>>>>>parsed response!: ', responseData.image);
+      res.status(200).send(responseData.image);
+    });
+  },
+
+  uploadPhoto: (req, res) => {
+    console.log(">>>>>>>>>>uploadPhoto's req.body.username: ", req.body.username)
+    fetch(baseLink_users_query + req.body.username + '?apiKey=' + mongoDB_API_KEY, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        },
+      body: JSON.stringify( { "$set" : {image: req.body.imageLink}})
+    }).then( () => res.sendStatus(200));
+  },
+
   populateHistory: (req, res) => {
     const userName = req.body.username;
     fetch(baseLink_history + mongoDB_API_KEY)
@@ -481,7 +502,7 @@ module.exports = {
         console.warn(error);
         res.sendStatus(400);
       });
-  },
+    },
 
   isRoaming: (req, res) => {
     fetch(baseLink_roams + mongoDB_API_KEY)
@@ -603,6 +624,9 @@ module.exports = {
             // if(!error && response.statusCode === 200) {
             //   distance = res.rows.elements[0].distance //always in meters
             // }
+
+
+
 
           //if it is within the radius, add it to an array
         //   if(distance <= radius) {

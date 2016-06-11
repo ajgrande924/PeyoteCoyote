@@ -36,9 +36,12 @@ class User extends Component {
       dataSource: null,
       navigator: props.navigator,
       loaded: false,
+      profilePic: ''
     };
   }
   componentDidMount() {
+    // console.error(this.state.user.id);
+    this.getProfilePic();
     this.getHistory();
     // history.forEach(function(obj) {
     //   fetch(baseLink_history + mongoDB_API_KEY, {
@@ -50,6 +53,25 @@ class User extends Component {
     //     body: JSON.stringify(obj),
     //   });
     // });
+  }
+
+  getProfilePic() {
+    const obj1 = {
+      id: this.state.user.id,
+    };
+    fetch('http://localhost:3000/profilePic', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj1),
+    })
+    .then((response) => {
+        this.setState({
+          profilePic: response._bodyText
+        });
+    });
   }
 
   getHistory() {
@@ -112,7 +134,7 @@ class User extends Component {
         <View style={styles.navbarContainer}>
           <View style={styles.profileContainer}>
             <View>
-              <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
+              <Image style={styles.circleImage} source={{uri: this.state.profilePic}}/> 
             </View>
             <View style={styles.titles}>
               <Text style={styles.navTitle}>{this.state.user.name}</Text>

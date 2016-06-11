@@ -18,8 +18,9 @@ import {
 // var UserPage = UserPageObj.UserPage;
 
 // import SwipePage from './SwipeView.ios.js';
-
+var ViewProfPic = require('./ViewProfPic.js');
 import Camera from 'react-native-camera';
+import Icon from 'react-native-vector-icons/FontAwesome';
 // import ViewPage from './ImageView.ios.js';
 // import NewUserInstructionModal from './NewUserInstructionModal.ios.js';
 
@@ -43,10 +44,17 @@ class CameraView extends Component {
       this.state = {
         user: props.user,
         image: null,
+        id: props.user.id,
         type: Camera.constants.Type.back,
-        flag: true
+        flag: true,
+        navigator: this.props.navigator
       }
   }
+
+  goBackToProfile() {
+    this.state.navigator.pop();
+  }
+
   render() {
       return (
         <View style={styles.container}>
@@ -60,6 +68,9 @@ class CameraView extends Component {
             orientation={Camera.constants.Orientation.portrait}
             type = {this.state.type}
             >
+            <TouchableHighlight style={styles.getOut} onPress={this.goBackToProfile.bind(this)} underlayColor='transparent'>
+              <Image source={require('./Images/reject.png')} style = {{height:40, width: 40, marginLeft: 40}} />
+            </TouchableHighlight>
             <TouchableHighlight style={styles.switchCam} onPress={this.switchCamType.bind(this)} underlayColor='transparent'>
               <Image style = {{height:40, width: 40, marginLeft: 40}} source={require('./Images/switch_camera_type.png')}/>
             </TouchableHighlight>
@@ -75,11 +86,11 @@ class CameraView extends Component {
   }
 
   goImageViewPage() {
-    // this.props.navigator.push({
-    //   title: "verify.me",
-    //   component: ViewPage,
-    //   passProps: {user: this.state.user, username: this.state.username, password: this.state.password, image: this.state.image, id: this.state.id, lastPhoto: this.state.lastPhoto},
-    // })
+    this.props.navigator.push({
+      title: "View Profile Picture",
+      component: ViewProfPic,
+      passProps: {user: this.state.user, username: this.state.username, password: this.state.password, image: this.state.image, id: this.state.id, lastPhoto: this.state.lastPhoto},
+    })
   }
 
   switchCamType() {
@@ -96,6 +107,7 @@ class CameraView extends Component {
       });        
     }
   }
+
   takePicture() {
     this.camera.capture()
       .then((data) => this.setState({image: data}))
@@ -136,8 +148,15 @@ const styles = StyleSheet.create({
   info: {
     right: deviceWidth/2.2, 
     top: -deviceHeight/1.48,
+  },
+  exit: {
+    width: deviceWidth /6,
+    height: deviceWidth/6,
+  },
+  getOut: {
+    left: -deviceWidth/2.4, 
+    top: -deviceHeight/1.55,
   }
 });
  
 module.exports = CameraView;
-
