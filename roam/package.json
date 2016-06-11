@@ -25,6 +25,7 @@
     "react-native-vector-icons": "^2.0.3",
     "rnpm": "^1.8.0",
     "twilio": "^2.9.1",
+    "undefined": "^0.1.0",
     "yelp": "^1.0.1"
   },
   "devDependencies": {
