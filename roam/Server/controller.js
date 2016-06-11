@@ -87,7 +87,7 @@ var getUser = (username, password, res) => {
           currentlocation: currentlocation,
           verificationCode: code,
           verifiedPhone: verifiedPhone,
-          image: image,
+          image: image
         };
         if (flag) {
           res.status(200).send(returnObj);
