@@ -272,7 +272,6 @@ class Geolocation extends Component {
                 coordinate={{ latitude: this.state.currentRoam.venueLatitude, longitude: this.state.currentRoam.venueLongitude}}
                 title={this.state.currentRoam.venue}
                 description={this.state.currentRoam.address}
-                image={require('../../imgs/purpleMarker.png')}
               />
             </MapView>
           </View>
