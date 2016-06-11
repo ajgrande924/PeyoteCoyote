@@ -474,7 +474,8 @@ module.exports = {
   },
 
   uploadPhoto: (req, res) => {
-    fetch(baseLink_users_query + req.body + '?apiKey=' + mongoDB_API_KEY, {
+    console.log(">>>>>>>>>>uploadPhoto's req.body.username: ", req.body.username)
+    fetch(baseLink_users_query + req.body.username + '?apiKey=' + mongoDB_API_KEY, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',

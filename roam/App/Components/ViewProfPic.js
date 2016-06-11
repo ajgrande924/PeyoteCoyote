@@ -40,7 +40,7 @@ class ViewProfPic extends Component {
       username: props.username || '',
       password: props.password || '',
       image: props.image,
-      //userId: props.id,
+      userId: props.id,
       navigator: this.props.navigator,
       photoObj: ''
     };
@@ -91,7 +91,7 @@ class ViewProfPic extends Component {
         username: this.state.userId,
         imageLink: 'https://franticrust.s3-us-west-1.amazonaws.com/uploads%2F' + photo.filename,
       };
-      console.error(photoObj.imageLink);
+      console.error(photoObj.username);
       this.state.photoObj = photoObj;
       
       fetch('http://localhost:3000/upload', 
