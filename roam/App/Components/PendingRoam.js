@@ -50,7 +50,7 @@ class PendingRoam extends Component {
           <Text style={styles.description}>We will notify you once you are matched!</Text>
           <Text style={styles.inputs}>Activity: {this.state.options.activity}</Text>
           <Text style={styles.inputs}>Transportation: {this.state.options.transportation}</Text>
-          <Text style={styles.inputs}>Radius from Me: {this.state.options.radius}</Text>
+          <Text style={styles.inputs}>Search Radius: {this.state.options.radius}</Text>
           <TouchableHighlight
             style={styles.button}
             onPress={this.handleCancel.bind(this)}

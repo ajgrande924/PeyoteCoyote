@@ -69,7 +69,7 @@ class Login extends Component {
         })
       })
       .then((res) => {
-        if (res.status === 400) {
+        if (res.status > 400) {
           this.setState({errorMessage: "Incorrect Username or Password", password: '', error: true, isLoading: false});
         } else{
           res = JSON.parse(res._bodyInit);
