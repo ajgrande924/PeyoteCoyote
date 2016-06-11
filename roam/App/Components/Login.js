@@ -115,7 +115,8 @@ class Login extends Component {
     });
     this.props.navigator.push({
       title: 'Create Account',
-      component: SignUp
+      component: SignUp,
+      passProps: {navigator: this.props.navigator}
     });
     this.setState({
       isLoading: false
@@ -128,9 +129,12 @@ class Login extends Component {
     );
     return(
       <Image style={styles.backgroundImage}
-      source={require('../../imgs/uni.jpg')}>
-      <View style={styles.loginContainer}>
-        <Text style={styles.title}> roam </Text>
+      source={require('../../imgs/mountains.png')}>
+        <View style={styles.logoContainer}>
+          <Image style={styles.logo}
+          source={require('../../imgs/logo.png')} />
+        </View>
+        <View style={styles.loginContainer}>
         <View style={styles.inputBar}>
           <View style={styles.icon}>
             <TouchableHighlight underlayColor='transparent'>
@@ -191,15 +195,17 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-  title: {
-    marginBottom: deviceHeight/20,
-    fontSize: deviceHeight/12,
-    fontWeight: "100",
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    color: 'white',
-    backgroundColor: 'transparent',
-    letterSpacing: deviceWidth/50,
+  logoContainer: {
+    width: deviceWidth,
+    height: deviceHeight/5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: deviceHeight/7.5,
+    marginBottom: deviceHeight/4.5
+  },
+  logo: {
+    width: deviceWidth/2,
+    height: deviceWidth/3.6,
   },
   submit: {
     height: deviceHeight/30,
@@ -224,10 +230,12 @@ const styles = StyleSheet.create({
     marginBottom: deviceHeight/40,
     borderBottomColor: 'white',
     borderBottomWidth: 0.5,
-    flexDirection: 'row', 
+    flexDirection: 'row',
+    marginLeft: deviceWidth/10,
+    marginRight: deviceWidth/10, 
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'white',
     alignSelf: 'center'
   },
@@ -236,26 +244,24 @@ const styles = StyleSheet.create({
     width: deviceWidth/2,
     flexDirection: 'row',
     backgroundColor: '#ff0066',
-    marginBottom: deviceHeight/40,
-    marginTop: deviceHeight/40,
+    marginBottom: deviceHeight/80,
+    // marginTop: deviceHeight/80,
     alignSelf: 'center',
     justifyContent: 'center',
+    borderRadius: 4
   },
   signUpButton: {
     color: 'white',
     textAlign: 'center',
-    paddingTop: deviceHeight/40,
-    fontSize: deviceHeight/40
+    // paddingTop: deviceHeight/,
+    fontSize: deviceHeight/50
   },
   backgroundImage: {
     flex: 1,
     width: deviceWidth,
     height: deviceHeight,
-    padding: deviceWidth/10,
-    paddingTop: deviceHeight/6,
-    marginTop: deviceHeight/30,
+    paddingTop: deviceHeight/10,
     flexDirection: 'column',
-    justifyContent: 'center'
   },
   errorMessage: {
     backgroundColor: 'transparent',

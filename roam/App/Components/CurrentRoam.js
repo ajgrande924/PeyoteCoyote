@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 // Require authentication component
 const styles = require('./Helpers/styles');
 const TabBar = require('./TabBar.js');
-const Geolocation = require('./Geolocation.js');
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;

@@ -15,7 +15,7 @@ var yelp = require('../App/Utils/api');
 // var roamOffGenerator = require('./App/Utils/roamOffGenerator');
 // var saltRounds = 10;
 
-//Frantic_Rust Requires
+//Frantic_Rust Requires 
 var config = require('../api_keys.js');
 var twilio = require('twilio');
 
@@ -52,6 +52,7 @@ var checkSignup = (username, phone, res) => {
         } else if (phoneFlag) {
           res.sendStatus(402);
         } else {
+          res.sendStatus(200);
           console.log('signup good to go');
         }
       });
@@ -107,6 +108,8 @@ var createNewRoam = (username, userLat, userLong, transportation, radius, neighb
     user1Latitude: userLat,
     user1Transportation: transportation,
     date: '',
+    user1TextCount: 3,
+    user2TextCount: 3,
     //yelp generates for us
     venueLatitude: '',
     venueLongitude: '',
@@ -176,23 +179,41 @@ module.exports = {
     };
     console.log('obj.......', obj);
 
-    checkSignup(obj.username, obj.phone, res);
-
-    fetch(baseLink_users + mongoDB_API_KEY,
-    {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(obj)
-    })
-    .then( err => {
-      getUser(obj.username, obj.password, res);
-    }).catch((err) => {
-        console.log('did not post user info');
-        res.sendStatus(400);
-    });
+    fetch(baseLink_verified + mongoDB_API_KEY)
+      .then((response) => response.json())
+        .then((responseData) => {
+          var usernameFlag = false;
+          var phoneFlag = false;
+          console.log(responseData);
+          for (var i = 0; i < responseData.length; i++) {
+            if (responseData[i].username === username) {
+              usernameFlag = true;
+            }
+            if (responseData[i].phone === phone) {
+              console.log(responseData[i].phone, phone, '************');
+              phoneFlag = true;
+            }
+          }
+          if (usernameFlag && phoneFlag) {
+            res.sendStatus(400);
+          } else if (usernameFlag) {
+            res.sendStatus(401);
+          } else if (phoneFlag) {
+            res.sendStatus(402);
+          } else {
+            fetch(baseLink_users + mongoDB_API_KEY,
+            {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(obj)
+            }).then((resp) => resp.json())
+            .then((responseData) => res.status(200).send(responseData));//res.status(200).send(resp._bodyInit));
+          }
+        });
+          
   },
 
   signin: (req, res) => {
@@ -275,8 +296,9 @@ module.exports = {
 
 //MATCHING ALGORITHM
   roam: (req, res) => {
-
+    var roamObj;
     var availableRoams = [];
+    var name = req.body.name;
     var username = req.body.id;
     var userLongitude = req.body.longitude;
     var userLatitude = req.body.latitude;
@@ -290,7 +312,7 @@ module.exports = {
     .then(responseData => {
       // if no existing roams, create new roam
       if(responseData.length === 0) {
-        console.log('*******');
+          console.log('https://maps.googleapis.com/maps/api/geocode/json?latlng='+ userLatitude + ',' + userLongitude + '&key=' + config.googleKey);
           fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
           .then((response) => response.json())
           .then((responseData) => {
@@ -305,7 +327,6 @@ module.exports = {
         for(var i=0; i<responseData.length; i++) {
           if(responseData[i].username1 === username || responseData[i].username2 === username) { res.sendStatus(401); return; }
           if(responseData[i].username2 !== '') { continue; }
-
           if (flag) {
             break;
           }
@@ -342,7 +363,7 @@ module.exports = {
                 };
                 var timeToMeet = new Date();
                 timeToMeet.setMinutes(timeToMeet.getMinutes() + 20);
-                console.log('3');
+                flag = true;
               fetch(baseLink_roams_query + responseData[saver]._id.$oid + '?apiKey=' + mongoDB_API_KEY,
               {
                 method: 'PUT',
@@ -352,8 +373,22 @@ module.exports = {
                   },
                 body: JSON.stringify( { "$set" : {username2: username, date: timeToMeet}})
               })
-              .catch(err => console.log(err))
-              .then( () => {flag = true; console.log('MATCHED');});
+              .then( () => {
+                flag = true;
+                console.log('MATCHED');
+                var date = new Date(timeToMeet);
+                var hours = date.getHours();
+                var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+                var TofD = hours > 12 ? 'PM' : 'AM';
+                hours = TofD === 'PM' ? hours-12 : hours;
+                var meetupTime = hours + ":" + minutes + TofD;
+                roamObj = responseData[saver];
+                roamObj.username2 = username;
+                roamObj.date = meetupTime;
+                roamObj.name2 = name;
+              })
+
+              .catch(err => console.log(err));
             })
            } 
           });
@@ -370,11 +405,45 @@ module.exports = {
               // 400 means new room created, did not find a match
               .then(() => res.sendStatus(400));          
           } else {
+            console.log(roamObj, 'dsfadfasfadsfdasfds');
+            var roamId = roamObj._id.$oid;
+
+            //make call to get roamObj -> currently undefined - I think its an asyn issue
+            // fetch(baseLink_roams_query + roamId + '?apiKey=' + mongoDB_API_KEY)
+            // .then(response => {response.json})
+            // .then(function(roamObjJson) {
+            //   var myRoamObj = roamObjJson;
+            //   console.log('roamObj ======================== :', myRoamObj);
+            // });
+
+
+            // send text to first user to sign up for a roam
+            // get user1's user info from roamObj
+            var user1Id = roamObj.username1.toString();
+
+            // use user1's id to search for user1's object in users collection
+            fetch(baseLink_users_query + user1Id + '?apiKey=' + mongoDB_API_KEY)
+            .then(data => data.json())
+            .then(function(twilioObj) {
+              var phoneNumber = twilioObj.phone;
+              client.sendSms({
+                  to:'+1' + phoneNumber,
+                  from:'+19259058241',
+                  body:'Hey! You have a Roam at ' + roamObj.venue + ' at ' + roamObj.date + ' with ' + roamObj.name2 + '.  The address is ' + roamObj.address + '.'
+              }, function(error, message) {
+                  if (!error) {
+                      console.log('Success! The SID for this SMS message is:');
+                      console.log(message.sid);
+                      console.log('Message sent on:');
+                      console.log(message.dateCreated);
+                  } else {
+                      console.log('Oops! There was an error.');
+                  }
+              });
+            })
             res.sendStatus(200);
           }
-        }, (500 * responseData.length));
-
-
+        }, (600 * responseData.length));
       }
     });
   },
@@ -473,6 +542,7 @@ module.exports = {
           var idFetched, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone, image;
           for (var i = 0; i < responseData.length; i++) {
             if (responseData[i]._id.$oid === id) {
+              console.log(responseData[i]._id.$oid, id, '**************');
               console.log('got it');
               idFetched = responseData[i]._id.$oid;
               name = responseData[i].name;
@@ -489,7 +559,7 @@ module.exports = {
           }
           const returnObj = {
             id: idFetched,
-            name: name,
+            name: name || 'a new friend',
             username: usernameFetched,
             password: passwordFetched,
             phone: phone,
@@ -498,13 +568,51 @@ module.exports = {
             verifiedPhone: verifiedPhone,
             image: image
           };
-          console.log(returnObj);
+          console.log('!!!!', returnObj);
           if (flag) {
             res.status(201).send(returnObj);
           } else {
             res.sendStatus(402);
           }
         });
+  },
+
+  sendRoamText: (req, res) => {
+    var phoneNumber = req.body.recipient.phone;
+    console.log(req.body.user, req.body.roamData);
+    client.sendSms({
+      to:'+1' + phoneNumber,
+      from:'+19259058241',
+      body:'Matched buddy ' + req.body.user.name + ' says: ' + req.body.message
+    }, function(error, message) {
+        if (!error) {
+          if (req.body.user.id === req.body.roamData.username1) {
+            fetch(baseLink_roams_query + req.body.roamData._id.$oid + '?apiKey=' + mongoDB_API_KEY,
+            {
+              method: 'PUT',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                },
+              body: JSON.stringify( { "$set" : {user1TextCount: req.body.roamData.user1TextCount-1} })
+            });
+          } else {
+            fetch(baseLink_roams_query + req.body.roamData._id.$oid + '?apiKey=' + mongoDB_API_KEY,
+            {
+              method: 'PUT',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                },
+              body: JSON.stringify( { "$set" : {user2TextCount: req.body.roamData.user2TextCount-1} })
+            });
+          }
+          console.log('Message sent on:');
+          console.log(message.dateCreated);
+        } else {
+          console.log('Oops! There was an error.');
+        }
+      });
   }
 
             // var obj = {

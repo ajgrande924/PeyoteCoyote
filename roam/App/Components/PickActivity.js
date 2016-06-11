@@ -28,7 +28,7 @@ class ActivityPicker extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.textContainer}>
-                <Text style={styles.title}> I want to go to {this.state.selectedOption}!</Text>
+                    <Text style={styles.title}> I want to go to {this.state.selectedOption}!</Text>
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableHighlight
@@ -56,13 +56,17 @@ var styles = StyleSheet.create({
         flexDirection: 'row'
     },
     textContainer: {
-        width: 3 * deviceWidth/4
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 2.5 * deviceWidth/3.5,
     },
     buttonContainer: {
-        width: deviceWidth/4
+        width: deviceWidth/3.5,
+        // alignItems: 'flex-start',
+        justifyContent: 'center'
     },
     title: {
-        fontSize: 18,
+        fontSize: 16,
         color: 'white',
     },
     welcome: {
@@ -76,17 +80,16 @@ var styles = StyleSheet.create({
         marginBottom: 5,
     },
     buttonText: {
-      fontSize: 18,
+      fontSize: 14,
       color: 'white',
       alignSelf: 'center'
     },
     button: {
-      height: deviceHeight/15,
-      width: deviceWidth/4,
+      height: deviceHeight/30,
+      width: deviceWidth/6.5,
       flexDirection: 'row',
       backgroundColor: '#ff0066',
-      // borderRadius:10,
-      marginBottom: 10,
+      borderRadius:10,
       alignSelf: 'center',
       justifyContent: 'center',
     },

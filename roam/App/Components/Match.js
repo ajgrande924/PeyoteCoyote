@@ -41,15 +41,24 @@ class MatchView extends Component {
       refresh: true,
       currentView: 1,
       currentRoam: props.currentRoam,
-      match: {},
+      match: {name: 'a New Friend'},
+      textsRemaining: 0,
       stateChange: props.passedDownStateChange,
       date: meetupTime
     };
 
+    this.getTextCountRemaining();
+  }
+
+  getTextCountRemaining() {
+    if (this.state.currentRoam.username1 === this.state.user.id) {
+      this.state.textsRemaining = this.state.currentRoam.user1TextCount;
+    } else {
+      this.state.textsRemaining = this.state.currentRoam.user2TextCount;
+    }
   }
 
   componentDidMount() {
-    this.getMatch();
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -69,7 +78,7 @@ class MatchView extends Component {
           },
           refresh: false
         });
-        console.warn(this.state.region);
+        this.getMatch();
       });
   }
 
@@ -106,6 +115,7 @@ class MatchView extends Component {
   }
 
   cancelMatch() {
+    this.state.stateChange(1);
     fetch('http://localhost:3000/cancelRoam', {
       method: 'POST',
       headers: {
@@ -113,18 +123,13 @@ class MatchView extends Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({id: this.state.user.id})
-    })
-    .then((res) => {
-      this.state.stateChange(1);
-      if (res.status === 200) {
-        AlertIOS.alert('deletion successful');
-      } else {
-        AlertIOs.alert('something wrong happened');
-      }
-    })
-    .catch((error) => {
-      console.log('Error handling submit:', error);
     });
+    // .then((res) => {
+    //   this.state.stateChange(1);
+    // })
+    // .catch((error) => {
+    //   console.log('Error handling submit:', error);
+    // });
   }
 
   passedDownStateChange(value) {
@@ -133,7 +138,6 @@ class MatchView extends Component {
       refresh: true
     });
   }
-
 
   loadingPage() {
     return(
@@ -147,6 +151,34 @@ class MatchView extends Component {
     });
   }
 
+  sendText() {
+    const name = this.state.match.name;
+    if (this.state.textsRemaining > 0) {
+    AlertIOS.prompt(
+      'Text to ' + name,
+      this.state.textsRemaining + ' Texts Remaining',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Send', onPress: message => {
+          fetch('http://localhost:3000/sendRoamMsg',
+          {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user: this.state.user, message: message, recipient: this.state.match, roamData: this.state.currentRoam})
+          });
+          this.setState({textsRemaining: this.state.textsRemaining-1});
+          AlertIOS.alert('Sent!');
+        }},
+      ]
+    );
+    } else {
+      AlertIOS.alert('You have no complimentary texts remaining! ;__;');
+    }
+  }
+
   render () {
     if (this.state.refresh) {
       return this.loadingPage();
@@ -157,7 +189,7 @@ class MatchView extends Component {
 
       <View style={styles.navbarContainer}>
         <Text style={styles.matchTitle}> It's a Match! </Text>
-        <Text style={styles.matchMessage}>Congratulations! You and {this.state.match.username} are ready to Roam!</Text>
+        <Text style={styles.matchMessage}>Congratulations! You and {this.state.match.name} are ready to Roam!</Text>
         <View style={styles.profileContainer}>
           <View style={styles.titles}>
             <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
@@ -182,6 +214,7 @@ class MatchView extends Component {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableHighlight
+            onPress={this.sendText.bind(this)}
             style={styles.button}
             underlayColor="white" >
               <Text style={styles.buttonText}>Text</Text>
@@ -230,6 +263,7 @@ class Geolocation extends Component {
             style={styles.map}
             initialRegion={this.state.region}>
               <MapView.Marker
+                pinColor={'teal'}
                 coordinate={this.state.marker.coordinates}
                 title={this.state.marker.title}
                 description={this.state.marker.description}

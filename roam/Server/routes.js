@@ -13,7 +13,7 @@ module.exports = function (app) {
   app.post('/cancelRoam', controller.cancelRoam);
   app.post('/upload', controller.uploadPhoto);
   app.post('/history', controller.populateHistory);
-  app.post('/profilePic', controller.profilePic);
-  // app.post('/isRoaming', controller.isRoaming);
-  // app.post('/match', controller.getMatch);
+  app.post('/isRoaming', controller.isRoaming);
+  app.post('/match', controller.getMatch);
+  app.post('/sendRoamMsg', controller.sendRoamText);
 };

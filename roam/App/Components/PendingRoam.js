@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, Image, TouchableHighlight, ListView} from 'react-native'
-var styles = require('./Helpers/styles');
+import {AlertIOS, Text, View, Image, TouchableHighlight, ListView, Dimensions, StyleSheet} from 'react-native';
 
 
 class PendingRoam extends Component {
@@ -11,7 +10,8 @@ class PendingRoam extends Component {
       address: null,
       time: null,
       queryType: '',
-      stateChange: props.passedDownStateChange
+      stateChange: props.passedDownStateChange,
+      options: props.options
     };
   }
 
@@ -29,37 +29,97 @@ class PendingRoam extends Component {
     })
     .then((res) => {
       this.state.stateChange(1);
-      if (res.status === 200) {
-        AlertIOS.alert('deletion successful');
-      } else {
-        AlertIOs.alert('something wrong happened');
-      }
     })
     .catch((error) => {
       console.log('Error handling submit:', error);
     });
+  }
 
+  refresh() {
+    this.state.stateChange(1);
   }
 
   render() {
     return (
-      <Image style={stylesFile.backgroundImage}
+      <Image style={styles.backgroundImage}
         source={require('../../imgs/uni.jpg')}>
-        <Text style={stylesFile.title}> ROAM </Text>
-
-          <Text>We will notify you once you are matched</Text>
-          <Text>{this.state.address}</Text>
-          <Text>Roam starts at {this.state.time}</Text>
+        <TouchableHighlight onPress={this.refresh.bind(this)}>
+        <Text> jskdlf;jksladjf;klsajfjs </Text>
+        </TouchableHighlight>
+        <Text style={styles.title}>roam</Text>
+          <Text style={styles.description}>We will notify you once you are matched!</Text>
+          <Text style={styles.inputs}>Activity: {this.state.options.activity}</Text>
+          <Text style={styles.inputs}>Transportation: {this.state.options.transportation}</Text>
+          <Text style={styles.inputs}>Radius from Me: {this.state.options.radius}</Text>
           <TouchableHighlight
-            style={stylesFile.button}
+            style={styles.button}
             onPress={this.handleCancel.bind(this)}
             underlayColor="white" >
-              <Text style={stylesFile.buttonText}>Cancel Roam</Text>
+              <Text style={styles.buttonText}>Cancel Roam</Text>
           </TouchableHighlight>
-
       </Image>
     );
   }
 }
 
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
+
+const styles = StyleSheet.create({
+  title: {
+    marginBottom: deviceHeight/20,
+    fontSize: deviceHeight/12,
+    fontWeight: "100",
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    color: 'white',
+    backgroundColor: 'transparent',
+    letterSpacing: deviceWidth/50,
+  },
+  description: {
+    marginBottom: deviceHeight/60,
+    fontSize: deviceHeight/35,
+    fontWeight: "100",
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    color: 'white',
+    backgroundColor: 'transparent',
+    // letterSpacing: deviceWidth/50,
+  },
+  inputs: {
+    marginBottom: deviceHeight/60,
+    fontSize: deviceHeight/35,
+    fontWeight: "100",
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    color: 'white',
+    backgroundColor: 'transparent',
+    // letterSpacing: deviceWidth/50,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+  },
+  button: {
+    height: deviceHeight/20,
+    width: deviceWidth/2,
+    flexDirection: 'row',
+    backgroundColor: '#ff0066',
+    marginBottom: deviceHeight/40,
+    marginTop: deviceHeight/40,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  backgroundImage: {
+    flex: 1,
+    width: deviceWidth,
+    height: deviceHeight,
+    padding: deviceWidth/10,
+    // paddingTop: deviceHeight/6,
+    // marginTop: deviceHeight/30,
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+});
 module.exports = PendingRoam;
