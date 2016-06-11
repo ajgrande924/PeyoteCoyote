@@ -140,6 +140,10 @@ class SignUp extends Component {
 
   }
 
+  redirectHome() {
+      this.props.navigator.popToTop();
+  }
+
   render() {
     var showErr = (
       this.state.error ? <Text style={styles.errorMessage}> {this.state.errorMessage} </Text> : <Text style={styles.errorMessage}> </Text>
@@ -148,8 +152,10 @@ class SignUp extends Component {
       <Image style={styles.backgroundImage}
         source={require('../../imgs/dude.png')} >
         <View style={styles.logoContainer}>
-          <Image style={styles.logo}
-          source={require('../../imgs/logo.png')} />
+          <TouchableHighlight onPress={this.redirectHome.bind(this)} underlayColor='transparent'>
+            <Image style={styles.logo}
+            source={require('../../imgs/logo.png')} />
+          </TouchableHighlight>
         </View>
         <View style={styles.signupContainer}>
           {/* Fields that we want to bind the username and password input */}
