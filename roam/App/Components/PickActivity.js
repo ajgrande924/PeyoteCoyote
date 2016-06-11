@@ -14,13 +14,14 @@ import FMPicker from '../Lib/index.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 
-var options = ['Hot Yoga', 'Regular Yoga', 'Restaurants', 'Bars', 'Food', 'Excercise', 'Site Seeing', ];
+var options = ['Eat Food', 'Exercise', 'Go Shopping', 'Explore a Museum', 'Watch a Movie', 'Drink Coffee'];
 
 class ActivityPicker extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedOption: 'Hot Yoga'
+            selectedOption: 'Eat Food',
+            callback: props.callback
         }
     }
 
@@ -28,7 +29,7 @@ class ActivityPicker extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.textContainer}>
-                    <Text style={styles.title}> I want to go to {this.state.selectedOption}!</Text>
+                    <Text style={styles.title}> I want to {this.state.selectedOption}!</Text>
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableHighlight
@@ -38,7 +39,8 @@ class ActivityPicker extends Component {
                     </TouchableHighlight>
                     <FMPicker ref={'picker'} options={options}
                         onSubmit={(option)=>{
-                            this.setState({selectedOption: option})
+                            this.setState({selectedOption: option});
+                            this.state.callback(option);
                         }}
                         />
                 </View>

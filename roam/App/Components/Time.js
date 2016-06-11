@@ -42,6 +42,9 @@ class RoamView extends Component {
       initialLoad: false,
       roamingData: {},
       roamingDataLoad: false,
+      activityType: 'Eat Food',
+      transportationType: '',
+      radiusChosen: ''
     };
 
   }
@@ -98,19 +101,35 @@ class RoamView extends Component {
     });
   }
 
-  passedDownStateChange(value) {
+  passedDownStateChange(value, activityOptions) {
     this.state.currentView = value;
     if (value === 1) {
       this.componentDidMount();
     }
-    this.setState({
-      refresh: true
-    });
+    if (activityOptions) {
+      this.setState({
+        radiusChosen: activityOptions.radius || 0,
+        transportationType: activityOptions.transportation || 'Walking',
+        refresh: true
+      });      
+    } else {
+      this.setState({
+        refresh: true
+      });
+    }
+
   }
 
   handleSelected(choice) {
+    console.error(choice);
     this.setState({
       selectedOption: choice
+    });
+  }
+
+  setActivity(activity) {
+    this.setState({
+      activityType: activity
     });
   }
 
@@ -140,7 +159,7 @@ class RoamView extends Component {
           </View>
         </View>
         <View style={styles.statsContainer}>
-            <ActivityPicker />
+            <ActivityPicker callback={this.setActivity.bind(this)}/>
         </View> 
       </View>
         <RoamSearchView stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
@@ -157,7 +176,7 @@ class RoamView extends Component {
       return this.renderSearchView();
     }
     if (this.state.currentView === 2) {
-      return (<PendingRoam user={this.state.user} passedDownStateChange={this.passedDownStateChange.bind(this)} options={{ activity: 'Hot Yoga', transportation: 'Walking', radius: '2 Miles' }}/>);
+      return (<PendingRoam user={this.state.user} passedDownStateChange={this.passedDownStateChange.bind(this)} options={{activity: this.state.activityType, transportation: this.state.transportationType, radius: this.state.radiusChosen}}/>);
     }
 
     if (this.state.currentView === 3 && !this.state.roamingDataLoad) {
@@ -236,7 +255,10 @@ class RoamSearchView extends Component {
       })
     .then( response => {
       if(response.status === 400) {
-        this.state.sendState(2);
+        this.state.sendState(2, {
+          transportation: this.state.transportSelectedOption.charAt(0).toUpperCase() + this.state.transportSelectedOption.slice(1) ,
+          radius: this.state.transportSelectedOption === 'walking' ? this.state.selectedOption : this.state.driveSelectedOption,
+        });
       } else if (response.status === 200){
         this.state.sendState(3);
       } else if (response.status === 401) {
