@@ -79,7 +79,7 @@ class SignUp extends Component {
 
       if (this.state.firstName !== '' && this.state.userName !== '' && this.state.password !== '' && this.state.passwordAgain !== '' && (this.state.password === this.state.passwordAgain) && (rePhone.test(this.state.phone) || rePhone2.test(this.state.phone))) {
         var verificationCode = this.getCode();
-        fetch('http://localhost:3000/signup', {
+        fetch('http://159.203.197.90:3000/signup', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

@@ -71,7 +71,7 @@ class RoamView extends Component {
           initialLoad: true,
         });
       });
-    fetch('http://localhost:3000/isRoaming', 
+    fetch('http://159.203.197.90:3000/isRoaming', 
     {
       method: 'POST',
       headers: {
@@ -244,7 +244,7 @@ class RoamSearchView extends Component {
       radius: Math.floor(this.state.circleRadius),
       transportation: this.state.transportSelectedOption
     };
-    fetch('http://localhost:3000/roam',
+    fetch('http://159.203.197.90:3000/roam',
       {
         method: 'POST',
         headers: {
@@ -455,7 +455,7 @@ const styles = StyleSheet.create({
     color:'#fff',
     textAlign:'center',
     fontWeight:'bold',
-    fontSize: 20,
+    fontSize: deviceHeight/30,
     fontFamily: 'Avenir',
 
   },
@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   statTitle: {
-    fontSize: 12,
+    fontSize: deviceWidth/20,
     color: '#ff0066',
   },
   titles: {
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: deviceWidth/20,
     color: 'white',
     alignSelf: 'center'
   },
@@ -517,26 +517,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#ff0066',
     // borderRadius:10,
-    marginBottom: 10,
+    marginBottom: deviceHeight/80,
     alignSelf: 'center',
     justifyContent: 'center',
   },
   unselected: {
-    fontSize: 20,
+    fontSize: deviceWidth/100,
     backgroundColor: 'orange',
-    marginTop: 20,
-    marginBottom: 20,
-    borderColor: 'black',
-    padding: 10,
+    marginTop: deviceHeight/100,
+    marginBottom: deviceHeight/100,
+    // borderColor: 'black',
+    padding: deviceHeight/70,
     textAlign: 'center',
     justifyContent: 'center'
   },
   selected: {
-    fontSize: 20,
+    fontSize: deviceWidth/100,
     backgroundColor: 'green',
-    marginTop: 20,
-    marginBottom: 20,
-    padding: 10,
+    marginTop: deviceHeight/100,
+    marginBottom: deviceHeight/100,
+    padding: deviceHeight/70,
     textAlign: 'center',
     justifyContent: 'center'
   },
@@ -555,7 +555,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   map: {
-    height: deviceHeight/2,
+    height: deviceHeight/1.96,
     width: deviceWidth,
     backgroundColor: 'transparent'
   },
@@ -564,11 +564,11 @@ const styles = StyleSheet.create({
   },
   sliderContainer1: {
     width: 3 * deviceWidth/10,
-    padding: 10
+    padding: deviceHeight/80
   },
   sliderContainer2: {
     width: 7 * deviceWidth/10,
-    padding: 10
+    padding: deviceHeight/80
   }
 });
 

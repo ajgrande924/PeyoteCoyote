@@ -57,7 +57,7 @@ class Login extends Component {
 
     //If username and password exists on the database, log the user into the select time page
     if(this.state.username !== '' && this.state.password !== ''){
-      fetch('http://localhost:3000/signin', {
+      fetch('http://159.203.197.90:3000/signin', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -73,7 +73,7 @@ class Login extends Component {
           this.setState({errorMessage: "Incorrect Username or Password", password: '', error: true, isLoading: false});
         } else{
           res = JSON.parse(res._bodyInit);
-          fetch('http://localhost:3000/isVerified',
+          fetch('http://159.203.197.90:3000/isVerified',
           {
             method: 'POST',
             headers: {
@@ -265,10 +265,10 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     backgroundColor: 'transparent',
-    height: deviceHeight/10,
+    // height: deviceHeight/14,
     color: '#ff0066',
     textAlign: 'center',
-    fontSize: deviceHeight/40,
+    fontSize: deviceHeight/50,
   },
 });
 
