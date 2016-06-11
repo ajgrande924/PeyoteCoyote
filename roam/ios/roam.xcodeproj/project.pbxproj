@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -137,6 +136,13 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		B558C5B51D0C9AC4006F39D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D6D7F1B574894A93B85093F1 /* RNAWSS3Upload.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C214703E1BF5108A008C4EB4;
+			remoteInfo = RNAWSS3Upload;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -177,6 +183,7 @@
 		B5A0C9FC1D075BFB00C89CFC /* RCTRootView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RCTRootView.h; path = "../../../app/node_modules/react-native/React/Base/RCTRootView.h"; sourceTree = "<group>"; };
 		B5A0C9FE1D075D9200C89CFC /* RCTRootView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RCTRootView.m; path = "../node_modules/react-native/React/Base/RCTRootView.m"; sourceTree = "<group>"; };
 		B5C087DE1D08EE8900AD9112 /* RCTCamera.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RCTCamera.m; path = "../node_modules/react-native-camera/ios/RCTCamera.m"; sourceTree = "<group>"; };
+		D6D7F1B574894A93B85093F1 /* RNAWSS3Upload.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAWSS3Upload.xcodeproj; path = "../node_modules/react-native-aws-s3/RNAWSS3Upload.xcodeproj"; sourceTree = "<group>"; };
 		FA11ACCC35D1441FAC38DBB6 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		FAF2FC82EEF54309A8C0A62F /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		FDD104B30194410685A86C71 /* libRCTCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTCamera.a; sourceTree = "<group>"; };
@@ -361,6 +368,7 @@
 				1B572BD0FF164974B4DB4DBD /* RNVectorIcons.xcodeproj */,
 				8B58F839E0EF4786905C9771 /* RCTCamera.xcodeproj */,
 				A3DA6F1A61554A6CAB4D6AEB /* AirMaps.xcodeproj */,
+				D6D7F1B574894A93B85093F1 /* RNAWSS3Upload.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -413,6 +421,14 @@
 				5DB51734D052446583B1D39C /* Zocial.ttf */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		B558C5A61D0C9AC4006F39D6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B558C5B61D0C9AC4006F39D6 /* libRNAWSS3Upload.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -538,6 +554,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = B558C5A61D0C9AC4006F39D6 /* Products */;
+					ProjectRef = D6D7F1B574894A93B85093F1 /* RNAWSS3Upload.xcodeproj */;
+				},
+				{
 					ProductGroup = 65F5B2C81D07B0480020A6EE /* Products */;
 					ProjectRef = 1B572BD0FF164974B4DB4DBD /* RNVectorIcons.xcodeproj */;
 				},
@@ -640,6 +660,13 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B558C5B61D0C9AC4006F39D6 /* libRNAWSS3Upload.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNAWSS3Upload.a;
+			remoteRef = B558C5B51D0C9AC4006F39D6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -745,6 +772,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/roam.app/roam";
@@ -761,6 +789,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -785,6 +814,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps/**",
+					"$(SRCROOT)/../node_modules/react-native-aws-s3/RNAWSS3Upload",
 				);
 				INFOPLIST_FILE = roam/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -813,6 +843,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps/**",
+					"$(SRCROOT)/../node_modules/react-native-aws-s3/RNAWSS3Upload",
 				);
 				INFOPLIST_FILE = roam/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -868,6 +899,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps/**",
+					"$(SRCROOT)/../node_modules/react-native-aws-s3/RNAWSS3Upload",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -911,6 +943,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps/**",
+					"$(SRCROOT)/../node_modules/react-native-aws-s3/RNAWSS3Upload",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

@@ -42,7 +42,7 @@ class RoamView extends Component {
       initialLoad: false,
       roamingData: {},
       roamingDataLoad: false,
-      activityType: '',
+      activityType: 'Eat Food',
       transportationType: '',
       radiusChosen: ''
     };
@@ -106,11 +106,18 @@ class RoamView extends Component {
     if (value === 1) {
       this.componentDidMount();
     }
-    this.setState({
-      radiusChosen: activityOptions.radius,
-      transportationType: activityOptions.transportation,
-      refresh: true
-    });
+    if (activityOptions) {
+      this.setState({
+        radiusChosen: activityOptions.radius || 0,
+        transportationType: activityOptions.transportation || 'Walking',
+        refresh: true
+      });      
+    } else {
+      this.setState({
+        refresh: true
+      });
+    }
+
   }
 
   handleSelected(choice) {
