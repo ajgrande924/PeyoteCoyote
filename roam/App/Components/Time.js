@@ -215,6 +215,7 @@ class RoamSearchView extends Component {
       this.state.transportSelectedOption = 'driving';
     }
     var userObj = {
+      name: this.state.user.name,
       id: this.state.user.id,
       latitude: this.state.region.latitude,
       longitude: this.state.region.longitude,

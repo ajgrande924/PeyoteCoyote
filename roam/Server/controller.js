@@ -298,6 +298,7 @@ module.exports = {
   roam: (req, res) => {
     var roamObj;
     var availableRoams = [];
+    var name = req.body.name;
     var username = req.body.id;
     var userLongitude = req.body.longitude;
     var userLatitude = req.body.latitude;
@@ -375,7 +376,16 @@ module.exports = {
               .then( () => {
                 flag = true;
                 console.log('MATCHED');
+                var date = new Date(timeToMeet);
+                var hours = date.getHours();
+                var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+                var TofD = hours > 12 ? 'PM' : 'AM';
+                hours = TofD === 'PM' ? hours-12 : hours;
+                var meetupTime = hours + ":" + minutes + TofD;
                 roamObj = responseData[saver];
+                roamObj.username2 = username;
+                roamObj.date = meetupTime;
+                roamObj.name2 = name;
               })
               .catch(err => console.log(err));
             })
@@ -395,6 +405,7 @@ module.exports = {
               .then(() => res.sendStatus(400));
               console.log('made new thing');          
           } else {
+            console.log(roamObj, 'dsfadfasfadsfdasfds');
             var roamId = roamObj._id.$oid;
 
             //make call to get roamObj -> currently undefined - I think its an asyn issue
@@ -418,7 +429,7 @@ module.exports = {
               client.sendSms({
                   to:'+1' + phoneNumber,
                   from:'+19259058241',
-                  body:'Hello there, you have a Roam at ' + roamObj.venue + ' at ' + 'roamObj.time' + ' with ' + 'roamObj.username2' + '.  The address is ' + roamObj.address + '.'
+                  body:'Hey! You have a Roam at ' + roamObj.venue + ' at ' + roamObj.date + ' with ' + roamObj.name2 + '.  The address is ' + roamObj.address + '.'
               }, function(error, message) {
                   if (!error) {
                       console.log('Success! The SID for this SMS message is:');
@@ -432,7 +443,7 @@ module.exports = {
             })
             res.sendStatus(200);
           }
-        }, (500 * responseData.length));
+        }, (600 * responseData.length));
       }
     });
   },
