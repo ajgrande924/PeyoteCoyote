@@ -171,14 +171,10 @@ class SignUp extends Component {
                 <TextInput
                   style={styles.submit}
                   returnKeyType = {"next"}
-                  autoFocus = {true}
                   placeholder="First Name"
                   placeholderTextColor="white"
                   onChangeText={(text) => this.setState({firstName: text})}
                   value={this.state.firstName}
-                  onSubmitEditing={(event) => { 
-                    this.refs.SecondInput.focus(); 
-                  }}
                   />
                 </View>
             </View>
@@ -187,16 +183,13 @@ class SignUp extends Component {
             <View style={styles.inputBar}>
               <View style= {styles.lineName}>
                 <TextInput
-                  ref='SecondInput'
                   returnKeyType = {"next"}
                   style={styles.submit}
                   placeholder="Username"
                   placeholderTextColor="white"
                   onChangeText={(text) => this.setState({userName: text})}
                   value={this.state.userName}
-                  onSubmitEditing={(event) => { 
-                    this.refs.ThirdInput.focus(); 
-                  }}
+                
                   />
                 </View>
               </View>
@@ -212,7 +205,6 @@ class SignUp extends Component {
               </View>
               <View style= {styles.lineName}>  
                 <TextInput
-                  ref='ThirdInput'
                   returnKeyType = {"next"}
                   style={styles.submit}
                   placeholder="Enter Password"
@@ -220,9 +212,6 @@ class SignUp extends Component {
                   onChangeText={(text) => this.setState({password: text})}
                   value={this.state.password}
                   secureTextEntry={true}
-                  onSubmitEditing={(event) => { 
-                    this.refs.FourthInput.focus(); 
-                  }}
                   />
               </View>
             </View>
@@ -231,7 +220,6 @@ class SignUp extends Component {
           <View style={styles.inputBar}>
             <View style= {styles.lineName}> 
               <TextInput
-                ref='FourthInput'
                 returnKeyType = {"next"}
                 style={styles.submit}
                 placeholder="Confirm Password"
@@ -239,9 +227,7 @@ class SignUp extends Component {
                 onChangeText={(text) => this.setState({passwordAgain: text})}
                 value={this.state.passwordAgain}
                 secureTextEntry={true}
-                onSubmitEditing={(event) => { 
-                  this.refs.FifthInput.focus(); 
-                }}
+
                 />
             </View>
           </View>
@@ -256,7 +242,6 @@ class SignUp extends Component {
             </View>
             <View style= {styles.lineName}> 
               <TextInput
-                ref='FifthInput'
                 style={styles.submit}
                 autoCapitalize="none"
                 placeholder="Phone Number"
@@ -266,9 +251,7 @@ class SignUp extends Component {
                 keyboardType="number-pad"
                 returnKeyType={'done'}
                 maxLength={10}
-                onSubmitEditing={(event) => { 
-                  this.handleSubmit.bind(this)(); 
-                }}
+
                 />
             </View>
           </View>

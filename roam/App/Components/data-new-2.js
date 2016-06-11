@@ -19,8 +19,6 @@ var history2 = [
 		placeRoamed: 'Dairy Queen',
 		date: '05/18/16'
 	},
-
-	
 	{
 		username1: 'Aj',
 		username1pic: 'http://liketherazor.com/wp-content/uploads/2014/12/13-Chris-Gillett-Houston-Headshot-Photographer-Brenna-Smith-1024x732.jpg',

@@ -8,6 +8,7 @@ var Separator = require('./Helpers/Separator');
 // const mongoDB_API_KEY = 'yjH4qEJR-Olag89IaUTXd06IpuVDZWx1';
 
 import history from './data-new.js';
+import history2 from './data-new-2.js';
 
 var coordinates = {};
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -43,7 +44,7 @@ class User extends Component {
     // console.error(this.state.user.id);
     this.getProfilePic();
     this.getHistory();
-    // history.forEach(function(obj) {
+    // history2.forEach(function(obj) {
     //   fetch(baseLink_history + mongoDB_API_KEY, {
     //     method: 'POST',
     //     headers: {
