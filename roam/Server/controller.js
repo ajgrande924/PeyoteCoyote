@@ -381,7 +381,7 @@ module.exports = {
                 var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
                 var TofD = hours > 12 ? 'PM' : 'AM';
                 hours = TofD === 'PM' ? hours-12 : hours;
-                var meetupTime = hours + ":" + minutes + TofD;
+                var meetupTime = hours + ":" + minutes + ' ' + TofD;
                 roamObj = responseData[saver];
                 roamObj.username2 = username;
                 roamObj.date = meetupTime;
@@ -405,8 +405,8 @@ module.exports = {
               // 400 means new room created, did not find a match
               .then(() => res.sendStatus(400));          
           } else {
-            console.log(roamObj, 'dsfadfasfadsfdasfds');
             var roamId = roamObj._id.$oid;
+            console.log('roamObj ====================== ', roamObj); 
 
             //make call to get roamObj -> currently undefined - I think its an asyn issue
             // fetch(baseLink_roams_query + roamId + '?apiKey=' + mongoDB_API_KEY)
@@ -420,6 +420,8 @@ module.exports = {
             // send text to first user to sign up for a roam
             // get user1's user info from roamObj
             var user1Id = roamObj.username1.toString();
+            var user2Id = roamObj.username2.toString();
+            console.log('user2Id ==================== ', roamObj.username2.toString())
 
             // use user1's id to search for user1's object in users collection
             fetch(baseLink_users_query + user1Id + '?apiKey=' + mongoDB_API_KEY)
@@ -441,6 +443,28 @@ module.exports = {
                   }
               });
             })
+
+            // use user2's id to search for user2's object in users collection
+            fetch(baseLink_users_query + user2Id + '?apiKey=' + mongoDB_API_KEY)
+            .then(data => data.json())
+            .then(function(twilioObj) {
+              var phoneNumber = twilioObj.phone;
+              client.sendSms({
+                  to:'+1' + phoneNumber,
+                  from:'+19259058241',
+                  body:'Hey! You have a Roam at ' + roamObj.venue + ' at ' + roamObj.date + ' with ' + roamObj.name2 + '.  The address is ' + roamObj.address + '.'
+              }, function(error, message) {
+                  if (!error) {
+                      console.log('Success! The SID for this SMS message is:');
+                      console.log(message.sid);
+                      console.log('Message sent on:');
+                      console.log(message.dateCreated);
+                  } else {
+                      console.log('Oops! There was an error.');
+                  }
+              });
+            })
+
             res.sendStatus(200);
           }
         }, (600 * responseData.length));
