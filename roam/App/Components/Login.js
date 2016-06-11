@@ -115,7 +115,8 @@ class Login extends Component {
     });
     this.props.navigator.push({
       title: 'Create Account',
-      component: SignUp
+      component: SignUp,
+      passProps: {navigator: this.props.navigator}
     });
     this.setState({
       isLoading: false

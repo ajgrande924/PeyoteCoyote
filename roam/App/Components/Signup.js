@@ -102,6 +102,7 @@ class SignUp extends Component {
             var body = JSON.parse(res._bodyInit);
             body.verifiedPhone = false;
             body.verificationCode = verificationCode;
+            console.error(body);
             this.props.navigator.push({
               title: 'Verify Phone Link',
               component: VerificationPage,
