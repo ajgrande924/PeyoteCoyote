@@ -42,10 +42,20 @@ class MatchView extends Component {
       currentView: 1,
       currentRoam: props.currentRoam,
       match: {},
+      textsRemaining: 0,
       stateChange: props.passedDownStateChange,
       date: meetupTime
     };
 
+    this.getTextCountRemaining();
+  }
+
+  getTextCountRemaining() {
+    if (this.state.currentRoam.username1 === this.state.user.id) {
+      this.state.textsRemaining = this.state.currentRoam.user1TextCount;
+    } else {
+      this.state.textsRemaining = this.state.currentRoam.user2TextCount;
+    }
   }
 
   componentDidMount() {
@@ -134,7 +144,6 @@ class MatchView extends Component {
     });
   }
 
-
   loadingPage() {
     return(
       <View></View>
@@ -145,6 +154,34 @@ class MatchView extends Component {
     this.setState({
       selectedOption: choice
     });
+  }
+
+  sendText() {
+    const name = this.state.match.name;
+    if (this.state.textsRemaining > 0) {
+    AlertIOS.prompt(
+      'Text to ' + name,
+      this.state.textsRemaining + ' Texts Remaining',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Send', onPress: message => {
+          fetch('http://localhost:3000/sendRoamMsg',
+          {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user: this.state.user, message: message, recipient: this.state.match, roamData: this.state.currentRoam})
+          });
+          this.setState({textsRemaining: this.state.textsRemaining-1});
+          AlertIOS.alert('Sent!');
+        }},
+      ]
+    );
+    } else {
+      AlertIOS.alert('You have no complimentary texts remaining! ;__;');
+    }
   }
 
   render () {
@@ -182,6 +219,7 @@ class MatchView extends Component {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableHighlight
+            onPress={this.sendText.bind(this)}
             style={styles.button}
             underlayColor="white" >
               <Text style={styles.buttonText}>Text</Text>
