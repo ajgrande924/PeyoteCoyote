@@ -62,7 +62,7 @@ var getUser = (username, password, res) => {
     .then((response) => response.json())
       .then((responseData) => {
         var flag = false;
-        var id, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone, image;
+        var id, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone;
         for (var i = 0; i < responseData.length; i++) {
           if (responseData[i].username === username && responseData[i].password === password) {
             id = responseData[i]._id.$oid;
@@ -73,7 +73,6 @@ var getUser = (username, password, res) => {
             phone = responseData[i].phone;
             code = responseData[i].verificationCode;
             verifiedPhone = responseData[i].verifiedPhone;
-            image = responseData[i].image;
             flag = true;
             break;
           }
@@ -86,8 +85,7 @@ var getUser = (username, password, res) => {
           phone: phone,
           currentlocation: currentlocation,
           verificationCode: code,
-          verifiedPhone: verifiedPhone,
-          image: image,
+          verifiedPhone: verifiedPhone
         };
         if (flag) {
           res.status(200).send(returnObj);
@@ -162,7 +160,6 @@ module.exports = {
     const currentlocation = req.body.currentlocation;
     const verificationCode = req.body.verificationCode;
     const verifiedPhone = req.body.verifiedPhone;
-    const image = req.body.image;
 
     const obj = {
       name: name,
@@ -171,8 +168,7 @@ module.exports = {
       phone: phone,
       currentlocation: currentlocation,
       verificationCode: verificationCode,
-      verifiedPhone: verifiedPhone,
-      image: image
+      verifiedPhone: verifiedPhone
     };
     console.log('obj.......', obj);
 
@@ -368,12 +364,11 @@ module.exports = {
                 createNewRoam(username, userLatitude, userLongitude, transportation, radius, neighborhood);
               }).catch(err=>console.log(err))
               // 400 means new room created, did not find a match
-              .then(() => res.sendStatus(400));
-              console.log('made new thing');          
+              .then(() => res.sendStatus(400));          
           } else {
             res.sendStatus(200);
           }
-        }, (500 * responseData.length));
+        }, 500);
 
 
       }
@@ -395,6 +390,17 @@ module.exports = {
     });
   },
 
+  uploadPhoto: (req, res) => {
+    fetch(baseLink_users_query + req.body.username + '?apiKey=' + mongoDB_API_KEY, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        },
+      body: JSON.stringify( { "$set" : {image: req.body.imageLink}})
+    }).then( () => res.sendStatus(200));
+  },
+
   populateHistory: (req, res) => {
     const userName = req.body.username;
     fetch(baseLink_history + mongoDB_API_KEY)
@@ -412,78 +418,6 @@ module.exports = {
         console.warn(error);
         res.sendStatus(400);
       });
-  },
-
-  isRoaming: (req, res) => {
-    fetch(baseLink_roams + mongoDB_API_KEY)
-    .then(res => res.json())
-    .then(responseData => {
-      var flag = false;
-      var data;
-      var roaming = false;
-      responseData.forEach(entry => {
-        if (entry.username1 === req.body.id || entry.username2 === req.body.id) {
-          roaming = true;
-        }
-        if (entry.username1 === req.body.id || entry.username2 === req.body.id) {
-          if (entry.username1 !== '' && entry.username2 !== '') {
-            flag = true;
-            data = entry;           
-          }
-        }
-      });
-      if (flag) {
-        res.status(200).send(data);
-      } 
-      if (roaming) {
-        res.sendStatus(300);
-      }
-      if (!roaming) {
-        res.sendStatus(400);
-      }
-    });
-  }, 
-  getMatch: (req, res) => {
-    var id = req.body.id;
-    fetch(baseLink_users + mongoDB_API_KEY)
-      .then((response) => response.json())
-        .then((responseData) => {
-          var flag = false;
-          var idFetched, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone, image;
-          for (var i = 0; i < responseData.length; i++) {
-            if (responseData[i]._id.$oid === id) {
-              console.log('got it');
-              idFetched = responseData[i]._id.$oid;
-              name = responseData[i].name;
-              usernameFetched = responseData[i].username;
-              passwordFetched = responseData[i].password;
-              currentlocation = responseData[i].currentlocation;
-              phone = responseData[i].phone;
-              code = responseData[i].verificationCode;
-              verifiedPhone = responseData[i].verifiedPhone;
-              image = responseData[i].image;
-              flag = true;
-              break;
-            }
-          }
-          const returnObj = {
-            id: idFetched,
-            name: name,
-            username: usernameFetched,
-            password: passwordFetched,
-            phone: phone,
-            currentlocation: currentlocation,
-            verificationCode: code,
-            verifiedPhone: verifiedPhone,
-            image: image
-          };
-          console.log(returnObj);
-          if (flag) {
-            res.status(201).send(returnObj);
-          } else {
-            res.sendStatus(402);
-          }
-        });
   }
 
             // var obj = {
@@ -494,6 +428,10 @@ module.exports = {
             // if(!error && response.statusCode === 200) {
             //   distance = res.rows.elements[0].distance //always in meters
             // }
+
+
+
+
           //if it is within the radius, add it to an array
         //   if(distance <= radius) {
         //     availableRoams.push(response[i]);
