@@ -54,8 +54,8 @@ class MatchView extends Component {
       (position) => {
         this.setState({
           region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
+            latitude: (position.coords.latitude+this.state.currentRoam.venueLatitude)/2,
+            longitude: (position.coords.longitude+this.state.currentRoam.venueLongitude)/2,
             latitudeDelta: Math.abs(position.coords.latitude - this.state.currentRoam.venueLatitude) * 2,
             longitudeDelta: Math.abs(position.coords.longitude - this.state.currentRoam.venueLongitude) * 2
           },
@@ -161,11 +161,11 @@ class MatchView extends Component {
         <View style={styles.profileContainer}>
           <View style={styles.titles}>
             <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
-            <Text style={styles.navTitle}>{this.state.user.username}</Text>
+            <Text style={styles.navTitle}>{this.state.user.name}</Text>
           </View>
           <View style={styles.titles}>
             <Image style={styles.circleImage} source={{uri: this.state.match.image}}/> 
-            <Text style={styles.navTitle}>{this.state.match.username}</Text>
+            <Text style={styles.navTitle}>{this.state.match.name}</Text>
           </View>
         </View>
 
