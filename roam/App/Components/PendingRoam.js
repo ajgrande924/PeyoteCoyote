@@ -20,7 +20,7 @@ class PendingRoam extends Component {
     //we will cancel roam from here
     //remove the roam from db
     //take the user back to the 'Time' page
-    fetch('http://localhost:3000/cancelRoam', {
+    fetch('http://159.203.197.90:3000/cancelRoam', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

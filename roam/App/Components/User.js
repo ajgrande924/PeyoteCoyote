@@ -59,7 +59,7 @@ class User extends Component {
     const obj1 = {
       id: this.state.user.id,
     };
-    fetch('http://localhost:3000/profilePic', {
+    fetch('http://159.203.197.90:3000/profilePic', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

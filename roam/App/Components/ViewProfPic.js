@@ -94,7 +94,7 @@ class ViewProfPic extends Component {
       console.error(photoObj.username);
       this.state.photoObj = photoObj;
       
-      fetch('http://localhost:3000/upload', 
+      fetch('http://159.203.197.90:3000/upload', 
         {
           method: 'POST',
           headers: {
