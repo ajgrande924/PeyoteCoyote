@@ -417,6 +417,7 @@ class RoamSearchView extends Component {
   }
   }
 }
+
 const styles = StyleSheet.create({
   navbarContainer:{
     backgroundColor: 'transparent',

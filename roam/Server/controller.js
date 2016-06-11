@@ -387,6 +387,7 @@ module.exports = {
                 roamObj.date = meetupTime;
                 roamObj.name2 = name;
               })
+
               .catch(err => console.log(err));
             })
            } 
