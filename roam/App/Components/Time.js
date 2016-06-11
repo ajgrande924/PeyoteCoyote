@@ -100,6 +100,9 @@ class RoamView extends Component {
 
   passedDownStateChange(value) {
     this.state.currentView = value;
+    if (value === 1) {
+      this.componentDidMount();
+    }
     this.setState({
       refresh: true
     });
