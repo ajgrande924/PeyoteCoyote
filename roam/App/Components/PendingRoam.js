@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, Image, TouchableHighlight, ListView, Dimensions, StyleSheet} from 'react-native';
+import {AlertIOS, Text, View, Image, TouchableHighlight, ListView, Dimensions, StyleSheet} from 'react-native';
 
 
 class PendingRoam extends Component {
@@ -29,22 +29,23 @@ class PendingRoam extends Component {
     })
     .then((res) => {
       this.state.stateChange(1);
-      if (res.status === 200) {
-        AlertIOS.alert('deletion successful');
-      } else {
-        AlertIOs.alert('something wrong happened');
-      }
     })
     .catch((error) => {
       console.log('Error handling submit:', error);
     });
+  }
 
+  refresh() {
+    this.state.stateChange(1);
   }
 
   render() {
     return (
       <Image style={styles.backgroundImage}
         source={require('../../imgs/uni.jpg')}>
+        <TouchableHighlight onPress={this.refresh.bind(this)}>
+        <Text> jskdlf;jksladjf;klsajfjs </Text>
+        </TouchableHighlight>
         <Text style={styles.title}>roam</Text>
           <Text style={styles.description}>We will notify you once you are matched!</Text>
           <Text style={styles.inputs}>Activity: {this.state.options.activity}</Text>
