@@ -15,7 +15,7 @@ var yelp = require('../App/Utils/api');
 // var roamOffGenerator = require('./App/Utils/roamOffGenerator');
 // var saltRounds = 10;
 
-//Frantic_Rust Requires
+//Frantic_Rust Requires 
 var config = require('../api_keys.js');
 var twilio = require('twilio');
 
@@ -296,7 +296,7 @@ module.exports = {
 
 //MATCHING ALGORITHM
   roam: (req, res) => {
-
+    var roamObj;
     var availableRoams = [];
     var username = req.body.id;
     var userLongitude = req.body.longitude;
@@ -371,8 +371,12 @@ module.exports = {
                   },
                 body: JSON.stringify( { "$set" : {username2: username, date: timeToMeet}})
               })
-              .catch(err => console.log(err))
-              .then( () => {flag = true; console.log('MATCHED');});
+              .then( () => {
+                flag = true;
+                console.log('MATCHED');
+                roamObj = responseData[saver];
+              })
+              .catch(err => console.log(err));
             })
            } 
           });
@@ -390,11 +394,44 @@ module.exports = {
               .then(() => res.sendStatus(400));
               console.log('made new thing');          
           } else {
+            var roamId = roamObj._id.$oid;
+
+            //make call to get roamObj -> currently undefined - I think its an asyn issue
+            // fetch(baseLink_roams_query + roamId + '?apiKey=' + mongoDB_API_KEY)
+            // .then(response => {response.json})
+            // .then(function(roamObjJson) {
+            //   var myRoamObj = roamObjJson;
+            //   console.log('roamObj ======================== :', myRoamObj);
+            // });
+
+
+            // send text to first user to sign up for a roam
+            // get user1's user info from roamObj
+            var user1Id = roamObj.username1.toString();
+
+            // use user1's id to search for user1's object in users collection
+            fetch(baseLink_users_query + user1Id + '?apiKey=' + mongoDB_API_KEY)
+            .then(data => data.json())
+            .then(function(twilioObj) {
+              var phoneNumber = twilioObj.phone;
+              client.sendSms({
+                  to:'+1' + phoneNumber,
+                  from:'+19259058241',
+                  body:'Hello there, you have a Roam at ' + roamObj.venue + ' at ' + 'roamObj.time' + ' with ' + 'roamObj.username2' + '.  The address is ' + roamObj.address + '.'
+              }, function(error, message) {
+                  if (!error) {
+                      console.log('Success! The SID for this SMS message is:');
+                      console.log(message.sid);
+                      console.log('Message sent on:');
+                      console.log(message.dateCreated);
+                  } else {
+                      console.log('Oops! There was an error.');
+                  }
+              });
+            })
             res.sendStatus(200);
           }
         }, (500 * responseData.length));
-
-
       }
     });
   },
