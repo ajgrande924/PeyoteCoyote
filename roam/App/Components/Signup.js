@@ -146,83 +146,83 @@ class SignUp extends Component {
     );
     return(
       <Image style={styles.backgroundImage}
-        source={require('../../imgs/mountains.png')} >
+        source={require('../../imgs/dude.png')} >
         <View style={styles.logoContainer}>
           <Image style={styles.logo}
           source={require('../../imgs/logo.png')} />
         </View>
         <View style={styles.signupContainer}>
           {/* Fields that we want to bind the username and password input */}
-          <View style={styles.inputBar}>
-            <View style={styles.icon}>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="user" size={20} color="#fff" />
-              </TouchableHighlight>
-            </View>
-            <View style= {styles.lineName}>
-              <TextInput
-                style={styles.submit}
-                returnKeyType = {"next"}
-                autoFocus = {true}
-                placeholder="First Name"
-                placeholderTextColor="white"
-                onChangeText={(text) => this.setState({firstName: text})}
-                value={this.state.firstName}
-                onSubmitEditing={(event) => { 
-                  this.refs.SecondInput.focus(); 
-                }}
-                />
+          <View style={styles.full}>
+          <View style={styles.halfLeft}>
+            <View style={styles.inputBar}>
+              <View style={styles.icon}>
+                <TouchableHighlight underlayColor='transparent'>
+                  <Icon name="user" size={20} color="#fff" />
+                </TouchableHighlight>
               </View>
-          </View>
-          <View style={styles.inputBar}>
-            <View style={styles.icon}>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="user" size={20} color="#fff" />
-              </TouchableHighlight>
-            </View>
-            <View style= {styles.lineName}>
-              <TextInput
-                ref='SecondInput'
-                returnKeyType = {"next"}
-                style={styles.submit}
-                placeholder="Username"
-                placeholderTextColor="white"
-                onChangeText={(text) => this.setState({userName: text})}
-                value={this.state.userName}
-                onSubmitEditing={(event) => { 
-                  this.refs.ThirdInput.focus(); 
-                }}
-                />
-              </View>
-            </View>
-          <View style={styles.inputBar}>
-            <View style={styles.icon}>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="lock" size={20} color="#fff" />
-              </TouchableHighlight>
-            </View>
-            <View style= {styles.lineName}>  
-              <TextInput
-                ref='ThirdInput'
-                returnKeyType = {"next"}
-                style={styles.submit}
-                placeholder="Enter password"
-                placeholderTextColor="white"
-                onChangeText={(text) => this.setState({password: text})}
-                value={this.state.password}
-                secureTextEntry={true}
-                onSubmitEditing={(event) => { 
-                  this.refs.FourthInput.focus(); 
-                }}
-                />
+              <View style= {styles.lineName}>
+                <TextInput
+                  style={styles.submit}
+                  returnKeyType = {"next"}
+                  autoFocus = {true}
+                  placeholder="First Name"
+                  placeholderTextColor="white"
+                  onChangeText={(text) => this.setState({firstName: text})}
+                  value={this.state.firstName}
+                  onSubmitEditing={(event) => { 
+                    this.refs.SecondInput.focus(); 
+                  }}
+                  />
+                </View>
             </View>
           </View>
-          <View style={styles.inputBar}>
-            <View style={styles.icon}>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="lock" size={20} color="#fff" />
-              </TouchableHighlight>
+          <View style={styles.halfRight}>
+            <View style={styles.inputBar}>
+              <View style= {styles.lineName}>
+                <TextInput
+                  ref='SecondInput'
+                  returnKeyType = {"next"}
+                  style={styles.submit}
+                  placeholder="Username"
+                  placeholderTextColor="white"
+                  onChangeText={(text) => this.setState({userName: text})}
+                  value={this.state.userName}
+                  onSubmitEditing={(event) => { 
+                    this.refs.ThirdInput.focus(); 
+                  }}
+                  />
+                </View>
+              </View>
+          </View>
+          </View>
+          <View style={styles.full}>
+          <View style={styles.halfLeft}>
+            <View style={styles.inputBar}>
+              <View style={styles.icon}>
+                <TouchableHighlight underlayColor='transparent'>
+                  <Icon name="lock" size={20} color="#fff" />
+                </TouchableHighlight>
+              </View>
+              <View style= {styles.lineName}>  
+                <TextInput
+                  ref='ThirdInput'
+                  returnKeyType = {"next"}
+                  style={styles.submit}
+                  placeholder="Enter Password"
+                  placeholderTextColor="white"
+                  onChangeText={(text) => this.setState({password: text})}
+                  value={this.state.password}
+                  secureTextEntry={true}
+                  onSubmitEditing={(event) => { 
+                    this.refs.FourthInput.focus(); 
+                  }}
+                  />
+              </View>
             </View>
+          </View>
+          <View style={styles.halfRight}>
+          <View style={styles.inputBar}>
             <View style= {styles.lineName}> 
               <TextInput
                 ref='FourthInput'
@@ -239,7 +239,10 @@ class SignUp extends Component {
                 />
             </View>
           </View>
-          <View style={styles.inputBar}>
+          </View>
+          </View>
+          <View style={styles.phone}>
+          <View style={styles.inputBar2}>
             <View style={styles.icon}>
               <TouchableHighlight underlayColor='transparent'>
                 <Icon name="phone" size={20} color="#fff" />
@@ -262,6 +265,7 @@ class SignUp extends Component {
                 }}
                 />
             </View>
+          </View>
           </View>
           {/* This is the loading animation when isLoading is set to true */}
           </View>
@@ -288,14 +292,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: deviceHeight/7.5,
-    marginBottom: deviceHeight/50
+    marginBottom: deviceHeight/5
   },
   logo: {
     width: deviceWidth/2,
     height: deviceWidth/3.6,
   },
   icon: {
-    width: deviceWidth/8,
+    width: deviceWidth/10,
     alignItems: 'center',
     // borderColor: 'white',
     // borderWidth: 0.5,
@@ -328,8 +332,19 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     borderBottomWidth: 0.5,
     flexDirection: 'row',
-    marginLeft: deviceWidth/10,
-    marginRight: deviceWidth/10, 
+    marginRight: deviceWidth/70,
+    // marginLeft: deviceWidth/10,
+    // marginRight: deviceWidth/10, 
+  },
+  inputBar2: {
+    marginBottom: deviceHeight/40,
+    borderBottomColor: 'white',
+    borderBottomWidth: 0.5,
+    flexDirection: 'row',
+    marginRight: deviceWidth/100,
+    width: deviceWidth/1.2
+    // marginLeft: deviceWidth/10,
+    // marginRight: deviceWidth/10, 
   },
   buttonText: {
     fontSize: 16,
@@ -361,6 +376,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: deviceHeight/40,
   },
+  full: {
+    flexDirection: 'row',
+    width: deviceWidth,
+    alignItems: 'center',
+    // borderColor: 'white',
+    // borderWidth: 0.5,
+  }, 
+  halfLeft: {
+    marginLeft: deviceWidth/12,
+    width: 5 * deviceWidth/12,
+    // borderColor: 'white',
+    // borderWidth: 0.5,
+  },
+  halfRight: {
+    width: 9.5 * deviceWidth/24,
+    // borderColor: 'white',
+    // borderWidth: 0.5,
+  },
+  phone: {
+    alignItems: 'center'
+  }
 });
 
 module.exports = SignUp;

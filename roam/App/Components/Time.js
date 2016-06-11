@@ -121,7 +121,7 @@ class RoamView extends Component {
   renderSearchView() {
     return (
       <Image style={styles.backgroundImage}
-      source={require('../../imgs/uni.jpg')} >
+      source={require('../../imgs/universe.png')} >
 
       <View style={styles.navbarContainer}>
         <View style={styles.profileContainer}>
