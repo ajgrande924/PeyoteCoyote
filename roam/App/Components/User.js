@@ -195,7 +195,7 @@ class GridListItem extends Component {
                 source={{uri: this.state.history.username2pic}}
                 style={styles.modalCircleImage}/>
               <View style={styles.modalInfoContainer}>
-                  <Text style={styles.statNumbers}>Roamed in {this.state.history.placeRoamed}</Text>
+                  <Text style={styles.statNumbers}>Roamed at {this.state.history.placeRoamed}</Text>
                   <Text style={styles.statNumbers}>Rating: {this.state.history.rating2}</Text>
               </View>
               <View style={styles.closeContainer}> 
