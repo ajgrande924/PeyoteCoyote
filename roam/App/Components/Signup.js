@@ -146,9 +146,12 @@ class SignUp extends Component {
     );
     return(
       <Image style={styles.backgroundImage}
-        source={require('../../imgs/uni.jpg')} >
+        source={require('../../imgs/mountains.png')} >
+        <View style={styles.logoContainer}>
+          <Image style={styles.logo}
+          source={require('../../imgs/logo.png')} />
+        </View>
         <View style={styles.signupContainer}>
-          <Text underlayColor='transparent' style={styles.title} onPress={this.handleSubmit.bind(this)}> sign up </Text>
           {/* Fields that we want to bind the username and password input */}
           <View style={styles.inputBar}>
             <View style={styles.icon}>
@@ -279,6 +282,18 @@ class SignUp extends Component {
 }
 
 const styles = StyleSheet.create({
+  logoContainer: {
+    width: deviceWidth,
+    height: deviceHeight/5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: deviceHeight/7.5,
+    marginBottom: deviceHeight/50
+  },
+  logo: {
+    width: deviceWidth/2,
+    height: deviceWidth/3.6,
+  },
   icon: {
     width: deviceWidth/8,
     alignItems: 'center',
@@ -289,16 +304,6 @@ const styles = StyleSheet.create({
     width: deviceWidth/1.5,
     // borderColor: 'white',
     // borderWidth: 0.5,
-  },
-  title: {
-    marginBottom: deviceHeight/20,
-    fontSize: deviceHeight/12,
-    fontWeight: "100",
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    color: 'white',
-    backgroundColor: 'transparent',
-    letterSpacing: deviceWidth/50,
   },
   subTitle: {
     marginBottom: deviceHeight/80,
@@ -323,9 +328,11 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     borderBottomWidth: 0.5,
     flexDirection: 'row',
+    marginLeft: deviceWidth/10,
+    marginRight: deviceWidth/10, 
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'white',
     alignSelf: 'center'
   },
@@ -334,20 +341,18 @@ const styles = StyleSheet.create({
     width: deviceWidth/2,
     flexDirection: 'row',
     backgroundColor: '#ff0066',
-    marginBottom: deviceHeight/40,
-    marginTop: deviceHeight/40,
+    marginBottom: deviceHeight/80,
+    // marginTop: deviceHeight/80,
     alignSelf: 'center',
     justifyContent: 'center',
+    borderRadius: 4
   },
   backgroundImage: {
     flex: 1,
     width: deviceWidth,
     height: deviceHeight,
-    padding: deviceWidth/10,
-    paddingTop: deviceHeight/6,
-    marginTop: deviceHeight/30,
+    paddingTop: deviceHeight/10,
     flexDirection: 'column',
-    justifyContent: 'center'
   },
   errorMessage: {
     backgroundColor: 'transparent',

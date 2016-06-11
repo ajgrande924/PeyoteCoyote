@@ -95,9 +95,12 @@ class VerifyText extends Component {
     );
     return(
       <Image style={styles.backgroundImage}
-      source={require('../../imgs/uni.jpg')}>
+      source={require('../../imgs/mountains.png')}>
+      <View style={styles.logoContainer}>
+        <Image style={styles.logo}
+        source={require('../../imgs/logo.png')} />
+      </View>
       <View style={styles.verifyContainer}>
-        <Text underlayColor='transparent' onPress={this.handleSubmitCode.bind(this)} style={styles.title}> verify </Text>
         <View style={styles.container}>
           <View style={styles.inputBar}>
             <View style={styles.icon}>
@@ -152,15 +155,17 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-  title: {
-    marginBottom: deviceHeight/20,
-    fontSize: deviceHeight/12,
-    fontWeight: "100",
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    color: 'white',
-    backgroundColor: 'transparent',
-    letterSpacing: deviceWidth/50,
+  logoContainer: {
+    width: deviceWidth,
+    height: deviceHeight/5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: deviceHeight/7.5,
+    marginBottom: deviceHeight/4.5
+  },
+  logo: {
+    width: deviceWidth/2,
+    height: deviceWidth/3.6,
   },
   submit: {
     height: deviceHeight/30,
@@ -192,7 +197,9 @@ const styles = StyleSheet.create({
     marginBottom: deviceHeight/40,
     borderBottomColor: 'white',
     borderBottomWidth: 0.5,
-    flexDirection: 'row', 
+    flexDirection: 'row',
+    marginLeft: deviceWidth/10,
+    marginRight: deviceWidth/10, 
   },
   buttons: {
     flexDirection: 'row',
@@ -211,35 +218,27 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: 16,
     color: 'white',
     alignSelf: 'center'
   },
   button: {
     height: deviceHeight/20,
-    width: deviceWidth/3.4,
+    width: deviceWidth/3.3,
     flexDirection: 'row',
     backgroundColor: '#ff0066',
-    // borderRadius:10,
-    marginBottom: 10,
+    marginBottom: deviceHeight/80,
+    // marginTop: deviceHeight/80,
     alignSelf: 'center',
     justifyContent: 'center',
+    borderRadius: 4
   },
-  // signUpButton: {
-  //   color: 'white',
-  //   textAlign: 'center',
-  //   paddingTop: deviceHeight/40,
-  //   fontSize: deviceHeight/40
-  // },
   backgroundImage: {
     flex: 1,
     width: deviceWidth,
     height: deviceHeight,
-    // padding: deviceWidth/10,
-    // paddingTop: deviceHeight/6,
-    marginTop: deviceHeight/30,
+    paddingTop: deviceHeight/10,
     flexDirection: 'column',
-    justifyContent: 'center'
   },
   errorMessage: {
     backgroundColor: 'transparent',
