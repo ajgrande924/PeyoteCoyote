@@ -488,7 +488,41 @@ module.exports = {
   },
 
   sendRoamText: (req, res) => {
-    console.log(req.body);
+    var phoneNumber = req.body.recipient.phone;
+    console.log(req.body.user, req.body.roamData);
+    client.sendSms({
+      to:'+1' + phoneNumber,
+      from:'+19259058241',
+      body:'Matched buddy ' + req.body.user.name + ' says: ' + req.body.message
+    }, function(error, message) {
+        if (!error) {
+          if (req.body.user.id === req.body.roamData.username1) {
+            fetch(baseLink_roams_query + req.body.roamData._id.$oid + '?apiKey=' + mongoDB_API_KEY,
+            {
+              method: 'PUT',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                },
+              body: JSON.stringify( { "$set" : {user1TextCount: req.body.roamData.user1TextCount-1} })
+            });
+          } else {
+            fetch(baseLink_roams_query + req.body.roamData._id.$oid + '?apiKey=' + mongoDB_API_KEY,
+            {
+              method: 'PUT',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                },
+              body: JSON.stringify( { "$set" : {user2TextCount: req.body.roamData.user2TextCount-1} })
+            });
+          }
+          console.log('Message sent on:');
+          console.log(message.dateCreated);
+        } else {
+          console.log('Oops! There was an error.');
+        }
+      });
   }
 
             // var obj = {
