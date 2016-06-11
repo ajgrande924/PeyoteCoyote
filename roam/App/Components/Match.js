@@ -92,7 +92,7 @@ class MatchView extends Component {
     const obj = {
       id: id,
     };
-    fetch('http://localhost:3000/match', {
+    fetch('http://159.203.197.90:3000/match', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -116,7 +116,7 @@ class MatchView extends Component {
 
   cancelMatch() {
     this.state.stateChange(1);
-    fetch('http://localhost:3000/cancelRoam', {
+    fetch('http://159.203.197.90:3000/cancelRoam', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -160,7 +160,7 @@ class MatchView extends Component {
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'Send', onPress: message => {
-          fetch('http://localhost:3000/sendRoamMsg',
+          fetch('http://159.203.197.90:3000/sendRoamMsg',
           {
             method: 'POST',
             headers: {
@@ -272,6 +272,7 @@ class Geolocation extends Component {
                 coordinate={{ latitude: this.state.currentRoam.venueLatitude, longitude: this.state.currentRoam.venueLongitude}}
                 title={this.state.currentRoam.venue}
                 description={this.state.currentRoam.address}
+                image={require('../../imgs/purpleMarker.png')}
               />
             </MapView>
           </View>

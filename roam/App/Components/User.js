@@ -78,7 +78,7 @@ class User extends Component {
     const obj = {
       username: this.state.user.username,
     };
-    fetch('http://localhost:3000/history', {
+    fetch('http://159.203.197.90:3000/history', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -434,6 +434,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: deviceWidth/12,
     marginRight: deviceWidth/12
+  },
+  closeButton: {
+    width: deviceWidth/4,
+    height: deviceHeight/30,
+    flex: 1,
+    backgroundColor: "#555555",
+    borderColor: "#555555",
+    borderWidth: 0.5,
+    // borderRadius: 8,
+    marginTop: deviceHeight/100,
+    justifyContent: "center",
+  },
+  closeText: {
+    textAlign: 'center',
+    fontSize: 15,
+    color: "#ffffff",
+    alignSelf: "center",
+    fontFamily: 'Avenir'
   },
 })
 

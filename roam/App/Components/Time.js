@@ -71,7 +71,7 @@ class RoamView extends Component {
           initialLoad: true,
         });
       });
-    fetch('http://localhost:3000/isRoaming', 
+    fetch('http://159.203.197.90:3000/isRoaming', 
     {
       method: 'POST',
       headers: {
@@ -244,7 +244,7 @@ class RoamSearchView extends Component {
       radius: Math.floor(this.state.circleRadius),
       transportation: this.state.transportSelectedOption
     };
-    fetch('http://localhost:3000/roam',
+    fetch('http://159.203.197.90:3000/roam',
       {
         method: 'POST',
         headers: {

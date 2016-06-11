@@ -44,7 +44,7 @@ class VerifyText extends Component {
 
   handleSubmitCode() {
     dismissKeyboard();
-    fetch('http://localhost:3000/checkCode', 
+    fetch('http://159.203.197.90:3000/checkCode', 
     {
       method: 'POST',
       headers: {
@@ -55,7 +55,7 @@ class VerifyText extends Component {
     })
     .then((response) => {
       if (response.status === 200) {
-        fetch('http://localhost:3000/verified', 
+        fetch('http://159.203.197.90:3000/verified', 
         {
           method: 'POST',
           headers: {
@@ -77,7 +77,7 @@ class VerifyText extends Component {
   }
 
   handleResendCode() {
-    fetch('http://localhost:3000/sendTxt',
+    fetch('http://159.203.197.90:3000/sendTxt',
     {
       method: 'POST',
       headers: {
