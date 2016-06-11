@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { SegmentedControls } from 'react-native-radio-buttons';
-// var Geolocation = require('./Geolocation');
-var Confirmation = require('./Confirmation');
 var Separator = require('./Helpers/Separator');
 var styles = require('./Helpers/styles');
 

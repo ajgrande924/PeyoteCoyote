@@ -76,6 +76,7 @@ class SignUp extends Component {
         errorMessage: '',
       });
     }
+
       if (this.state.firstName !== '' && this.state.userName !== '' && this.state.password !== '' && this.state.passwordAgain !== '' && (this.state.password === this.state.passwordAgain) && (rePhone.test(this.state.phone) || rePhone2.test(this.state.phone))) {
         var verificationCode = this.getCode();
         fetch('http://localhost:3000/signup', {
@@ -92,7 +93,7 @@ class SignUp extends Component {
             currentlocation: {latitude: 0, longitude: 0},
             verifiedPhone: false,
             verificationCode: verificationCode,
-            image: 'https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg',
+            image: 'https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg'
           })
         })
         .then((res) => {
@@ -136,7 +137,6 @@ class SignUp extends Component {
           console.log('Error handling submit:', error);
         });
       }
-    
 
   }
 
@@ -146,80 +146,83 @@ class SignUp extends Component {
     );
     return(
       <Image style={styles.backgroundImage}
-        source={require('../../imgs/uni.jpg')} >
+        source={require('../../imgs/dude.png')} >
+        <View style={styles.logoContainer}>
+          <Image style={styles.logo}
+          source={require('../../imgs/logo.png')} />
+        </View>
         <View style={styles.signupContainer}>
-          <Text underlayColor='transparent' style={styles.title} onPress={this.handleSubmit.bind(this)}> sign up </Text>
           {/* Fields that we want to bind the username and password input */}
-          <View style={styles.inputBar}>
-            <View style={styles.icon}>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="user" size={20} color="#fff" />
-              </TouchableHighlight>
-            </View>
-            <View style= {styles.lineName}>
-              <TextInput
-                style={styles.submit}
-                returnKeyType = {"next"}
-                autoFocus = {true}
-                placeholder="First Name"
-                placeholderTextColor="white"
-                onChangeText={(text) => this.setState({firstName: text})}
-                value={this.state.firstName}
-                onSubmitEditing={(event) => { 
-                  this.refs.SecondInput.focus(); 
-                }}
-                />
+          <View style={styles.full}>
+          <View style={styles.halfLeft}>
+            <View style={styles.inputBar}>
+              <View style={styles.icon}>
+                <TouchableHighlight underlayColor='transparent'>
+                  <Icon name="user" size={20} color="#fff" />
+                </TouchableHighlight>
               </View>
-          </View>
-          <View style={styles.inputBar}>
-            <View style={styles.icon}>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="user" size={20} color="#fff" />
-              </TouchableHighlight>
-            </View>
-            <View style= {styles.lineName}>
-              <TextInput
-                ref='SecondInput'
-                returnKeyType = {"next"}
-                style={styles.submit}
-                placeholder="Username"
-                placeholderTextColor="white"
-                onChangeText={(text) => this.setState({userName: text})}
-                value={this.state.userName}
-                onSubmitEditing={(event) => { 
-                  this.refs.ThirdInput.focus(); 
-                }}
-                />
-              </View>
-            </View>
-          <View style={styles.inputBar}>
-            <View style={styles.icon}>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="lock" size={20} color="#fff" />
-              </TouchableHighlight>
-            </View>
-            <View style= {styles.lineName}>  
-              <TextInput
-                ref='ThirdInput'
-                returnKeyType = {"next"}
-                style={styles.submit}
-                placeholder="Enter password"
-                placeholderTextColor="white"
-                onChangeText={(text) => this.setState({password: text})}
-                value={this.state.password}
-                secureTextEntry={true}
-                onSubmitEditing={(event) => { 
-                  this.refs.FourthInput.focus(); 
-                }}
-                />
+              <View style= {styles.lineName}>
+                <TextInput
+                  style={styles.submit}
+                  returnKeyType = {"next"}
+                  autoFocus = {true}
+                  placeholder="First Name"
+                  placeholderTextColor="white"
+                  onChangeText={(text) => this.setState({firstName: text})}
+                  value={this.state.firstName}
+                  onSubmitEditing={(event) => { 
+                    this.refs.SecondInput.focus(); 
+                  }}
+                  />
+                </View>
             </View>
           </View>
-          <View style={styles.inputBar}>
-            <View style={styles.icon}>
-              <TouchableHighlight underlayColor='transparent'>
-                <Icon name="lock" size={20} color="#fff" />
-              </TouchableHighlight>
+          <View style={styles.halfRight}>
+            <View style={styles.inputBar}>
+              <View style= {styles.lineName}>
+                <TextInput
+                  ref='SecondInput'
+                  returnKeyType = {"next"}
+                  style={styles.submit}
+                  placeholder="Username"
+                  placeholderTextColor="white"
+                  onChangeText={(text) => this.setState({userName: text})}
+                  value={this.state.userName}
+                  onSubmitEditing={(event) => { 
+                    this.refs.ThirdInput.focus(); 
+                  }}
+                  />
+                </View>
+              </View>
+          </View>
+          </View>
+          <View style={styles.full}>
+          <View style={styles.halfLeft}>
+            <View style={styles.inputBar}>
+              <View style={styles.icon}>
+                <TouchableHighlight underlayColor='transparent'>
+                  <Icon name="lock" size={20} color="#fff" />
+                </TouchableHighlight>
+              </View>
+              <View style= {styles.lineName}>  
+                <TextInput
+                  ref='ThirdInput'
+                  returnKeyType = {"next"}
+                  style={styles.submit}
+                  placeholder="Enter Password"
+                  placeholderTextColor="white"
+                  onChangeText={(text) => this.setState({password: text})}
+                  value={this.state.password}
+                  secureTextEntry={true}
+                  onSubmitEditing={(event) => { 
+                    this.refs.FourthInput.focus(); 
+                  }}
+                  />
+              </View>
             </View>
+          </View>
+          <View style={styles.halfRight}>
+          <View style={styles.inputBar}>
             <View style= {styles.lineName}> 
               <TextInput
                 ref='FourthInput'
@@ -236,7 +239,10 @@ class SignUp extends Component {
                 />
             </View>
           </View>
-          <View style={styles.inputBar}>
+          </View>
+          </View>
+          <View style={styles.phone}>
+          <View style={styles.inputBar2}>
             <View style={styles.icon}>
               <TouchableHighlight underlayColor='transparent'>
                 <Icon name="phone" size={20} color="#fff" />
@@ -260,6 +266,7 @@ class SignUp extends Component {
                 />
             </View>
           </View>
+          </View>
           {/* This is the loading animation when isLoading is set to true */}
           </View>
         <TouchableHighlight
@@ -279,8 +286,20 @@ class SignUp extends Component {
 }
 
 const styles = StyleSheet.create({
+  logoContainer: {
+    width: deviceWidth,
+    height: deviceHeight/5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: deviceHeight/7.5,
+    marginBottom: deviceHeight/5
+  },
+  logo: {
+    width: deviceWidth/2,
+    height: deviceWidth/3.6,
+  },
   icon: {
-    width: deviceWidth/8,
+    width: deviceWidth/10,
     alignItems: 'center',
     // borderColor: 'white',
     // borderWidth: 0.5,
@@ -289,16 +308,6 @@ const styles = StyleSheet.create({
     width: deviceWidth/1.5,
     // borderColor: 'white',
     // borderWidth: 0.5,
-  },
-  title: {
-    marginBottom: deviceHeight/20,
-    fontSize: deviceHeight/12,
-    fontWeight: "100",
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    color: 'white',
-    backgroundColor: 'transparent',
-    letterSpacing: deviceWidth/50,
   },
   subTitle: {
     marginBottom: deviceHeight/80,
@@ -323,9 +332,22 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     borderBottomWidth: 0.5,
     flexDirection: 'row',
+    marginRight: deviceWidth/70,
+    // marginLeft: deviceWidth/10,
+    // marginRight: deviceWidth/10, 
+  },
+  inputBar2: {
+    marginBottom: deviceHeight/40,
+    borderBottomColor: 'white',
+    borderBottomWidth: 0.5,
+    flexDirection: 'row',
+    marginRight: deviceWidth/100,
+    width: deviceWidth/1.2
+    // marginLeft: deviceWidth/10,
+    // marginRight: deviceWidth/10, 
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'white',
     alignSelf: 'center'
   },
@@ -334,20 +356,18 @@ const styles = StyleSheet.create({
     width: deviceWidth/2,
     flexDirection: 'row',
     backgroundColor: '#ff0066',
-    marginBottom: deviceHeight/40,
-    marginTop: deviceHeight/40,
+    marginBottom: deviceHeight/80,
+    // marginTop: deviceHeight/80,
     alignSelf: 'center',
     justifyContent: 'center',
+    borderRadius: 4
   },
   backgroundImage: {
     flex: 1,
     width: deviceWidth,
     height: deviceHeight,
-    padding: deviceWidth/10,
-    paddingTop: deviceHeight/6,
-    marginTop: deviceHeight/30,
+    paddingTop: deviceHeight/10,
     flexDirection: 'column',
-    justifyContent: 'center'
   },
   errorMessage: {
     backgroundColor: 'transparent',
@@ -356,6 +376,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: deviceHeight/40,
   },
+  full: {
+    flexDirection: 'row',
+    width: deviceWidth,
+    alignItems: 'center',
+    // borderColor: 'white',
+    // borderWidth: 0.5,
+  }, 
+  halfLeft: {
+    marginLeft: deviceWidth/12,
+    width: 5 * deviceWidth/12,
+    // borderColor: 'white',
+    // borderWidth: 0.5,
+  },
+  halfRight: {
+    width: 9.5 * deviceWidth/24,
+    // borderColor: 'white',
+    // borderWidth: 0.5,
+  },
+  phone: {
+    alignItems: 'center'
+  }
 });
 
 module.exports = SignUp;

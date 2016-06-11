@@ -88,7 +88,7 @@ var getUser = (username, password, res) => {
           currentlocation: currentlocation,
           verificationCode: code,
           verifiedPhone: verifiedPhone,
-          image: image,
+          image: image
         };
         if (flag) {
           res.status(200).send(returnObj);
@@ -311,6 +311,7 @@ module.exports = {
     .then(responseData => {
       // if no existing roams, create new roam
       if(responseData.length === 0) {
+          console.log('https://maps.googleapis.com/maps/api/geocode/json?latlng='+ userLatitude + ',' + userLongitude + '&key=' + config.googleKey);
           fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + userLatitude + ',' + userLongitude + '&key=' + config.googleKey)
           .then((response) => response.json())
           .then((responseData) => {

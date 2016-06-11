@@ -10,15 +10,14 @@ import {
 
 var Login = require('./App/Components/Login');
 var User = require('./App/Components/User');
-var GeolocationView = require('./App/Components/Geolocation.js');
 var Time = require('./App/Components/Time.js');
 var Splash = require('./App/Components/Splash.js');
 var VerifyText = require('./App/Components/VerifyText.js');
 var CurrentRoam = require('./App/Components/CurrentRoam.js');
 var Signup = require('./App/Components/Signup.js');
-var Confirmation = require('./App/Components/Confirmation.js');
 var MatchView = require('./App/Components/Match.js');
 var tabs = require('./App/Components/TabBar.js');
+var PendingRoam = require('./App/Components/PendingRoam.js');
 
 class roam extends Component{
   render() {
