@@ -76,9 +76,6 @@ class SignUp extends Component {
         errorMessage: '',
       });
     }
-
-
-    if (this.state.error) {
       if (this.state.firstName !== '' && this.state.userName !== '' && this.state.password !== '' && this.state.passwordAgain !== '' && (this.state.password === this.state.passwordAgain) && (rePhone.test(this.state.phone) || rePhone2.test(this.state.phone))) {
         var verificationCode = this.getCode();
         fetch('http://localhost:3000/signup', {
@@ -104,6 +101,7 @@ class SignUp extends Component {
             var body = JSON.parse(res._bodyInit);
             body.verifiedPhone = false;
             body.verificationCode = verificationCode;
+            console.error(body);
             this.props.navigator.push({
               title: 'Verify Phone Link',
               component: VerificationPage,
@@ -138,7 +136,7 @@ class SignUp extends Component {
           console.log('Error handling submit:', error);
         });
       }
-    }
+    
 
   }
 

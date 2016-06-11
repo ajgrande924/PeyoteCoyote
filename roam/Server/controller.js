@@ -52,6 +52,7 @@ var checkSignup = (username, phone, res) => {
         } else if (phoneFlag) {
           res.sendStatus(402);
         } else {
+          res.sendStatus(200);
           console.log('signup good to go');
         }
       });
@@ -178,23 +179,41 @@ module.exports = {
     };
     console.log('obj.......', obj);
 
-    checkSignup(obj.username, obj.phone, res);
-
-    fetch(baseLink_users + mongoDB_API_KEY,
-    {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(obj)
-    })
-    .then( err => {
-      getUser(obj.username, obj.password, res);
-    }).catch((err) => {
-        console.log('did not post user info');
-        res.sendStatus(400);
-    });
+    fetch(baseLink_verified + mongoDB_API_KEY)
+      .then((response) => response.json())
+        .then((responseData) => {
+          var usernameFlag = false;
+          var phoneFlag = false;
+          console.log(responseData);
+          for (var i = 0; i < responseData.length; i++) {
+            if (responseData[i].username === username) {
+              usernameFlag = true;
+            }
+            if (responseData[i].phone === phone) {
+              console.log(responseData[i].phone, phone, '************');
+              phoneFlag = true;
+            }
+          }
+          if (usernameFlag && phoneFlag) {
+            res.sendStatus(400);
+          } else if (usernameFlag) {
+            res.sendStatus(401);
+          } else if (phoneFlag) {
+            res.sendStatus(402);
+          } else {
+            fetch(baseLink_users + mongoDB_API_KEY,
+            {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(obj)
+            }).then((resp) => resp.json())
+            .then((responseData) => res.status(200).send(responseData));//res.status(200).send(resp._bodyInit));
+          }
+        });
+          
   },
 
   signin: (req, res) => {
