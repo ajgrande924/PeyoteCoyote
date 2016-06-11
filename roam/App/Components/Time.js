@@ -40,7 +40,8 @@ class RoamView extends Component {
       refresh: true,
       currentView: 1,
       initialLoad: false,
-      roamingData: {}
+      roamingData: {},
+      roamingDataLoad: false,
     };
 
   }
@@ -80,7 +81,8 @@ class RoamView extends Component {
       if (res.status === 200) {
         this.setState({
           roamingData: JSON.parse(res._bodyInit),
-          currentView: 3
+          currentView: 3,
+          roamingDataLoad: true
         });
       }
       if (res.status === 300) {
@@ -155,54 +157,55 @@ class RoamView extends Component {
       return (<PendingRoam user={this.state.user} passedDownStateChange={this.passedDownStateChange.bind(this)} options={{ activity: 'Hot Yoga', transportation: 'Walking', radius: '2 Miles' }}/>);
     }
 
-    if (this.state.currentView === 3) {
+    if (this.state.currentView === 3 && !this.state.roamingDataLoad) {
+      this.componentDidMount();
+      return (<View></View>);
+    } else {
       return (<MatchView user={this.state.user} currentRoam={this.state.roamingData} passedDownStateChange={this.passedDownStateChange.bind(this)} />);
     }
-    
   }
 }
 
 class RoamSearchView extends Component {
     
   constructor(props) {
-  super(props);
-  this.state = {
-    user: props.user,
-    navigator: props.navigator,
-    sendState: props.stateChange,
-    region: props.region,
-    marker: {
-      coordinates: {
-        latitude: props.markers[0].latitude,
-        longitude: props.markers[0].longitude,
+    super(props);
+    this.state = {
+      user: props.user,
+      navigator: props.navigator,
+      sendState: props.stateChange,
+      region: props.region,
+      marker: {
+        coordinates: {
+          latitude: props.markers[0].latitude,
+          longitude: props.markers[0].longitude,
+        },
+        title: 'Hi!',
+        description: 'this is your location',
       },
-      title: 'Hello',
-      description: 'this is a nice spot',
-    },
-    circleRadius: 1609.34,
-    refresh: true,
-    coordinate: props.coordinate,
-    transportSelectedOption: 'Walk',
-    selectedOption: '0.5 Miles',
-    driveSelectedOption: '5 Miles',
-    transportOptions: [
-      'Walk',
-      'Drive',
-    ],
-    walkOptions: [
-      '0.5 Miles',
-      '1 Mile',
-      '1.5 Miles',
-      '2 Miles'
-    ],
-    driveOptions: [
-      '5 Miles',
-      '10 Miles',
-      '15 Miles',
-      '20 Miles',
-    ] 
-  };
-  
+      circleRadius: 1609.34,
+      refresh: true,
+      coordinate: props.coordinate,
+      transportSelectedOption: 'Walk',
+      selectedOption: '0.5 Miles',
+      driveSelectedOption: '5 Miles',
+      transportOptions: [
+        'Walk',
+        'Drive',
+      ],
+      walkOptions: [
+        '0.5 Miles',
+        '1 Mile',
+        '1.5 Miles',
+        '2 Miles'
+      ],
+      driveOptions: [
+        '5 Miles',
+        '10 Miles',
+        '15 Miles',
+        '20 Miles',
+      ] 
+    };
   }
 
   handleSubmit() {
@@ -229,14 +232,10 @@ class RoamSearchView extends Component {
       })
     .then( response => {
       if(response.status === 400) {
-        AlertIOS.alert('searching for match');
         this.state.sendState(2);
       } else if (response.status === 200){
-        AlertIOS.alert('going to match view!');
         this.state.sendState(3);
-        
       } else if (response.status === 401) {
-        AlertIOS.alert('match in progress! going to match view!');
         this.state.sendState(3);
       }
     });
@@ -280,7 +279,6 @@ class RoamSearchView extends Component {
         },
       });
     }
-
   }
 
   renderDistanceSegment() {
@@ -418,7 +416,6 @@ class RoamSearchView extends Component {
   }
   }
 }
-
 const styles = StyleSheet.create({
   navbarContainer:{
     backgroundColor: 'transparent',

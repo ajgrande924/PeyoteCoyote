@@ -362,7 +362,7 @@ module.exports = {
                 };
                 var timeToMeet = new Date();
                 timeToMeet.setMinutes(timeToMeet.getMinutes() + 20);
-                console.log('3');
+                flag = true;
               fetch(baseLink_roams_query + responseData[saver]._id.$oid + '?apiKey=' + mongoDB_API_KEY,
               {
                 method: 'PUT',
@@ -510,6 +510,7 @@ module.exports = {
           var idFetched, name, usernameFetched, passwordFetched, currentlocation, phone, code, verifiedPhone, image;
           for (var i = 0; i < responseData.length; i++) {
             if (responseData[i]._id.$oid === id) {
+              console.log(responseData[i]._id.$oid, id, '**************');
               console.log('got it');
               idFetched = responseData[i]._id.$oid;
               name = responseData[i].name;
@@ -526,7 +527,7 @@ module.exports = {
           }
           const returnObj = {
             id: idFetched,
-            name: name,
+            name: name || 'a new friend',
             username: usernameFetched,
             password: passwordFetched,
             phone: phone,
@@ -535,7 +536,7 @@ module.exports = {
             verifiedPhone: verifiedPhone,
             image: image
           };
-          console.log(returnObj);
+          console.log('!!!!', returnObj);
           if (flag) {
             res.status(201).send(returnObj);
           } else {

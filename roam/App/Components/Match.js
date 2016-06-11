@@ -41,7 +41,7 @@ class MatchView extends Component {
       refresh: true,
       currentView: 1,
       currentRoam: props.currentRoam,
-      match: {},
+      match: {name: 'a New Friend'},
       textsRemaining: 0,
       stateChange: props.passedDownStateChange,
       date: meetupTime
@@ -59,7 +59,6 @@ class MatchView extends Component {
   }
 
   componentDidMount() {
-    this.getMatch();
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -79,7 +78,7 @@ class MatchView extends Component {
           },
           refresh: false
         });
-        console.warn(this.state.region);
+        this.getMatch();
       });
   }
 
@@ -126,11 +125,6 @@ class MatchView extends Component {
     })
     .then((res) => {
       this.state.stateChange(1);
-      if (res.status === 200) {
-        AlertIOS.alert('deletion successful');
-      } else {
-        AlertIOs.alert('something wrong happened');
-      }
     })
     .catch((error) => {
       console.log('Error handling submit:', error);
@@ -194,7 +188,7 @@ class MatchView extends Component {
 
       <View style={styles.navbarContainer}>
         <Text style={styles.matchTitle}> It's a Match! </Text>
-        <Text style={styles.matchMessage}>Congratulations! You and {this.state.match.username} are ready to Roam!</Text>
+        <Text style={styles.matchMessage}>Congratulations! You and {this.state.match.name} are ready to Roam!</Text>
         <View style={styles.profileContainer}>
           <View style={styles.titles}>
             <Image style={styles.circleImage} source={{uri: this.state.user.image}}/> 
@@ -268,6 +262,7 @@ class Geolocation extends Component {
             style={styles.map}
             initialRegion={this.state.region}>
               <MapView.Marker
+                pinColor={'teal'}
                 coordinate={this.state.marker.coordinates}
                 title={this.state.marker.title}
                 description={this.state.marker.description}
