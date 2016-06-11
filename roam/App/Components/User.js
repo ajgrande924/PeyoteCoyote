@@ -108,7 +108,7 @@ class User extends Component {
     return (
       <View>
         <Image style={styles.backgroundImage}
-        source={require('../../imgs/bridge.png')}>
+        source={require('../../imgs/universe.png')}>
         <View style={styles.navbarContainer}>
           <View style={styles.profileContainer}>
             <View>
@@ -266,14 +266,14 @@ const styles = StyleSheet.create({
   },
   statTitle: {
     fontSize: 12,
-    // color: '#ff0066',
-    color: 'white',
+    color: '#ff0066',
+    // color: 'white',
   },
   statTitle2: {
     marginTop: deviceHeight/200,
     fontSize: 12,
-    // color: '#ff0066',
-    color: 'white',
+    color: '#ff0066',
+    // color: 'white',
   },
   cam: {
     marginTop: deviceHeight/200,
