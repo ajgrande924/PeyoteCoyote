@@ -20,7 +20,7 @@ class ActivityPicker extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedOption: 'Eat Food',
+            selectedOption: props.selected || 'Eat Food',
             callback: props.callback
         }
     }

@@ -159,7 +159,7 @@ class RoamView extends Component {
           </View>
         </View>
         <View style={styles.statsContainer}>
-            <ActivityPicker callback={this.setActivity.bind(this)}/>
+            <ActivityPicker selected={this.state.activityType} callback={this.setActivity.bind(this)}/>
         </View> 
       </View>
         <RoamSearchView stateChange={this.passedDownStateChange.bind(this)} navigator={this.state.navigator} activityType= {this.state.activityType} user={this.state.user} region={this.state.region} markers={this.state.markers} coordinate={this.state.coordinate}/>
