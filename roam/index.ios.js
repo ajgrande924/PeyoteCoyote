@@ -3,41 +3,40 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
   NavigatorIOS,
-  View
 } from 'react-native';
 
-var Login = require('./App/Components/Login');
-var User = require('./App/Components/User');
-var Time = require('./App/Components/Time.js');
-var Splash = require('./App/Components/Splash.js');
-var VerifyText = require('./App/Components/VerifyText.js');
-var CurrentRoam = require('./App/Components/CurrentRoam.js');
-var Signup = require('./App/Components/Signup.js');
-var MatchView = require('./App/Components/Match.js');
-var tabs = require('./App/Components/TabBar.js');
-var PendingRoam = require('./App/Components/PendingRoam.js');
+const Login = require('./App/Components/Login');
+const User = require('./App/Components/User');
+const Time = require('./App/Components/Time.js');
+const Splash = require('./App/Components/Splash.js');
+const VerifyText = require('./App/Components/VerifyText.js');
+const CurrentRoam = require('./App/Components/CurrentRoam.js');
+const Signup = require('./App/Components/Signup.js');
+const MatchView = require('./App/Components/Match.js');
+const tabs = require('./App/Components/TabBar.js');
+const PendingRoam = require('./App/Components/PendingRoam.js');
 
-class roam extends Component{
+class roam extends Component {
   render() {
     return (
       <NavigatorIOS
-      style={styles.container}
+        style={styles.container}
         initialRoute={{
           title: 'Login',
           component: Login,
           //passProps: {user: {id: '5758a1abc2ef1652b41f961f'}}
         }}
-        navigationBarHidden={true} />
+        navigationBarHidden={true}
+      />
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
-    backgroundColor: 'red'
+    backgroundColor: 'red',
   },
 });
 
