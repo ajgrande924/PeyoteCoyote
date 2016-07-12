@@ -347,7 +347,7 @@ module.exports = {
           .catch(err => console.log(err))
           .then( respons => respons.json())
           .then(responseData2 => {
-            if(responseData2.rows[0].elements[0].distance.value < (radius + 2000)) {
+            if(true) {
 
               var user2TimeToDest = responseData2.rows[0].elements[0].duration.value;
               var origin = 'origins=' + responseData[saver].user1Latitude + ',' + responseData[saver].user1Longitude;
